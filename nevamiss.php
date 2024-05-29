@@ -57,20 +57,11 @@ function error_notice(string $message): void
     }
 }
 
-try {
-    autoload();
-}catch( \Exception $exception){
-
-    error_notice($exception->getMessage());
-}
-
 /**
  * @throws Exception
  */
 function plugin(): Package {
     static $package;
-
-    autoload();
 
     if (!$package) {
         $properties = PluginProperties::new(__FILE__);
@@ -83,7 +74,9 @@ function plugin(): Package {
 add_action(
     'plugins_loaded',
     static function(): void {
+
         try {
+            autoload();
             plugin()->boot();
         }catch ( \Throwable $exception ){
             error_notice($exception->getMessage());
