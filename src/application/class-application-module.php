@@ -1,6 +1,6 @@
 <?php
 
-namespace Nevamiss\Setup;
+namespace Nevamiss\Application;
 
 use Exception;
 use Inpsyde\Modularity\Module\ExecutableModule;
@@ -16,13 +16,25 @@ class Module implements ServiceModule, ExecutableModule
 
     public function services(): array
     {
-        return [];
+        return [
+            DB::class => static function(){
+                global $wpdb;
+                return new DB($wpdb);
+            }
+        ];
     }
 
     public function run(ContainerInterface $container): bool
     {
-        register_activation_hook(NEVAMISS_ROOT, [$this, 'activate']);
-        register_deactivation_hook(NEVAMISS_ROOT, [$this, 'deactivate']);
+        register_activation_hook(
+         NEVAMISS_ROOT,
+            static function() use($container){
+                $this->activate($container);
+            }
+        );
+        register_deactivation_hook(NEVAMISS_ROOT, static function() use($container){
+            $this->deactivate($container);
+        });
 
         return true;
     }
@@ -30,16 +42,17 @@ class Module implements ServiceModule, ExecutableModule
     /**
      * @throws Exception
      */
-    public function activate(): void
+    private function activate(ContainerInterface $container): void
     {
         // Check for required PHP version
         if ( version_compare( PHP_VERSION, self::MINIMUM_PHP_VERSION, '<' ) ) {
             throw new Exception('The server PHP version is not compatible', );
         }
+        $container->get(DB::class)->setup_tables();
     }
 
-    public function deactivate()
+    public function deactivate(ContainerInterface $container)
     {
-
+        $container->get(DB::class)->drop_tables();
     }
 }
