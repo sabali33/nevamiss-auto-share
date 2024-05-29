@@ -5,6 +5,7 @@ namespace Nevamiss\Presentation\Pages;
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
+use Nevamiss\Service\Settings;
 use Psr\Container\ContainerInterface;
 
 class Module implements ServiceModule, ExecutableModule
