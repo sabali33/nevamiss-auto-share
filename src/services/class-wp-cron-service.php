@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use Nevamiss\Crons\Cron_Interface;
+namespace Nevamiss\Services;
+
+use Nevamiss\Services\Contracts\Cron_Interface;
 
 class WP_Cron_Service implements Cron_Interface {
 
