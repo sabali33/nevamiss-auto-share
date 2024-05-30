@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Nevamiss\Service;
+namespace Nevamiss\Services\Contracts;
 
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Psr\Container\ContainerInterface;
 use Saas\Infrastructure\WP_Cron_Service;
 
-class Module implements ServiceModule, ExecutableModule
+class Services_Module implements ServiceModule, ExecutableModule
 {
 
     public function run(ContainerInterface $container): bool
