@@ -10,7 +10,7 @@ use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Service\Settings;
 use Psr\Container\ContainerInterface;
 
-class Module implements ServiceModule, ExecutableModule
+class Presentation_Module implements ServiceModule, ExecutableModule
 {
     use ModuleClassNameIdTrait;
 
