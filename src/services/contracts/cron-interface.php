@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Crons;
+namespace Nevamiss\Services\Contracts;
 
 interface Cron_Interface
 {
