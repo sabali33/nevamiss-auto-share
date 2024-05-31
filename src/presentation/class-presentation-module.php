@@ -7,6 +7,7 @@ use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Service\Settings;
 use Psr\Container\ContainerInterface;
 
@@ -56,7 +57,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule
                     'schedule',
                     10
                 );
-            }
+            },
+            Post_Meta::class => fn() => new Post_Meta(),
         ];
     }
 
@@ -71,6 +73,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule
                 $container->get(Stats_Page::class)->register();
             }
         );
+
+        add_action('add_meta_boxes', [$container->get(Post_Meta::class), 'meta_boxes']);
 
         return true;
     }
