@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services\Contracts;
 
-use Nevamiss\Domain\Covariance\Share_Response;
+use Nevamiss\Domain\DTO\Share_Response;
 use Nevamiss\Domain\Entities\Network_Account;
 
 interface Remote_Post_Interface
