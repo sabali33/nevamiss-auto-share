@@ -9,26 +9,26 @@ use Exception;
 class Plugin {
 
     const MINIMUM_PHP_VERSION = '8.0';
+    private static DB $db;
 
-    public function __construct(private readonly DB $db)
+    public function __construct(DB $db)
     {
     }
 
     /**
      * @throws Exception
      */
-    public function activate(): void
+    public static function activate(): void
     {
         // Check for required PHP version
         if ( version_compare( PHP_VERSION, self::MINIMUM_PHP_VERSION, '<' ) ) {
-            throw new Exception('The server PHP version is not compatible', );
+            throw new Exception("The server PHP version {PHP_VERSION} is not compatible", );
         }
-
-        $this->db->setup_tables();
+        static::$db->setup_tables();
     }
 
     public function deactivate(): void
     {
-        $this->db->drop_tables();
+        self::$db->drop_tables();
     }
 }
