@@ -19,6 +19,13 @@ namespace Nevamiss;
 use Exception;
 use Inpsyde\Modularity\Package;
 use Inpsyde\Modularity\Properties\PluginProperties;
+use Nevamiss\Application\Application_Module;
+use Nevamiss\Application\DB;
+use Nevamiss\Application\Plugin;
+use Nevamiss\Presentation\Pages\Presentation_Module;
+use Nevamiss\Service\Repositories_Module;
+use Nevamiss\Services\Contracts\Services_Module;
+use Throwable;
 
 defined('ABSPATH') || die('Not authorized');
 
@@ -59,6 +66,7 @@ function error_notice(string $message): void
 
 /**
  * @throws Exception
+ * @throws Throwable
  */
 function plugin(): Package {
     static $package;
@@ -66,6 +74,11 @@ function plugin(): Package {
     if (!$package) {
         $properties = PluginProperties::new(__FILE__);
         $package = Package::new($properties);
+        $package->
+        addModule(new Application_Module())->
+        addModule(new Repositories_Module())->
+        addModule(new Presentation_Module())->
+        addModule(new Services_Module());
     }
 
     return $package;
@@ -78,9 +91,18 @@ add_action(
         try {
             autoload();
             plugin()->boot();
-        }catch ( \Throwable $exception ){
+        }catch ( Throwable $exception ){
             error_notice($exception->getMessage());
         }
 
+    }
+);
+
+register_activation_hook(
+
+    NEVAMISS_ROOT,
+
+    static function(){
+        plugin()->container()->get(Plugin::class)->activate();
     }
 );
