@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services\Contracts;
 
+use Nevamiss\Domain\Covariance\Share_Response;
+use Nevamiss\Domain\Entities\Network_Account;
+
 interface Remote_Post_Interface
 {
-    public function run(int $task_id): void;
+    /**
+     * @param int $id A schedule ID in the case of Schedule Post Manager class and post ID in the case of instant share.
+     * @return mixed
+     */
+    public function run(int $id): mixed;
 
-    public function post(int $task_id): void;
+    public function post(string $data): Share_Response;
 
 }
