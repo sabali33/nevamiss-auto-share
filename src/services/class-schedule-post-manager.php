@@ -22,7 +22,7 @@ class Schedule_Post_Manager implements Remote_Post_Interface {
         // TODO: Implement run() method.
     }
 
-    public function post(string $data): \Nevamiss\Domain\Covariance\Share_Response
+    public function post(string $data): \Nevamiss\Domain\DTO\Share_Response
     {
         // TODO: Implement post() method.
     }
