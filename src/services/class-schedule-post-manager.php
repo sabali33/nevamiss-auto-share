@@ -86,7 +86,7 @@ class Schedule_Post_Manager {
     /**
      * @param Schedule $schedule
      * @param array $data_set
-     * @return void[]
+     * @return array{class_identifier: string, parameters: array, schedule_id: int}
      */
     private function set_task_schedule_ids(Schedule $schedule, array $data_set): array
     {
