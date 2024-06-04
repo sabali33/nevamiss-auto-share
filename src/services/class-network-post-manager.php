@@ -9,12 +9,12 @@ use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Contracts\Remote_Post_Interface;
 
-class Instant_Post_Manager implements Remote_Post_Interface {
+class Network_Post_Manager implements Remote_Post_Interface {
 
     public function __construct(
-        private readonly Network_Account $account,
-        private readonly Network_Clients_Interface $network_client,
-        private readonly Post_Formatter $formatter
+        private Network_Account $account,
+        private Network_Clients_Interface $network_client,
+        private Post_Formatter $formatter
     )
     {
 
