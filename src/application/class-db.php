@@ -16,7 +16,8 @@ class DB {
             'schedule_queue' => $schedule_queue_table_name,
             'stats'   => $stats_table_name,
             'logs'   => $logs_table_name,
-            'task'  => $task_table_name
+            'task'  => $task_table_name,
+            'network_account'  => $network_account_table_name
         ] = $this->table_names();
 
         $charset_collate = $this->wpdb->get_charset_collate();
@@ -66,6 +67,13 @@ class DB {
             id INT PRIMARY KEY AUTO_INCREMENT,
             schedule_id INT,
             messages JSON,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        );
+            CREATE TABLE IF NOT EXISTS `$network_account_table_name` (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(50),
+            network VARCHAR(50),
+            remote_account_id INT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         ) $charset_collate;
 
