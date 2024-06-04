@@ -11,7 +11,7 @@ trait Delete_All_Trait  {
     /**
      * @throws Exception
      */
-    public function clear(int $id): bool
+    public function clear(): bool
     {
         $sql = "DELETE * FROM {$this->table_name()}";
 
