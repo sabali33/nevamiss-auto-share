@@ -33,7 +33,7 @@ class Network_Post_Provider {
     {
         $schedule_accounts = $schedule->network_accounts();
         $schedule_posts = $this->query->query($schedule->query_args());
-        $schedule_tags = $schedule->tags();
+        $schedule_tags = $schedule->social_media_tags();
         $data_set = [];
 
         foreach( $schedule_accounts as $schedule_account) {

@@ -28,6 +28,7 @@ class DB {
             name VARCHAR(255) UNIQUE NOT NULL,
             start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             repeat_frequency ENUM NOT NULL,
+            social_media_tags VARCHAR(255),
             daily_times JSON,
             weekly_times JSON,
             monthly_times JSON,
