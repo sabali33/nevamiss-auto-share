@@ -24,7 +24,7 @@ class DB {
         $sql = <<<SQL
             CREATE TABLE IF NOT EXISTS `$schedule_table_name` (
             id INT PRIMARY KEY AUTO_INCREMENT,
-            schedule_name VARCHAR(255) UNIQUE NOT NULL,
+            name VARCHAR(255) UNIQUE NOT NULL,
             start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             repeat_frequency ENUM NOT NULL,
             daily_times JSON,
@@ -56,7 +56,7 @@ class DB {
         CREATE TABLE IF NOT EXISTS `$task_table_name` (
             id INT PRIMARY KEY AUTO_INCREMENT,
             class_identifier VARCHAR(255) NOT NULL,
-            parameter JSON,
+            parameters JSON,
             schedule_id INT NULL,
             status ENUM('pending', 'running', 'succeeded', 'failed'),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
