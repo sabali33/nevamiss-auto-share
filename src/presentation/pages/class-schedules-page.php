@@ -2,7 +2,7 @@
 
 namespace Nevamiss\Presentation\Pages;
 
-use Saas\Inc\Domain\Repository\Schedule_Repository_Interface;
+use Nevamiss\Domain\Entities\Schedule;
 
 
 class Schedules_Page extends Page
@@ -11,12 +11,12 @@ class Schedules_Page extends Page
 
     public int $priority;
 
-    public Schedule_Repository_Interface $schedule;
+    public Schedule $schedule;
 
     public const TEMPLE_PATH = 'templates/schedules';
 
     public function __construct(
-        Schedule_Repository_Interface $schedule, 
+        Schedule $schedule,
         string $title, 
         string $slug, 
         string $filename, 

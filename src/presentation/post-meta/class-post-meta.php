@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Post_Meta;
 
+use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
-use Nevamiss\Factory\Factory;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
-use Nevamiss\Services\Instant_Post_Manager;
+use Nevamiss\Services\Network_Post_Manager;
 use Nevamiss\Services\Post_Formatter;
 
 class Post_Meta {
 
     public function __construct(
-        private readonly Network_Account_Repository $account,
-        private readonly Factory                    $factory,
-        private readonly Post_Formatter             $formatter,
-        private readonly array                      $network_clients,
+        private Network_Account_Repository $account,
+        private Factory                    $factory,
+        private Post_Formatter             $formatter,
+        private array                      $network_clients,
     )
     {
     }
@@ -47,7 +47,7 @@ class Post_Meta {
         $network_client = $this->network_clients[$network_account->network()];
 
         $post_manager = $this->factory->new(
-            Instant_Post_Manager::class,
+            Network_Post_Manager::class,
             $network_account,
             $network_client
         );
