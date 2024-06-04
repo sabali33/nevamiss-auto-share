@@ -7,7 +7,7 @@ namespace Nevamiss\Domain\Repositories;
 
 use Nevamiss\Domain\Factory\Factory;
 
-trait Repository_Common {
+trait Repository_Common_Trait {
     public function __construct(private Factory $factory, private \wpdb $wpdb)
     {
     }
