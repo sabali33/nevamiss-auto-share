@@ -13,7 +13,7 @@ class Instant_Post_Manager implements Remote_Post_Interface {
 
     public function __construct(
         private readonly Network_Account $account,
-        private readonly Network_Clients_Interface           $network_client,
+        private readonly Network_Clients_Interface $network_client,
         private readonly Post_Formatter $formatter
     )
     {
@@ -33,11 +33,7 @@ class Instant_Post_Manager implements Remote_Post_Interface {
 
     public function post(string $data): Share_Response
     {
-        $client = $this->network_client;
-
-        $response = $client->post($data, $this->account);
-
-        return new Share_Response($response);
+        return $this->network_client->post($data, $this->account);
     }
 
 }

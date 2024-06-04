@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Factory;
+namespace Nevamiss\Domain\Factory;
 
 use Nevamiss\Application\Not_Found_Exception;
 
