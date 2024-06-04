@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nevamiss\Domain\Repositories;
 
-use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Contracts\Create_Interface;
 use Nevamiss\Domain\Contracts\Delete_Interface;
 use Nevamiss\Domain\Contracts\Get_All_Interface;
@@ -14,9 +13,15 @@ use Nevamiss\Domain\Entities\Schedule;
 
 class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_All_Interface, Update_Interface, Delete_Interface
 {
-    use Repository_Common;
+    use Repository_Common_Trait;
     use Create_Trait;
     use Update_Trait;
+    use Get_One_Trait;
+    use Delete_Trait;
+    use Get_All_Trait;
+
+    private const ENTITY_NAME = 'Schedule';
+    private const ENTITY_CLASS = Schedule::class;
     private const ALLOW_TABLE_COLUMNS = [
         'id',
         'name',
@@ -28,26 +33,6 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
         'query',
         'accounts'
     ];
-
-    public function get_all(array $data = [])
-    {
-        throw new \Exception("Implement this method");
-    }
-
-    /**
-     * @throws Not_Found_Exception
-     */
-    public function get(int $id): Schedule
-    {
-        $sql = $this->wpdb->prepare("SELECT * FROM {$this->table_name()} WHERE id = '%s'", $id);
-        $schedule = $this->wpdb->get_results($sql);
-        return $this->factory->new(Schedule::class, $schedule);
-    }
-
-    public function delete(int $id)
-    {
-        throw new \Exception("Implement this method");
-    }
 
     private function table_name(): string
     {

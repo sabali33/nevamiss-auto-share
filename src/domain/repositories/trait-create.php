@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Nevamiss\Domain\Repositories;
 
-
-use Nevamiss\Domain\Factory\Factory;
+use Exception;
 
 trait Create_Trait {
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(mixed $data): bool
     {

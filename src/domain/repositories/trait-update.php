@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Nevamiss\Domain\Repositories;
 
-
-use Nevamiss\Domain\Factory\Factory;
+use Exception;
 
 trait Update_Trait  {
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(int $id, mixed $data): bool
     {

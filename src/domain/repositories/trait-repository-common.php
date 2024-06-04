@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nevamiss\Domain\Repositories;
 
-
 use Nevamiss\Domain\Factory\Factory;
 
 trait Repository_Common_Trait {
@@ -31,6 +30,7 @@ trait Repository_Common_Trait {
     {
         $columns = implode(',', array_keys($data) );
         $values = implode(',', array_values($data) );
+
         return [$columns, $values];
     }
 
