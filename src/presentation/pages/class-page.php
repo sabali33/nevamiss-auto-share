@@ -14,7 +14,13 @@ abstract class Page implements Renderable
     protected string $filename;
     private bool $is_sub_page = false;
 
-    public function __construct(mixed $data, $title, $slug, $filename, $priority)
+    public function __construct(
+        mixed $data,
+        string $title,
+        string $slug,
+        string $filename,
+        string $priority
+    )
     {
         $this->title = $title;
         $this->priority = $priority;
