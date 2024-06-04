@@ -12,6 +12,7 @@ class Schedule
         private int    $share_posts_count,
         private array  $network_accounts,
         private array  $query_args,
+        private string $social_media_tags,
         private ?array $daily_times,
         private ?array $weekly_times,
         private ?array $monthly_times,
@@ -68,5 +69,10 @@ class Schedule
     public function monthly_times(): ?array
     {
         return $this->monthly_times;
+    }
+
+    public function social_media_tags(): string
+    {
+        return $this->social_media_tags;
     }
 }
