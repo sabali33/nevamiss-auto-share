@@ -27,8 +27,8 @@ class Services_Module implements ServiceModule, ExecutableModule
 
     public function run(ContainerInterface $container): bool
     {
-        add_action('schedule_create_tasks_completed', [$container->get(Schedule_Tasks_Runner::class), 'run']);
-        add_action('schedule_task_complete', [$container->get(Schedule_Tasks_Runner::class), 'update_task']);
+        \add_action('schedule_create_tasks_completed', [$container->get(Schedule_Tasks_Runner::class), 'run']);
+        \add_action('schedule_task_complete', [$container->get(Schedule_Tasks_Runner::class), 'update_task']);
     }
 
     public function services(): array
