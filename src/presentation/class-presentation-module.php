@@ -5,11 +5,14 @@ namespace Nevamiss\Presentation\Pages;
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
+use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Networks\Network_Clients;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Service\Settings;
+use Nevamiss\Services\Post_Formatter;
 use Psr\Container\ContainerInterface;
 
 class Presentation_Module implements ServiceModule, ExecutableModule
@@ -60,7 +63,12 @@ class Presentation_Module implements ServiceModule, ExecutableModule
                 );
             },
             Post_Meta::class => function(ContainerInterface $container) {
-                return new Post_Meta($container->get(Network_Account_Repository::class));
+                return new Post_Meta(
+                    $container->get(Network_Account_Repository::class),
+                    $container->get(Factory::class),
+                    $container->get(Post_Formatter::class),
+                    $container->get(Network_Clients::class),
+                );
             },
         ];
     }

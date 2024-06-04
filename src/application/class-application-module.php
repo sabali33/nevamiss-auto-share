@@ -28,7 +28,7 @@ class Application_Module implements ServiceModule, ExecutableModule
     public function run(ContainerInterface $container): bool
     {
 
-        register_deactivation_hook(
+        \register_deactivation_hook(
             NEVAMISS_ROOT,
             [$container->get(Plugin::class), 'deactivate']
         );

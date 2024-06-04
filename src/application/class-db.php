@@ -38,7 +38,6 @@ class DB {
         CREATE TABLE IF NOT EXISTS `$schedule_queue_table_name` (
             id INT PRIMARY KEY AUTO_INCREMENT,
             schedule_id INT,
-            cycles_count INT 0 CHECK,
             shared_posts_ids JSON,
             all_posts_ids JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,6 +48,7 @@ class DB {
             schedule_id INT NOT NULL,
             posted_on TIMESTAMP NOT NULL CURRENT_TIMESTAMP,
             posts_ids JSON NOT NULL,
+            cycles_count INT 0 CHECK,
             remote_posted ENUM(0, 1,),
             status JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -57,6 +57,7 @@ class DB {
             id INT PRIMARY KEY AUTO_INCREMENT,
             class_identifier VARCHAR(255) NOT NULL,
             parameter JSON,
+            schedule_id INT NULL,
             status ENUM('pending', 'running', 'succeeded', 'failed'),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
