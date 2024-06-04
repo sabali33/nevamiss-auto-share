@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nevamiss\Domain\Repositories;
 
-use factory\Factory;
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Contracts\Create_Interface;
 use Nevamiss\Domain\Contracts\Get_All_Interface;
@@ -15,22 +14,17 @@ use Nevamiss\Domain\Entities\Task;
 class Task_Repository implements Create_Interface, Get_One_Interface, Get_All_Interface, Update_Interface
 {
 
-    use RepositoryCommon;
+    use Repository_Common;
+    use Create_Trait;
+    use Update_Trait;
 
-    public function create(mixed $data): bool
-    {
-        $columns = implode(',', array_keys($data) );
-        $values = implode(',', array_values($data) );
-
-        $sql = $this->wpdb->prepare("INSERT INTO {$this->table_name()} ($columns) VALUES ($values)", $data);
-
-        $result = $this->wpdb->query($sql);
-
-        if(!$result){
-            return false;
-        }
-        return true;
-    }
+    private  const ALLOWED_TABLE_COLUMNS = [
+        'id',
+        'class_identifier',
+        'parameters',
+        'schedule_id',
+        'status'
+    ];
 
     public function get_all(array $data = ['status' => 1, 'count' => 1]): array|null
     {
@@ -43,7 +37,7 @@ class Task_Repository implements Create_Interface, Get_One_Interface, Get_All_In
      */
     public function get(int $id)
     {
-        $sql = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}_nevamiss_task WHERE id='%s'", $id);
+        $sql = $this->wpdb->prepare("SELECT * FROM {$this->table_name()} WHERE id='%s'", $id);
 
         $task = $this->wpdb->get_results($sql, ARRAY_A);
 
@@ -52,33 +46,6 @@ class Task_Repository implements Create_Interface, Get_One_Interface, Get_All_In
         }
 
         return $this->factory->new(Task::class, $task);
-    }
-
-    /**
-     * @param int $id Task Id
-     * @param array $data
-     * @return bool
-     */
-    public function update(int $id, array $data): bool
-    {
-        if(!isset($data['status'])){
-            return false;
-        }
-
-        $result = $this->wpdb->update(
-            $this->table_name(),
-            [
-                'status' => $data['status']
-            ],
-            [
-                'id' => $id
-            ]
-        );
-
-        if(!$result){
-            return false;
-        }
-        return true;
     }
 
     private function table_name(): string

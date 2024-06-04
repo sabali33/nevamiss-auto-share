@@ -10,20 +10,24 @@ use Nevamiss\Domain\Contracts\Update_Interface;
 
 class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, Update_Interface
 {
-    use RepositoryCommon;
+    use Repository_Common;
+    use Create_Trait;
+    use Update_Trait;
 
-    public function create(mixed $data)
-    {
-        throw new \Exception("Implement this method");
-    }
+    private const ALLOWED_TABLE_COLUMNS = [
+        'id',
+        'schedule_id',
+        'shared_posts_ids',
+        'all_posts_ids',
+    ];
 
         public function get(int $id)
     {
         throw new \Exception("Implement this method");
     }
 
-    public function update(int $id, mixed $data)
+    private function table_name(): string
     {
-        throw new \Exception("Implement this method");
+        return "{$this->wpdb->prefix}_nevamiss_schedule_queue";
     }
 }
