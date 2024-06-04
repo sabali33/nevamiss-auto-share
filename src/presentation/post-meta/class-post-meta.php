@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Post_Meta;
 
+use Exception;
 use Nevamiss\Domain\Factory\Factory;
-use Nevamiss\Domain\Repositories\Network_Account_Repository;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Network_Post_Manager;
-use Nevamiss\Services\Post_Formatter;
+use Nevamiss\Services\Network_Post_Provider;
 
 class Post_Meta {
 
     public function __construct(
-        private Network_Account_Repository $account,
         private Factory                    $factory,
-        private Post_Formatter             $formatter,
-        private array                      $network_clients,
+        private Network_Post_Provider      $network_post_provider,
     )
     {
     }
@@ -34,17 +31,16 @@ class Post_Meta {
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function share_post_to_account(int $post_id, int $network_account_id): mixed
     {
-        $network_account = $this->account->get($network_account_id);
+        $data = $this->network_post_provider->format_post($post_id);
 
-        $data = $this->format_post($post_id);
-        /**
-         * @var Network_Clients_Interface $client
-         */
-        $network_client = $this->network_clients[$network_account->network()];
+        [
+            'account' => $network_account,
+            'network_client' => $network_client
+        ] = $this->network_post_provider->provide_network($network_account_id);
 
         $post_manager = $this->factory->new(
             Network_Post_Manager::class,
@@ -61,7 +57,7 @@ class Post_Meta {
      * @param int $post_id
      * @param array $network_accounts
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function share_post_to_accounts(int $post_id, array $network_accounts): array
     {
@@ -72,10 +68,4 @@ class Post_Meta {
         }
         return $response;
     }
-
-    private function format_post(int $post_id): string
-    {
-        return $this->formatter->format($post_id);
-    }
-
 }

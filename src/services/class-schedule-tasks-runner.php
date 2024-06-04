@@ -13,9 +13,8 @@ class Schedule_Tasks_Runner {
 
     public function __construct(
         private Task_Repository            $task_repository,
-        private Network_Account_Repository $account_repository,
         private Factory                    $factory,
-        private array                      $network_clients
+        private Network_Post_Provider $schedule_provider
     )
     {
     }
@@ -37,9 +36,10 @@ class Schedule_Tasks_Runner {
             'parameter' => $parameters,
         ] = $active_task[0];
 
-        $network_account = $this->account_repository->get($parameters['network_account_id']);
-
-        $network_client = $this->network_clients[$network_account->network()];
+        [
+            'account' => $network_account,
+            'network_client' => $network_client
+        ] = $this->schedule_provider->provide_network($parameters['network_account_id']);
 
         /**
          * @var Network_Post_Manager $post_manager

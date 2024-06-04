@@ -11,9 +11,9 @@ class Settings {
 
     }
 
-    public function setting(string $key)
+    public function setting(string $key):string
     {
-
+        return "";
     }
     public function settings()
     {
