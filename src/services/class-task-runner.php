@@ -41,7 +41,7 @@ class Task_Runner implements Task_Runner_Interface {
 
         $response = $post_manager->run($parameters['post_id']);
 
-        do_action('nevamiss_task_completed', ['results' => $response, 'task' => $task_id]);
+        \do_action('nevamiss_task_completed', ['results' => $response, 'task' => $task_id]);
 
     }
 }
