@@ -6,21 +6,22 @@ namespace Nevamiss\Services;
 
 use Exception;
 use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Application\Post_Query\Query;
+use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
-use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
+use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 
 class Schedule_Post_Manager {
 
     public function __construct(
-        private Schedule_Repository        $schedule_repository,
-        private Network_Account_Repository $account_repository,
-        private Factory                    $factory,
-        private Task_Repository            $task_repository,
-        private Post_Formatter             $formatter,
-        private array                      $network_clients,
+        private Schedule_Repository   $schedule_repository,
+        private Factory               $factory,
+        private Task_Repository       $task_repository,
+        private Network_Post_Provider $schedule_provider,
+        private Query                 $query,
     )
     {
 
@@ -34,30 +35,39 @@ class Schedule_Post_Manager {
      */
     public function run(int $schedule_id): void
     {
+        /**
+         * @var Schedule $schedule
+         */
         $schedule = $this->schedule_repository->get($schedule_id);
-        $data_set = $schedule->post_data();
 
-        if($schedule->is_heavy()){
+        if(!$schedule->is_heavy()){
+
+            $data_set = $this->schedule_provider->provide_for_schedule($schedule);
+
             $this->instant_post($data_set);
             return;
         }
+        $data_set = $this->make_schedule_post_data($schedule);
 
         $this->create_tasks($schedule, $data_set);
     }
 
     /**
+     * @param array[] $data_set
      * @throws Not_Found_Exception
      */
     private function instant_post(array $data_set): void
     {
         /**
-         * @var array{account_id:int, post_id: int} $item
+         * @var array{data: string, account: Network_Account, network_client: Network_Clients_Interface} $item
          */
         foreach ($data_set as $item ){
 
-            $network_account = $this->account_repository->get($item['account_id']);
-            $network_client = $this->network_clients[$network_account->network()];
-            $data = $this->formatter->format($item['post_id']);
+            [
+                'account' => $network_account,
+                'network_client' => $network_client,
+                'data' => $data
+            ] = $item;
 
             $network_post_manager = $this->factory->new(
                 Network_Post_Manager::class,
@@ -66,6 +76,8 @@ class Schedule_Post_Manager {
             );
 
             $network_post_manager->post($data);
+
+            sleep(1);
         }
     }
 
@@ -74,9 +86,7 @@ class Schedule_Post_Manager {
      */
     private function create_tasks(Schedule $schedule, array $data_set): void
     {
-        $task_data = $this->set_task_schedule_ids($schedule, $data_set);
-
-        foreach ($task_data as $data ){
+        foreach ($data_set as $data ){
             $this->task_repository->create($data);
         }
 
@@ -85,18 +95,34 @@ class Schedule_Post_Manager {
 
     /**
      * @param Schedule $schedule
-     * @param array $data_set
      * @return array{class_identifier: string, parameters: array, schedule_id: int}
      */
-    private function set_task_schedule_ids(Schedule $schedule, array $data_set): array
+    private function make_schedule_post_data(Schedule $schedule): array
     {
-        return array_map(function ($data) use ($schedule) {
+        $schedule_posts = $this->query->query($schedule->query_args());
 
-            return [
-                'class_identifier' => Schedule_Tasks_Runner::class,
-                'parameters' => $data,
-                'schedule_id' => $schedule->id(),
-            ];
-        }, $data_set);
+        /**
+         * @var Network_Account $schedule_accounts
+         */
+        $schedule_accounts = $schedule->network_accounts();
+
+        $post_data = [];
+
+        foreach( $schedule_accounts as $schedule_account){
+
+            foreach( $schedule_posts as $schedule_post){
+
+                $post_data[] = [
+                    'class_identifier' => Schedule_Tasks_Runner::class,
+                    'schedule_id' => $schedule->id(),
+                    'parameters' => [
+                        'post_id' => $schedule_post->ID,
+                        'account_id' => $schedule_account->id()
+                    ]
+                ];
+            }
+        }
+
+        return $post_data;
     }
 }
