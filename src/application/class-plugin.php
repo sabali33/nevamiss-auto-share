@@ -11,8 +11,9 @@ class Plugin {
     const MINIMUM_PHP_VERSION = '8.0';
     private static DB $db;
 
-    public function __construct(DB $db)
+    public function __construct( DB $db)
     {
+        static::$db = $db;
     }
 
     /**
