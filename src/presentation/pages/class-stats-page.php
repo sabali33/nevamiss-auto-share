@@ -2,14 +2,19 @@
 
 namespace Nevamiss\Presentation\Pages;
 
+use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
+
 class Stats_Page extends Page
 {
-    public string $title;
-    public int $priority;
-    public array $stats;
     public const TEMPLE_PATH = 'templates/stats';
 
-    public function __construct($stats, $title, $slug, $filename, $priority )
+    public function __construct(
+        Posts_Stats_Repository $stats,
+        string $title,
+        string $slug,
+        string $filename,
+        int $priority
+    )
     {
         parent::__construct($stats, $title, $slug, $filename, $priority);
     }

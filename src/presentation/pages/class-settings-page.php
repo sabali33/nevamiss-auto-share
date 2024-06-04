@@ -2,14 +2,19 @@
 
 namespace Nevamiss\Presentation\Pages;
 
+use Nevamiss\Service\Settings;
+
 class Settings_Page extends Page
 {
-    public string $title;
-    public int $priority;
-    public array $settings;
     public const TEMPLE_PATH = 'templates/settings';
 
-    public function __construct($settings, $title, $slug, $filename, $priority )
+    public function __construct(
+        Settings $settings,
+        string $title,
+        string $slug,
+        string $filename,
+        int $priority
+    )
     {
         parent::__construct($settings, $title, $slug, $filename, $priority);
     }
