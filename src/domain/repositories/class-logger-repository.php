@@ -12,7 +12,7 @@ use Nevamiss\Domain\Contracts\Get_All_Interface;
 
 class Logger_Repository implements Create_Interface, Delete_Interface, Get_All_Interface, Delete_All_Interface
 {
-
+    use RepositoryCommon;
     public function create(mixed $data)
     {
         throw new \Exception("Implement this method");

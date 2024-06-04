@@ -6,5 +6,5 @@ namespace Nevamiss\Domain\Contracts;
 
 interface Update_Interface
 {
-    public function update(array $data);
+    public function update(int $id, array $data);
 }

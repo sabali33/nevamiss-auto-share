@@ -10,6 +10,7 @@ use Nevamiss\Domain\Contracts\Update_Interface;
 
 class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, Update_Interface
 {
+    use RepositoryCommon;
 
     public function create(mixed $data)
     {
@@ -21,7 +22,7 @@ class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, 
         throw new \Exception("Implement this method");
     }
 
-    public function update(mixed $data)
+    public function update(int $id, mixed $data)
     {
         throw new \Exception("Implement this method");
     }
