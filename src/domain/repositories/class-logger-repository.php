@@ -12,12 +12,12 @@ use Nevamiss\Domain\Contracts\Get_All_Interface;
 
 class Logger_Repository implements Create_Interface, Delete_Interface, Get_All_Interface, Delete_All_Interface
 {
-    use RepositoryCommon;
-    public function create(mixed $data)
-    {
-        throw new \Exception("Implement this method");
-    }
-
+    use Repository_Common;
+    use Create_Trait;
+    private const ALLOWED_TABLE_COLUMNS = [
+        'schedule_id',
+        'messages'
+    ];
     public function get_all(array $data = [])
     {
         throw new \Exception("Implement this method");
