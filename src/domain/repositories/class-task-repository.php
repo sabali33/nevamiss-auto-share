@@ -31,6 +31,6 @@ class Task_Repository implements Create_Interface, Get_One_Interface, Get_All_In
 
     private function table_name(): string
     {
-        return "{$this->wpdb->prefix}_nevamiss_task";
+        return "{$this->wpdb->prefix}_nevamiss_tasks";
     }
 }

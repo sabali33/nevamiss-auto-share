@@ -36,6 +36,6 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 
     private function table_name(): string
     {
-        return "{$this->wpdb->prefix}_nevamiss_schedule";
+        return "{$this->wpdb->prefix}_nevamiss_schedules";
     }
 }
