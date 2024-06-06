@@ -32,6 +32,6 @@ class Network_Account_Repository implements Create_Interface, Delete_Interface, 
 
     private function table_name(): string
     {
-        return "{$this->wpdb->prefix}_nevamiss_network_account";
+        return "{$this->wpdb->prefix}_nevamiss_network_accounts";
     }
 }

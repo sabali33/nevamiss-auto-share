@@ -92,7 +92,8 @@ class DB {
             'schedule_queue' => $schedule_queue_table_name,
             'stats'   => $stats_table_name,
             'logs'   => $logs_table_name,
-            'task'  => $task_table_name
+            'task'  => $task_table_name,
+            'network_account'     => $network_account_table_name
         ] = $this->table_names();
 
         $sql = <<< DROPSQL
@@ -102,6 +103,7 @@ class DB {
             DROP TABLE IF EXISTS $schedule_queue_table_name;
             DROP TABLE IF EXISTS $logs_table_name;
             DROP TABLE IF EXISTS $task_table_name;
+            DROP TABLE IF EXISTS $network_account_table_name;
 
         DROPSQL;
 
@@ -111,11 +113,12 @@ class DB {
     private function table_names(): array
     {
         return [
-            'schedule'            => "{$this->wpdb->prefix}nevass_schedule",
+            'schedule'            => "{$this->wpdb->prefix}nevass_schedules",
             'schedule_queue'      => "{$this->wpdb->prefix}nevass_schedule_queue",
             'stats'               => "{$this->wpdb->prefix}nevass_stats",
-            'task'                => "{$this->wpdb->prefix}nevass_task",
+            'task'                => "{$this->wpdb->prefix}nevass_tasks",
             'logs'                => "{$this->wpdb->prefix}nevass_logs",
+            'network_account'     => "{$this->wpdb->prefix}nevass_network_accounts"
         ];
     }
 }
