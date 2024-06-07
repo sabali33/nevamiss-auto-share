@@ -6,10 +6,9 @@ use Nevamiss\Presentation\Contracts\Renderable;
 
 abstract class Page implements Renderable
 {
-    const TEMPLE_PATH = '';
     protected string $title;
     protected int $priority;
-    protected array $data;
+    protected mixed $data;
     protected string $slug;
     protected string $filename;
     private bool $is_sub_page = false;
@@ -19,7 +18,7 @@ abstract class Page implements Renderable
         string $title,
         string $slug,
         string $filename,
-        string $priority
+        int $priority
     )
     {
         $this->title = $title;
@@ -33,7 +32,7 @@ abstract class Page implements Renderable
     {
         ob_start();
 
-        include NEVAMISS_PATH . '/resources/' . self::TEMPLE_PATH .'.php';
+        include NEVAMISS_PATH . 'resources/' . static::TEMPLE_PATH .'.php';
 
         return ob_get_clean();
     }
