@@ -21,10 +21,12 @@ use Inpsyde\Modularity\Package;
 use Inpsyde\Modularity\Properties\PluginProperties;
 use Nevamiss\Application\Application_Module;
 use Nevamiss\Application\DB;
-use Nevamiss\Application\Plugin;
+use Nevamiss\Application\Setup;
+use Nevamiss\Networks\Media_Networks_Module;
 use Nevamiss\Presentation\Pages\Presentation_Module;
+use Nevamiss\Service\Factory_Module;
 use Nevamiss\Service\Repositories_Module;
-use Nevamiss\Services\Contracts\Services_Module;
+use Nevamiss\Services\Services_Module;
 use Throwable;
 
 defined('ABSPATH') || die('Not authorized');
@@ -64,6 +66,13 @@ function error_notice(string $message): void
     }
 }
 
+try {
+    autoload();
+    Setup::instance(DB::class);
+}catch (Exception $exception){
+    error_notice($exception->getMessage());
+}
+
 /**
  * @throws Exception
  * @throws Throwable
@@ -78,7 +87,9 @@ function plugin(): Package {
         addModule(new Application_Module())->
         addModule(new Repositories_Module())->
         addModule(new Presentation_Module())->
-        addModule(new Services_Module());
+        addModule(new Services_Module())->
+        addModule(new Factory_Module())->
+        addModule(new Media_Networks_Module());
     }
 
     return $package;
@@ -89,20 +100,10 @@ add_action(
     static function(): void {
 
         try {
-            autoload();
             plugin()->boot();
         }catch ( Throwable $exception ){
             error_notice($exception->getMessage());
         }
 
-    }
-);
-
-register_activation_hook(
-
-    NEVAMISS_ROOT,
-
-    static function(){
-        plugin()->container()->get(Plugin::class)->activate();
     }
 );
