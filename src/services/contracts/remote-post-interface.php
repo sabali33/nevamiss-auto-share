@@ -6,9 +6,8 @@ namespace Nevamiss\Services\Contracts;
 
 use Nevamiss\Domain\DTO\Share_Response;
 
-interface Remote_Post_Interface
-{
+interface Remote_Post_Interface {
 
-    public function post(string $data): Share_Response;
 
+	public function post( string $data ): Share_Response;
 }

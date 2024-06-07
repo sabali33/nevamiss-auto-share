@@ -16,113 +16,107 @@ use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 
 class Schedule_Post_Manager {
 
-    public function __construct(
-        private Schedule_Repository   $schedule_repository,
-        private Factory               $factory,
-        private Task_Repository       $task_repository,
-        private Network_Post_Provider $schedule_provider,
-        private Query                 $query,
-    )
-    {
+	public function __construct(
+		private Schedule_Repository $schedule_repository,
+		private Factory $factory,
+		private Task_Repository $task_repository,
+		private Network_Post_Provider $schedule_provider,
+		private Query $query,
+	) {
+	}
 
-    }
+	/**
+	 * @param int $schedule_id Schedule Id.
+	 * @return void
+	 * @throws Not_Found_Exception
+	 * @throws Exception
+	 */
+	public function run( int $schedule_id ): void {
+		/**
+		 * @var Schedule $schedule
+		 */
+		$schedule = $this->schedule_repository->get( $schedule_id );
 
-    /**
-     * @param int $schedule_id Schedule Id.
-     * @return void
-     * @throws Not_Found_Exception
-     * @throws Exception
-     */
-    public function run(int $schedule_id): void
-    {
-        /**
-         * @var Schedule $schedule
-         */
-        $schedule = $this->schedule_repository->get($schedule_id);
+		if ( ! $schedule->is_heavy() ) {
 
-        if(!$schedule->is_heavy()){
+			$data_set = $this->schedule_provider->provide_for_schedule( $schedule );
 
-            $data_set = $this->schedule_provider->provide_for_schedule($schedule);
+			$this->instant_post( $data_set );
+			return;
+		}
+		$data_set = $this->make_schedule_post_data( $schedule );
 
-            $this->instant_post($data_set);
-            return;
-        }
-        $data_set = $this->make_schedule_post_data($schedule);
+		$this->create_tasks( $schedule, $data_set );
+	}
 
-        $this->create_tasks($schedule, $data_set);
-    }
+	/**
+	 * @param array[] $data_set
+	 * @throws Not_Found_Exception
+	 */
+	private function instant_post( array $data_set ): void {
+		/**
+		 * @var array{data: string, account: Network_Account, network_client: Network_Clients_Interface} $item
+		 */
+		foreach ( $data_set as $item ) {
 
-    /**
-     * @param array[] $data_set
-     * @throws Not_Found_Exception
-     */
-    private function instant_post(array $data_set): void
-    {
-        /**
-         * @var array{data: string, account: Network_Account, network_client: Network_Clients_Interface} $item
-         */
-        foreach ($data_set as $item ){
+			[
+				'account' => $network_account,
+				'network_client' => $network_client,
+				'data' => $data
+			] = $item;
 
-            [
-                'account' => $network_account,
-                'network_client' => $network_client,
-                'data' => $data
-            ] = $item;
+			$network_post_manager = $this->factory->new(
+				Network_Post_Manager::class,
+				$network_account,
+				$network_client
+			);
 
-            $network_post_manager = $this->factory->new(
-                Network_Post_Manager::class,
-                $network_account,
-                $network_client
-            );
+			$network_post_manager->post( $data );
 
-            $network_post_manager->post($data);
+			sleep( 1 );
+		}
+	}
 
-            sleep(1);
-        }
-    }
+	/**
+	 * @throws Exception
+	 */
+	private function create_tasks( Schedule $schedule, array $data_set ): void {
+		foreach ( $data_set as $data ) {
+			$this->task_repository->create( $data );
+		}
 
-    /**
-     * @throws Exception
-     */
-    private function create_tasks(Schedule $schedule, array $data_set): void
-    {
-        foreach ($data_set as $data ){
-            $this->task_repository->create($data);
-        }
+		do_action( 'schedule_create_tasks_completed', $schedule->id() );
+	}
 
-        do_action('schedule_create_tasks_completed', $schedule->id() );
-    }
+	/**
+	 * @param Schedule $schedule
+	 * @return array{class_identifier: string, parameters: array, schedule_id: int}
+	 */
+	private function make_schedule_post_data( Schedule $schedule ): array {
+		$schedule_posts = $this->query->query( $schedule->query_args() );
 
-    /**
-     * @param Schedule $schedule
-     * @return array{class_identifier: string, parameters: array, schedule_id: int}
-     */
-    private function make_schedule_post_data(Schedule $schedule): array
-    {
-        $schedule_posts = $this->query->query($schedule->query_args());
+		/**
+		 * @var Network_Account $schedule_accounts
+		 */
+		$schedule_accounts = $schedule->network_accounts();
 
-        /**
-         * @var Network_Account $schedule_accounts
-         */
-        $schedule_accounts = $schedule->network_accounts();
+		$post_data = array();
 
-        $post_data = [];
+		foreach ( $schedule_accounts as $schedule_account ) {
 
-        foreach( $schedule_accounts as $schedule_account){
+			foreach ( $schedule_posts as $schedule_post ) {
 
-            foreach( $schedule_posts as $schedule_post){
+				$post_data[] = array(
+					'class_identifier' => Schedule_Tasks_Runner::class,
+					'schedule_id'      => $schedule->id(),
+					'parameters'       => array(
+						'post_id'    => $schedule_post->ID,
+						'account_id' => $schedule_account->id(),
+					),
+				);
+			}
+		}
 
-                $post_data[] = [
-                    'class_identifier' => Schedule_Tasks_Runner::class,
-                    'schedule_id' => $schedule->id(),
-                    'parameters' => [
-                        'post_id' => $schedule_post->ID,
-                        'account_id' => $schedule_account->id()
-                    ]
-                ];
-            }
-        }
-
-        return $post_data;
-    }
+		return $post_data;
+	}
 }

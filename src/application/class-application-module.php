@@ -8,31 +8,29 @@ use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
 use Psr\Container\ContainerInterface;
 
-class Application_Module implements ServiceModule, ExecutableModule
-{
+class Application_Module implements ServiceModule, ExecutableModule {
 
-    use ModuleClassNameIdTrait;
 
-    public function services(): array
-    {
-        return [
-            DB::class => static function(){
-                global $wpdb;
-                return new DB($wpdb);
-            },
-            Setup::class => static fn() => new Setup(DB::class),
-            Query::class => fn() => new Query(new \WP_Query())
-        ];
-    }
+	use ModuleClassNameIdTrait;
 
-    public function run(ContainerInterface $container): bool
-    {
+	public function services(): array {
+		return array(
+			DB::class    => static function () {
+				global $wpdb;
+				return new DB( $wpdb );
+			},
+			Setup::class => static fn() => new Setup( DB::class ),
+			Query::class => fn() => new Query( new \WP_Query() ),
+		);
+	}
 
-        register_deactivation_hook(
-            NEVAMISS_ROOT,
-            [$container->get(Setup::class), 'deactivate']
-        );
+	public function run( ContainerInterface $container ): bool {
 
-        return true;
-    }
+		register_deactivation_hook(
+			NEVAMISS_ROOT,
+			array( $container->get( Setup::class ), 'deactivate' )
+		);
+
+		return true;
+	}
 }

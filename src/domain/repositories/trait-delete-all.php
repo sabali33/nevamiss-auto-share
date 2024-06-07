@@ -6,20 +6,19 @@ namespace Nevamiss\Domain\Repositories;
 
 use Exception;
 
-trait Delete_All_Trait  {
+trait Delete_All_Trait {
 
-    /**
-     * @throws Exception
-     */
-    public function clear(): bool
-    {
-        $sql = "DELETE * FROM {$this->table_name()}";
+	/**
+	 * @throws Exception
+	 */
+	public function clear(): bool {
+		$sql = "DELETE * FROM {$this->table_name()}";
 
-        $entity = $this->wpdb->query($sql);
+		$entity = $this->wpdb->query( $sql );
 
-        if(!$entity){
-            throw new Exception( "Unable to clear records for self::ENTITY_NAME");
-        }
-        return true;
-    }
+		if ( ! $entity ) {
+			throw new Exception( 'Unable to clear records for self::ENTITY_NAME' );
+		}
+		return true;
+	}
 }

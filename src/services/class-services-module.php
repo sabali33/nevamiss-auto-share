@@ -14,51 +14,49 @@ use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Networks\Network_Clients;
 use Psr\Container\ContainerInterface;
 
-class Services_Module implements ServiceModule, ExecutableModule
-{
-    use ModuleClassNameIdTrait;
+class Services_Module implements ServiceModule, ExecutableModule {
 
-    public function run(ContainerInterface $container): bool
-    {
-        add_action('schedule_create_tasks_completed', [$container->get(Schedule_Tasks_Runner::class), 'run']);
-        add_action('schedule_task_complete', [$container->get(Schedule_Tasks_Runner::class), 'update_task']);
+	use ModuleClassNameIdTrait;
 
-        return true;
-    }
+	public function run( ContainerInterface $container ): bool {
+		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
+		add_action( 'schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
 
-    public function services(): array
-    {
-        return [
-            Date::class => fn(): Date => new Date(),
-            Logger::class => fn(): Logger => new Logger(),
-            Schedule_Post_Manager::class => fn(ContainerInterface $container): Schedule_Post_Manager => new Schedule_Post_Manager(
-                $container->get(Schedule_Repository::class),
-                $container->get(Factory::class),
-                $container->get(Task_Repository::class),
-                $container->get(Network_Post_Provider::class),
-                $container->get(Query::class)
-            ),
-            Task_Runner::class => fn(ContainerInterface $container): Task_Runner => new Task_Runner(
-                $container->get(Factory::class),
-                $container->get(Task_Repository::class),
-                $container->get(Network_Post_Provider::class),
-            ),
-            Settings::class => fn(): Settings => new Settings(),
-            WP_Cron_Service::class => fn(): WP_Cron_Service => new WP_Cron_Service(),
-            Network_Post_Provider::class => fn(ContainerInterface $container): Network_Post_Provider => new Network_Post_Provider(
-                $container->get(Settings::class),
-                $container->get(Network_Account_Repository::class),
-                $container->get(Query::class),
-                $container->get(Network_Clients::class)
-            ),
-            Schedule_Tasks_Runner::class => function(ContainerInterface $container) {
+		return true;
+	}
 
-                return new Schedule_Tasks_Runner(
-                    $container->get(Task_Repository::class),
-                    $container->get(Factory::class),
-                    $container->get(Network_Post_Provider::class),
-                );
-            }
-        ];
-    }
+	public function services(): array {
+		return array(
+			Date::class                  => fn(): Date => new Date(),
+			Logger::class                => fn(): Logger => new Logger(),
+			Schedule_Post_Manager::class => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
+				$container->get( Schedule_Repository::class ),
+				$container->get( Factory::class ),
+				$container->get( Task_Repository::class ),
+				$container->get( Network_Post_Provider::class ),
+				$container->get( Query::class )
+			),
+			Task_Runner::class           => fn( ContainerInterface $container ): Task_Runner => new Task_Runner(
+				$container->get( Factory::class ),
+				$container->get( Task_Repository::class ),
+				$container->get( Network_Post_Provider::class ),
+			),
+			Settings::class              => fn(): Settings => new Settings(),
+			WP_Cron_Service::class       => fn(): WP_Cron_Service => new WP_Cron_Service(),
+			Network_Post_Provider::class => fn( ContainerInterface $container ): Network_Post_Provider => new Network_Post_Provider(
+				$container->get( Settings::class ),
+				$container->get( Network_Account_Repository::class ),
+				$container->get( Query::class ),
+				$container->get( Network_Clients::class )
+			),
+			Schedule_Tasks_Runner::class => function ( ContainerInterface $container ) {
+
+				return new Schedule_Tasks_Runner(
+					$container->get( Task_Repository::class ),
+					$container->get( Factory::class ),
+					$container->get( Network_Post_Provider::class ),
+				);
+			},
+		);
+	}
 }

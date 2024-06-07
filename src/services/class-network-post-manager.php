@@ -11,17 +11,13 @@ use Nevamiss\Services\Contracts\Remote_Post_Interface;
 
 class Network_Post_Manager implements Remote_Post_Interface {
 
-    public function __construct(
-        private Network_Account           $account,
-        private Network_Clients_Interface $network_client,
-    )
-    {
+	public function __construct(
+		private Network_Account $account,
+		private Network_Clients_Interface $network_client,
+	) {
+	}
 
-    }
-
-    public function post(string $data): Share_Response
-    {
-        return $this->network_client->post($data, $this->account);
-    }
-
+	public function post( string $data ): Share_Response {
+		return $this->network_client->post( $data, $this->account );
+	}
 }

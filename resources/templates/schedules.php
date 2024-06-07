@@ -8,7 +8,7 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
  * @var Schedules_Page $this
  */
 
-var_dump("here");
+var_dump( 'here' );
 ?>
 
 <hr class="wp-header-end">

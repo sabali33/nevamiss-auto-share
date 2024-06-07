@@ -8,19 +8,18 @@ use Exception;
 
 trait Create_Trait {
 
-    /**
-     * @throws Exception
-     */
-    public function create(mixed $data): bool
-    {
-        $this->validate_data($data);
+	/**
+	 * @throws Exception
+	 */
+	public function create( mixed $data ): bool {
+		$this->validate_data( $data );
 
-        [$columns, $values] = $this->format_create_data($data);
+		[$columns, $values] = $this->format_create_data( $data );
 
-        $sql = $this->wpdb->prepare("INSERT INTO {$this->table_name()} ($columns) VALUES ($values)", $data);
+		$sql = $this->wpdb->prepare( "INSERT INTO {$this->table_name()} ($columns) VALUES ($values)", $data );
 
-        $result = $this->wpdb->query($sql);
+		$result = $this->wpdb->query( $sql );
 
-        return !!$result;
-    }
+		return (bool) $result;
+	}
 }

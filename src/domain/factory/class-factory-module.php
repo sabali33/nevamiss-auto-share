@@ -9,14 +9,13 @@ use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Factory\Factory;
 
 
-class Factory_Module implements ServiceModule
-{
-    use ModuleClassNameIdTrait;
+class Factory_Module implements ServiceModule {
 
-    public function services(): array
-    {
-        return [
-            Factory::class => fn() => new Factory()
-        ];
-    }
+	use ModuleClassNameIdTrait;
+
+	public function services(): array {
+		return array(
+			Factory::class => fn() => new Factory(),
+		);
+	}
 }
