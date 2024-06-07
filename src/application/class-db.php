@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace Nevamiss\Application;
 
 class DB {
-    public function __construct(private $wpdb)
-    {
-    }
+	public function __construct( private $wpdb ) {
+	}
 
-    public function setup_tables(): void
-    {
-        [
-            'schedule' => $schedule_table_name,
-            'schedule_queue' => $schedule_queue_table_name,
-            'stats'   => $stats_table_name,
-            'logs'   => $logs_table_name,
-            'task'  => $task_table_name,
-            'network_account'  => $network_account_table_name
-        ] = $this->table_names();
+	public function setup_tables(): void {
+		[
+			'schedule' => $schedule_table_name,
+			'schedule_queue' => $schedule_queue_table_name,
+			'stats'   => $stats_table_name,
+			'logs'   => $logs_table_name,
+			'task'  => $task_table_name,
+			'network_account'  => $network_account_table_name
+		] = $this->table_names();
 
-        $charset_collate = $this->wpdb->get_charset_collate();
+		$charset_collate = $this->wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE $schedule_table_name (
+		$sql = "CREATE TABLE $schedule_table_name (
             id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) UNIQUE NOT NULL,
             start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -83,41 +81,40 @@ class DB {
             PRIMARY KEY (id)
         ) $charset_collate";
 
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-        dbDelta( $sql );
-    }
+		dbDelta( $sql );
+	}
 
-    public function drop_tables(): void
-    {
-        [
-            'schedule' => $schedule_table_name,
-            'schedule_queue' => $schedule_queue_table_name,
-            'stats'   => $stats_table_name,
-            'logs'   => $logs_table_name,
-            'task'  => $task_table_name,
-            'network_account'     => $network_account_table_name
-        ] = $this->table_names();
+	public function drop_tables(): void {
+		[
+			'schedule' => $schedule_table_name,
+			'schedule_queue' => $schedule_queue_table_name,
+			'stats'   => $stats_table_name,
+			'logs'   => $logs_table_name,
+			'task'  => $task_table_name,
+			'network_account'     => $network_account_table_name
+		] = $this->table_names();
 
-        $sql = "DROP TABLE IF EXISTS `$stats_table_name`;
-            DROP TABLE IF EXISTS `$schedule_table_name`;
-            DROP TABLE IF EXISTS `$schedule_queue_table_name`;
-            DROP TABLE IF EXISTS `$logs_table_name`;
-            DROP TABLE IF EXISTS `$task_table_name`;
-            DROP TABLE IF EXISTS `$network_account_table_name`;";
+		$sql = "DROP TABLE IF EXISTS 
+            `$stats_table_name`, 
+            `$schedule_table_name`, 
+            `$schedule_queue_table_name`,
+            `$logs_table_name`,
+            `$task_table_name`,
+            `$network_account_table_name`";
 
-        $this->wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-    }
+		$this->wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	}
 
-    private function table_names(): array
-    {
-        return [
-            'schedule'            => "{$this->wpdb->prefix}nevass_schedules",
-            'schedule_queue'      => "{$this->wpdb->prefix}nevass_schedule_queue",
-            'stats'               => "{$this->wpdb->prefix}nevass_stats",
-            'task'                => "{$this->wpdb->prefix}nevass_tasks",
-            'logs'                => "{$this->wpdb->prefix}nevass_logs",
-            'network_account'     => "{$this->wpdb->prefix}nevass_network_accounts"
-        ];
-    }
+	private function table_names(): array {
+		return array(
+			'schedule'        => "{$this->wpdb->prefix}nevass_schedules",
+			'schedule_queue'  => "{$this->wpdb->prefix}nevass_schedule_queue",
+			'stats'           => "{$this->wpdb->prefix}nevass_stats",
+			'task'            => "{$this->wpdb->prefix}nevass_tasks",
+			'logs'            => "{$this->wpdb->prefix}nevass_logs",
+			'network_account' => "{$this->wpdb->prefix}nevass_network_accounts",
+		);
+	}
 }

@@ -11,36 +11,34 @@ use Nevamiss\Domain\Contracts\Get_One_Interface;
 use Nevamiss\Domain\Contracts\Update_Interface;
 use Nevamiss\Domain\Entities\Schedule;
 
-class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_All_Interface, Update_Interface, Delete_Interface
-{
-    use Repository_Common_Trait;
-    use Create_Trait;
-    use Update_Trait;
-    use Get_One_Trait;
-    use Delete_Trait;
-    use Get_All_Trait;
+class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_All_Interface, Update_Interface, Delete_Interface {
 
-    private const ENTITY_NAME = 'Schedule';
-    private const ENTITY_CLASS = Schedule::class;
-    private const ALLOW_TABLE_COLUMNS = [
-        'id',
-        'name',
-        'start_date',
-        'repeat_frequency',
-        'daily_times',
-        'weekly_times',
-        'monthly_times',
-        'query',
-        'accounts'
-    ];
+	use Repository_Common_Trait;
+	use Create_Trait;
+	use Update_Trait;
+	use Get_One_Trait;
+	use Delete_Trait;
+	use Get_All_Trait;
 
-    public function get_total(): int
-    {
-        return 2;
-    }
+	private const ENTITY_NAME         = 'Schedule';
+	private const ENTITY_CLASS        = Schedule::class;
+	private const ALLOW_TABLE_COLUMNS = array(
+		'id',
+		'name',
+		'start_date',
+		'repeat_frequency',
+		'daily_times',
+		'weekly_times',
+		'monthly_times',
+		'query',
+		'accounts',
+	);
 
-    private function table_name(): string
-    {
-        return "{$this->wpdb->prefix}_nevamiss_schedules";
-    }
+	public function get_total(): int {
+		return 2;
+	}
+
+	private function table_name(): string {
+		return "{$this->wpdb->prefix}_nevamiss_schedules";
+	}
 }

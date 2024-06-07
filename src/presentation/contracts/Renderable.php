@@ -6,5 +6,5 @@ namespace Nevamiss\Presentation\Contracts;
 
 interface Renderable {
 
-    public function render();
+	public function render();
 }

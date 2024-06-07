@@ -13,82 +13,80 @@ use Nevamiss\Services\Settings;
 use Nevamiss\Services\Network_Post_Provider;
 use Psr\Container\ContainerInterface;
 
-class Presentation_Module implements ServiceModule, ExecutableModule
-{
-    use ModuleClassNameIdTrait;
+class Presentation_Module implements ServiceModule, ExecutableModule {
 
-    public function services(): array
-    {
-        return [
+	use ModuleClassNameIdTrait;
 
-            Schedules_Page::class => static function(ContainerInterface $container) {
-                
-                return  new Schedules_Page(
-                    $container->get(Schedules_Table_List::class),
-                    'Schedules',
-                    'admin.php?page=schedules',
-                    'schedules',
-                    9
-                );
-            },
+	public function services(): array {
+		return array(
 
-            Settings_Page::class => static function(ContainerInterface $container ){
-                return new Settings_Page(
-                    $container->get(Settings::class),
-                    'Settings',
-                    'admin.php?page=settings',
-                    'settings',
-                    10
-                );
-            },
-            Stats_Page::class => static function(ContainerInterface $container ){
-                return new Stats_Page(
-                    $container->get(Posts_Stats_Repository::class),
-                    'Stats',
-                    'admin.php?page=stats',
-                    'stats',
-                    10
-                );
-            },
-            Schedule_View_Page::class => function(ContainerInterface $container): Schedule_View_Page {
+			Schedules_Page::class       => static function ( ContainerInterface $container ) {
 
-                return new Schedule_View_Page(
-                    $container->get(Schedule_Repository::class),
-                    'Schedule',
-                    'admin.php?page=schedule',
-                    'schedule',
-                    10
-                );
-            },
-            Post_Meta::class => function(ContainerInterface $container) {
-                return new Post_Meta(
-                    $container->get(Factory::class),
-                    $container->get(Network_Post_Provider::class),
-                );
-            },
-            Schedules_Table_List::class => fn(ContainerInterface $container) => new Schedules_Table_List(
-                $container->get(Schedule_Repository::class)
-            ),
-        ];
-    }
+				return new Schedules_Page(
+					$container->get( Schedules_Table_List::class ),
+					'Schedules',
+					'admin.php?page=schedules',
+					'schedules',
+					9
+				);
+			},
 
-    public function run(ContainerInterface $container): bool
-    {
-        add_action(
-            'admin_menu',
-            static function () use ($container){
-                $container->get(Schedules_Page::class)->register();
-                $container->get(Settings_Page::class)->register();
-                $container->get(Schedule_View_Page::class)->register();
-                $container->get(Stats_Page::class)->register();
-            }
-        );
+			Settings_Page::class        => static function ( ContainerInterface $container ) {
+				return new Settings_Page(
+					$container->get( Settings::class ),
+					'Settings',
+					'admin.php?page=settings',
+					'settings',
+					10
+				);
+			},
+			Stats_Page::class           => static function ( ContainerInterface $container ) {
+				return new Stats_Page(
+					$container->get( Posts_Stats_Repository::class ),
+					'Stats',
+					'admin.php?page=stats',
+					'stats',
+					10
+				);
+			},
+			Schedule_View_Page::class   => function ( ContainerInterface $container ): Schedule_View_Page {
 
-        add_action(
-            'add_meta_boxes',
-            [$container->get(Post_Meta::class), 'meta_boxes']
-        );
+				return new Schedule_View_Page(
+					$container->get( Schedule_Repository::class ),
+					'Schedule',
+					'admin.php?page=schedule',
+					'schedule',
+					10
+				);
+			},
+			Post_Meta::class            => function ( ContainerInterface $container ) {
+				return new Post_Meta(
+					$container->get( Factory::class ),
+					$container->get( Network_Post_Provider::class ),
+				);
+			},
+			Schedules_Table_List::class => fn( ContainerInterface $container ) => new Schedules_Table_List(
+				$container->get( Schedule_Repository::class )
+			),
+		);
+	}
 
-        return true;
-    }
+	public function run( ContainerInterface $container ): bool {
+		add_action(
+			'admin_menu',
+			static function () use ( $container ) {
+				$container->get( Schedules_Page::class )->register();
+				$container->get( Settings_Page::class )->register();
+				$container->get( Schedule_View_Page::class )->register();
+				$container->get( Stats_Page::class )->register();
+			}
+		);
+
+		add_action(
+			'add_meta_boxes',
+			array( $container->get( Post_Meta::class ), 'meta_boxes' )
+		);
+
+		return true;
+	}
 }

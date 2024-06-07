@@ -4,62 +4,58 @@ namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Presentation\Contracts\Renderable;
 
-abstract class Page implements Renderable
-{
-    protected string $title;
-    protected int $priority;
-    protected mixed $data;
-    protected string $slug;
-    protected string $filename;
-    private bool $is_sub_page = false;
+abstract class Page implements Renderable {
 
-    public function __construct(
-        mixed $data,
-        string $title,
-        string $slug,
-        string $filename,
-        int $priority
-    )
-    {
-        $this->title = $title;
-        $this->priority = $priority;
-        $this->slug = $slug;
-        $this->$filename = $filename;
-        $this->data = $data;
-    }
+	protected string $title;
+	protected int $priority;
+	protected mixed $data;
+	protected string $slug;
+	protected string $filename;
+	private bool $is_sub_page = false;
 
-    final public function render(): bool|string
-    {
-        ob_start();
+	public function __construct(
+		mixed $data,
+		string $title,
+		string $slug,
+		string $filename,
+		int $priority
+	) {
+		$this->title     = $title;
+		$this->priority  = $priority;
+		$this->slug      = $slug;
+		$this->$filename = $filename;
+		$this->data      = $data;
+	}
 
-        include NEVAMISS_PATH . 'resources/' . static::TEMPLE_PATH .'.php';
+	final public function render(): bool|string {
+		ob_start();
 
-        return ob_get_clean();
-    }
+		include NEVAMISS_PATH . 'resources/' . static::TEMPLE_PATH . '.php';
 
-    final public function register(): void
-    {
-        if(!$this->is_sub_page){
+		return ob_get_clean();
+	}
 
-            add_menu_page( 
-                $this->title, 
-                $this->title, 
-                'manage_options', 
-                $this->slug, 
-                array($this, 'render' ) 
-            );
+	final public function register(): void {
+		if ( ! $this->is_sub_page ) {
 
-            return;
-        }
+			add_menu_page(
+				$this->title,
+				$this->title,
+				'manage_options',
+				$this->slug,
+				array( $this, 'render' )
+			);
 
-        add_submenu_page( 
-            'auto-share-content', 
-            $this->title, 
-            $this->title, 
-            'manage_options', 
-            $this->slug, 
-            array($this, 'render' ) 
-        );
-    }
+			return;
+		}
 
+		add_submenu_page(
+			'auto-share-content',
+			$this->title,
+			$this->title,
+			'manage_options',
+			$this->slug,
+			array( $this, 'render' )
+		);
+	}
 }
