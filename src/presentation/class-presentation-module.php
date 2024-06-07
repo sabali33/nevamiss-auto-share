@@ -9,7 +9,7 @@ use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
-use Nevamiss\Service\Settings;
+use Nevamiss\Services\Settings;
 use Nevamiss\Services\Network_Post_Provider;
 use Psr\Container\ContainerInterface;
 
@@ -24,7 +24,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule
             Schedules_Page::class => static function(ContainerInterface $container) {
                 
                 return  new Schedules_Page(
-                    $container->get(Schedule_Repository::class),
+                    $container->get(Schedules_Table_List::class),
                     'Schedules',
                     'admin.php?page=schedules',
                     'schedules',
@@ -53,7 +53,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule
             Schedule_View_Page::class => function(ContainerInterface $container): Schedule_View_Page {
 
                 return new Schedule_View_Page(
-                    $container->get(Posts_Stats_Repository::class),
+                    $container->get(Schedule_Repository::class),
                     'Schedule',
                     'admin.php?page=schedule',
                     'schedule',
@@ -66,6 +66,9 @@ class Presentation_Module implements ServiceModule, ExecutableModule
                     $container->get(Network_Post_Provider::class),
                 );
             },
+            Schedules_Table_List::class => fn(ContainerInterface $container) => new Schedules_Table_List(
+                $container->get(Schedule_Repository::class)
+            ),
         ];
     }
 
