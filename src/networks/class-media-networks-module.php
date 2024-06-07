@@ -17,7 +17,10 @@ class Media_Networks_Module implements ServiceModule
     public function services(): array
     {
         return [
-            Media_Network_Collection::class => fn() => Media_Networks::cases(),
+            Facebook_Client::class => fn() => new Facebook_Client(),
+            X_Client::class => fn() => new X_Client(),
+            Linkedin_Client::class => fn() => new Linkedin_Client(),
+            Instagram_Client::class => fn() => new Instagram_Client(),
             Network_Clients::class => function(ContainerInterface $container){
                 return [
                     'facebook' => $container->get(Facebook_Client::class),
@@ -28,4 +31,5 @@ class Media_Networks_Module implements ServiceModule
             }
         ];
     }
+
 }
