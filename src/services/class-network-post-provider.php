@@ -10,7 +10,6 @@ use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
-use Nevamiss\Service\Settings;
 
 class Network_Post_Provider {
 
