@@ -2,22 +2,23 @@
 
 namespace Nevamiss\Presentation\Pages;
 
-use Nevamiss\Domain\Entities\Schedule;
-use Nevamiss\Domain\Repositories\Schedule_Repository;
-
-
 class Schedules_Page extends Page
 {
     public const TEMPLE_PATH = 'templates/schedules';
+    /**
+     * @var true
+     */
+    private bool $is_sub_page;
 
     public function __construct(
-        Schedule_Repository $schedule_repository,
+        public Schedules_Table_List $table_list,
         string $title, 
         string $slug, 
         string $filename, 
         int $priority 
     ){
-        parent::__construct($schedule_repository, $title, $slug, $filename, $priority);
+        parent::__construct($table_list, $title, $slug, $filename, $priority);
+        $this->is_sub_page = true;
     }
 
 }

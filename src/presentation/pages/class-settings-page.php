@@ -21,6 +21,7 @@ class Settings_Page extends Page
     )
     {
         parent::__construct($settings, $title, $slug, $filename, $priority);
+        $this->is_sub_page = true;
     }
     
 }
