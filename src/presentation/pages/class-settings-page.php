@@ -2,11 +2,15 @@
 
 namespace Nevamiss\Presentation\Pages;
 
-use Nevamiss\Service\Settings;
+use Nevamiss\Services\Settings;
 
 class Settings_Page extends Page
 {
     public const TEMPLE_PATH = 'templates/settings';
+    /**
+     * @var true
+     */
+    private bool $is_sub_page;
 
     public function __construct(
         Settings $settings,

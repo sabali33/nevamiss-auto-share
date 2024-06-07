@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Service;
+namespace Nevamiss\Services;
 
 class Settings {
 

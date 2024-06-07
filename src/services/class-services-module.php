@@ -1,28 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Nevamiss\Services\Contracts;
+namespace Nevamiss\Services;
 
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
-use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Networks\Network_Clients;
-use Nevamiss\Service\Settings;
-use Nevamiss\Services\Date;
-use Nevamiss\Services\Logger;
-use Nevamiss\Services\Network_Post_Manager;
-use Nevamiss\Services\Schedule_Post_Manager;
-use Nevamiss\Services\Network_Post_Provider;
-use Nevamiss\Services\Schedule_Tasks_Runner;
-use Nevamiss\Services\Task_Runner;
-use Nevamiss\Services\WP_Cron_Service;
 use Psr\Container\ContainerInterface;
 
 class Services_Module implements ServiceModule, ExecutableModule
@@ -33,6 +22,8 @@ class Services_Module implements ServiceModule, ExecutableModule
     {
         add_action('schedule_create_tasks_completed', [$container->get(Schedule_Tasks_Runner::class), 'run']);
         add_action('schedule_task_complete', [$container->get(Schedule_Tasks_Runner::class), 'update_task']);
+
+        return true;
     }
 
     public function services(): array
