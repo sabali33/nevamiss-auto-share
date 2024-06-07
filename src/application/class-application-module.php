@@ -20,9 +20,7 @@ class Application_Module implements ServiceModule, ExecutableModule
                 global $wpdb;
                 return new DB($wpdb);
             },
-            Plugin::class => static function(ContainerInterface $container) {
-                return new Plugin($container->get(DB::class));
-            },
+            Setup::class => static fn() => new Setup(DB::class),
             Query::class => fn() => new Query(new \WP_Query())
         ];
     }
@@ -32,7 +30,7 @@ class Application_Module implements ServiceModule, ExecutableModule
 
         register_deactivation_hook(
             NEVAMISS_ROOT,
-            [$container->get(Plugin::class), 'deactivate']
+            [$container->get(Setup::class), 'deactivate']
         );
 
         return true;
