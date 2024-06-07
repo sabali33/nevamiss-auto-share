@@ -22,12 +22,11 @@ class DB {
 
         $charset_collate = $this->wpdb->get_charset_collate();
 
-        $sql = <<<SQL
-            CREATE TABLE IF NOT EXISTS `$schedule_table_name` (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+        $sql = "CREATE TABLE $schedule_table_name (
+            id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) UNIQUE NOT NULL,
             start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            repeat_frequency ENUM NOT NULL,
+            repeat_frequency ENUM('none', 'daily', 'weekly', 'monthly') NOT NULL DEFAULT 'none',
             social_media_tags VARCHAR(255),
             daily_times JSON,
             weekly_times JSON,
@@ -35,57 +34,61 @@ class DB {
             query JSON,
             accounts JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS `$schedule_queue_table_name` (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;
+        CREATE TABLE $schedule_queue_table_name (
+            id INT NOT NULL AUTO_INCREMENT,
             schedule_id INT,
             shared_posts_ids JSON,
             all_posts_ids JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        ); 
-        CREATE TABLE IF NOT EXISTS `$stats_table_name` (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;
+        CREATE TABLE $stats_table_name (
+            id INT NOT NULL AUTO_INCREMENT,
             schedule_id INT NOT NULL,
-            posted_on TIMESTAMP NOT NULL CURRENT_TIMESTAMP,
+            posted_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
             posts_ids JSON NOT NULL,
-            cycles_count INT 0 CHECK,
-            remote_posted ENUM(0, 1,),
+            cycles_count INT DEFAULT 0 CHECK (cycles_count >= 0),
+            remote_posted ENUM('0', '1') DEFAULT '0',
             status JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        );
-        CREATE TABLE IF NOT EXISTS `$task_table_name` (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            PRIMARY KEY (id)
+        ) $charset_collate;
+        CREATE TABLE $task_table_name (
+            id INT NOT NULL AUTO_INCREMENT,
             class_identifier VARCHAR(255) NOT NULL,
             parameters JSON,
             schedule_id INT NULL,
-            status ENUM('pending', 'running', 'succeeded', 'failed'),
+            status ENUM('pending', 'running', 'succeeded', 'failed') DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS `$logs_table_name` (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;
+        CREATE TABLE $logs_table_name (
+            id INT NOT NULL AUTO_INCREMENT,
             schedule_id INT,
             messages JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        );
-            CREATE TABLE IF NOT EXISTS `$network_account_table_name` (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            PRIMARY KEY (id)
+        ) $charset_collate;
+        CREATE TABLE $network_account_table_name (
+            id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(50),
             network VARCHAR(50),
             remote_account_id INT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        ) $charset_collate;
-
-        SQL;
+            PRIMARY KEY (id)
+        ) $charset_collate";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         dbDelta( $sql );
     }
 
-    public function drop_tables()
+    public function drop_tables(): void
     {
         [
             'schedule' => $schedule_table_name,
@@ -96,16 +99,12 @@ class DB {
             'network_account'     => $network_account_table_name
         ] = $this->table_names();
 
-        $sql = <<< DROPSQL
-        
-            DROP TABLE IF EXISTS $stats_table_name;
-            DROP TABLE IF EXISTS $schedule_table_name;
-            DROP TABLE IF EXISTS $schedule_queue_table_name;
-            DROP TABLE IF EXISTS $logs_table_name;
-            DROP TABLE IF EXISTS $task_table_name;
-            DROP TABLE IF EXISTS $network_account_table_name;
-
-        DROPSQL;
+        $sql = "DROP TABLE IF EXISTS `$stats_table_name`;
+            DROP TABLE IF EXISTS `$schedule_table_name`;
+            DROP TABLE IF EXISTS `$schedule_queue_table_name`;
+            DROP TABLE IF EXISTS `$logs_table_name`;
+            DROP TABLE IF EXISTS `$task_table_name`;
+            DROP TABLE IF EXISTS `$network_account_table_name`;";
 
         $this->wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
     }
