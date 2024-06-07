@@ -34,6 +34,11 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
         'accounts'
     ];
 
+    public function get_total(): int
+    {
+        return 2;
+    }
+
     private function table_name(): string
     {
         return "{$this->wpdb->prefix}_nevamiss_schedules";
