@@ -10,11 +10,16 @@ trait Get_All_Trait {
 	 */
 	public function get_all( array $options = array() ): array|object|null {
 		[$where_clause, $data] = $this->where_clause( $options );
+		$sql                   = "SELECT * FROM {$this->table_name()}";
 
-		$sql = $this->wpdb->prepare(
-			"SELECT * FROM {$this->table_name()} WHERE $where_clause",
-			...$data
-		);
+		if ( $where_clause ) {
+			$sql .= 'WHERE ' . $where_clause;
+            $sql = $this->wpdb->prepare(
+                $sql,
+                ...$data
+            );
+		}
+
 		return $this->wpdb->get_results( $sql, ARRAY_A );
 	}
 
