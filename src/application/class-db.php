@@ -109,12 +109,12 @@ class DB {
 
 	private function table_names(): array {
 		return array(
-			'schedule'        => "{$this->wpdb->prefix}nevass_schedules",
-			'schedule_queue'  => "{$this->wpdb->prefix}nevass_schedule_queue",
-			'stats'           => "{$this->wpdb->prefix}nevass_stats",
-			'task'            => "{$this->wpdb->prefix}nevass_tasks",
-			'logs'            => "{$this->wpdb->prefix}nevass_logs",
-			'network_account' => "{$this->wpdb->prefix}nevass_network_accounts",
+			'schedule'        => "{$this->wpdb->prefix}nevamiss_schedules",
+			'schedule_queue'  => "{$this->wpdb->prefix}nevamiss_schedule_queue",
+			'stats'           => "{$this->wpdb->prefix}nevamiss_stats",
+			'task'            => "{$this->wpdb->prefix}nevamiss_tasks",
+			'logs'            => "{$this->wpdb->prefix}nevamiss_logs",
+			'network_account' => "{$this->wpdb->prefix}nevamiss_network_accounts",
 		);
 	}
 }
