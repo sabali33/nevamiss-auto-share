@@ -36,7 +36,7 @@
     },
     "scripts": {
         "cs": "./vendor/bin/phpcs ./src --standard=WordPress,PHPCompatibility",
-        "cbf": "./vendor/bin/phpcbf ./src --standard=WordPress,PHPCompatibility",
+        "cbf": "./vendor/bin/phpcbf ./src --standard=WordPress",
         "qa": "./vendor/bin/psalm"
     }
 }
