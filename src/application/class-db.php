@@ -22,15 +22,15 @@ class DB {
 
 		$sql = "CREATE TABLE $schedule_table_name (
             id INT NOT NULL AUTO_INCREMENT,
-            name VARCHAR(255) UNIQUE NOT NULL,
+            schedule_name VARCHAR(255) UNIQUE NOT NULL,
             start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             repeat_frequency ENUM('none', 'daily', 'weekly', 'monthly') NOT NULL DEFAULT 'none',
             social_media_tags VARCHAR(255),
             daily_times JSON,
             weekly_times JSON,
             monthly_times JSON,
-            query JSON,
-            accounts JSON,
+            query_args JSON,
+            network_accounts JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
