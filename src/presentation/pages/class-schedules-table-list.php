@@ -16,6 +16,12 @@ class Schedules_Table_List extends \WP_List_Table {
 				'screen'   => $args['screen'] ?? null,
 			)
 		);
+		$this->_column_headers = array(
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns(),
+			$this->get_default_primary_column_name(),
+		);
 	}
 	public function prepare_items(): void {
 		$search             = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
@@ -40,7 +46,7 @@ class Schedules_Table_List extends \WP_List_Table {
 			$args['order'] = $_REQUEST['order'];
 		}
 
-		$this->items = $this->schedule_repository->get_all( $args );
+		$this->items = $this->schedule_repository->get_all( array() );
 
 		$this->set_pagination_args(
 			array(
@@ -63,22 +69,22 @@ class Schedules_Table_List extends \WP_List_Table {
 	public function get_columns(): array {
 		return array(
 			'cb'               => '<input type="checkbox" />',
-			'name'             => __( 'Name', 'nevamiss' ),
+			'schedule_name'    => __( 'Name', 'nevamiss' ),
 			'start_time'       => __( 'Start Time', 'nevamiss' ),
 			'repeat_frequency' => __( 'Repeat Frequency', 'nevamiss' ),
-			'query'            => __( 'Query Args', 'nevamiss' ),
-			'accounts'         => __( 'Accounts', 'nevamiss' ),
-			'weekly_times'     => __( 'Weekly_times', 'nevamiss' ),
-			'monthly_times'    => __( 'monthly_times', 'nevamiss' ),
-			'daily_times'      => __( 'Daily times', 'nevamiss' ),
+			'query_args'       => __( 'Query Args', 'nevamiss' ),
+			'network_accounts' => __( 'Network Accounts', 'nevamiss' ),
+			'weekly_times'     => __( 'Weekly Times', 'nevamiss' ),
+			'monthly_times'    => __( 'monthly Times', 'nevamiss' ),
+			'daily_times'      => __( 'Daily Times', 'nevamiss' ),
 			'created_at'       => __( 'Created At', 'nevamiss' ),
 		);
 	}
 
 	protected function get_sortable_columns(): array {
 		return array(
-			'name'       => array( 'Name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
-			'created_at' => array( 'Created Date', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
+			'schedule_name' => array( 'Name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
+			'created_at'    => array( 'Created Date', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
 		);
 	}
 
@@ -88,6 +94,15 @@ class Schedules_Table_List extends \WP_List_Table {
 		}
 	}
 	protected function get_default_primary_column_name(): string {
-		return 'name';
+		return 'schedule_name';
+	}
+
+	public function column_schedule_name( array $item ) {
+		echo $item['schedule_name'];
+		echo $this->row_actions(
+			array(
+				'<a href="#">edit</a>',
+			)
+		);
 	}
 }
