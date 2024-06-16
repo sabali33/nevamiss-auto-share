@@ -9,9 +9,9 @@ use Nevamiss\Presentation\Utils;
 
 class Input implements Renderable {
 
-    public function render( $attributes = array() ): string {
+	public function render( $attributes = array() ): string {
 
-		$attributes = wp_parse_args(
+		$attributes       = wp_parse_args(
 			$attributes,
 			array(
 				'type'  => 'text',
@@ -19,22 +19,22 @@ class Input implements Renderable {
 				'name'  => 'text',
 			)
 		);
-        $input_attributes = [
-            'type' => $attributes['type'],
-            'class' => $attributes['class'],
-            'name' => $attributes['name'],
-            'value' => $attributes['value']?? '',
-        ];
+		$input_attributes = array(
+			'type'  => $attributes['type'],
+			'class' => $attributes['class'],
+			'name'  => $attributes['name'],
+			'value' => $attributes['value'] ?? '',
+		);
 
-        if($attributes['type'] === 'number'){
-            $input_attributes['min'] = $attributes['min'];
-            $input_attributes['max'] = $attributes['max'];
-            $input_attributes['step'] = $attributes['step'] ?? 1;
-        }
+		if ( $attributes['type'] === 'number' ) {
+			$input_attributes['min']  = $attributes['min'];
+			$input_attributes['max']  = $attributes['max'];
+			$input_attributes['step'] = $attributes['step'] ?? 1;
+		}
 
-        if(isset($attributes['custom_inputs'])){
-            $input_attributes = array_merge($input_attributes, $attributes['custom_inputs']);
-        }
+		if ( isset( $attributes['custom_inputs'] ) ) {
+			$input_attributes = array_merge( $input_attributes, $attributes['custom_inputs'] );
+		}
 		$attributes_str = Utils::build_input_attr( $input_attributes );
 
 		$label = $attributes['label'] ?? '';
