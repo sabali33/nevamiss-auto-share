@@ -15,10 +15,13 @@ trait Repository_Common_Trait {
 	 */
 	public function validate_data( array $data ): array {
 		$validated_data = array();
+
 		foreach ( $data as $key => $value ) {
+
 			if ( ! in_array( $key, self::ALLOW_TABLE_COLUMNS ) ) {
-				throw new \Exception( 'Invalid column' );
+				continue;
 			}
+
 			$validated_data[ $key ] = $value;
 		}
 		return $validated_data;
@@ -26,7 +29,7 @@ trait Repository_Common_Trait {
 
 	public function format_create_data( array $data ): array {
 		$columns = implode( ',', array_keys( $data ) );
-		$values  = implode( ',', array_values( $data ) );
+		$values  = array_values( $data );
 
 		return array( $columns, $values );
 	}
