@@ -13,11 +13,11 @@ trait Get_All_Trait {
 		$sql                   = "SELECT * FROM {$this->table_name()}";
 
 		if ( $where_clause ) {
-			$sql .= 'WHERE ' . $where_clause;
-            $sql = $this->wpdb->prepare(
-                $sql,
-                ...$data
-            );
+			$sql .= ' WHERE ' . $where_clause;
+			$sql  = $this->wpdb->prepare(
+				$sql,
+				...$data
+			);
 		}
 
 		return $this->wpdb->get_results( $sql, ARRAY_A );
@@ -28,6 +28,9 @@ trait Get_All_Trait {
 		$data         = array();
 
 		foreach ( $options as $key => $option ) {
+			if ( ! $option ) {
+				continue;
+			}
 			$where_string .= " $key= %s";
 			$data[]        = $option;
 		}
