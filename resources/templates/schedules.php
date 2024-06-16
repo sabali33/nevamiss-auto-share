@@ -8,19 +8,30 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
  * @var Schedules_Page $this
  */
 
-var_dump( 'here' );
+
 ?>
+<div class="wrap">
+    <p>
+        <h1 class="wp-heading-inline">
+            <?php echo esc_html($this->title); ?>
+        </h1>
+        <?php $this->new_link(); ?>
+    </p>
 
-<hr class="wp-header-end">
 
-<?php $this->table_list->views(); ?>
+    <hr class="wp-header-end">
+    <?php $this->table_list->prepare_items(); ?>
 
-<form method="get">
+    <?php $this->table_list->views(); ?>
 
-<?php $this->table_list->search_box( __( 'Search Schedules' ), 'user' ); ?>
+    <form method="get">
 
-<?php $this->table_list->display(); ?>
+        <?php $this->table_list->search_box( __( 'Search Schedules' ), 'user' ); ?>
 
-</form>
+        <?php $this->table_list->display(); ?>
 
-<div class="clear"></div>
+    </form>
+
+    <div class="clear"></div>
+</div>
+
