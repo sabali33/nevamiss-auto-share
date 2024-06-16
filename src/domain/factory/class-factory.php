@@ -20,15 +20,15 @@ class Factory {
 		return new $class_name( ...$args );
 	}
 
-    /**
-     * @throws Not_Found_Exception
-     */
-    public function component(
-        string $class_name,
-        array $attributes,
-        array $inner_components=[]
-    ): Component {
-        $renderable = new $class_name();
-		return $this->new( Component::class, $renderable, $attributes, $inner_components  );
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	public function component(
+		string $class_name,
+		array $attributes,
+		array $inner_components = array()
+	): Component {
+		$renderable = new $class_name();
+		return $this->new( Component::class, $renderable, $attributes, $inner_components );
 	}
 }
