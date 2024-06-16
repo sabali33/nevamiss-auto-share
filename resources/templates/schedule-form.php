@@ -13,6 +13,8 @@ use Nevamiss\Presentation\Pages\Schedule_Form;
     <?php echo esc_html($this->title); ?>
 </h1>
 
+<?php $this->maybe_save_form(); ?>
+
 <div class="wrap">
     <form method="post">
         <?php wp_nonce_field('nevamiss_create_schedule'); ?>
