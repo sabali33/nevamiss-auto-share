@@ -11,28 +11,30 @@ abstract class Page implements Renderable {
 	protected mixed $data;
 	protected string $slug;
 	protected string $filename;
-	private bool $is_sub_page = false;
+	protected string $page_url;
+	protected bool $is_sub_page = false;
+	private ?string $parent;
 
 	public function __construct(
 		mixed $data,
 		string $title,
 		string $slug,
-		string $filename,
-		int $priority
+		int $priority,
+		?string $parent = null,
+		?bool $is_sub_page = false,
 	) {
-		$this->title     = $title;
-		$this->priority  = $priority;
-		$this->slug      = $slug;
-		$this->$filename = $filename;
-		$this->data      = $data;
+		$this->title       = $title;
+		$this->priority    = $priority;
+		$this->slug        = $slug;
+		$this->parent      = $parent;
+		$this->is_sub_page = $is_sub_page;
+		$this->data        = $data;
+		$this->page_url    = admin_url( "page=$slug" );
 	}
 
-	final public function render(): bool|string {
-		ob_start();
+	final public function render(): void {
 
 		include NEVAMISS_PATH . 'resources/' . static::TEMPLE_PATH . '.php';
-
-		return ob_get_clean();
 	}
 
 	final public function register(): void {
@@ -50,12 +52,16 @@ abstract class Page implements Renderable {
 		}
 
 		add_submenu_page(
-			'auto-share-content',
+			$this->parent,
 			$this->title,
 			$this->title,
 			'manage_options',
 			$this->slug,
 			array( $this, 'render' )
 		);
+	}
+
+	public function page_url(): string {
+		return $this->page_url;
 	}
 }
