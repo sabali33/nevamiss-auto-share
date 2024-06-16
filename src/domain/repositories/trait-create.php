@@ -11,15 +11,21 @@ trait Create_Trait {
 	/**
 	 * @throws Exception
 	 */
-	public function create( mixed $data ): bool {
-		$this->validate_data( $data );
+	public function create( mixed $data ): void {
+
+		$model_slug =  self::ENTITY_SLUG;
 
 		[$columns, $values] = $this->format_create_data( $data );
+		$placeholder        = array_pad( array(), count( $values ), '%s' );
+		$placeholder        = join( ',', $placeholder );
 
-		$sql = $this->wpdb->prepare( "INSERT INTO {$this->table_name()} ($columns) VALUES ($values)", $data );
+		$sql = $this->wpdb->prepare( "INSERT INTO {$this->table_name()} ($columns) VALUES ($placeholder)", ...$values );
 
-		$result = $this->wpdb->query( $sql );
+		$results = $this->wpdb->query( $sql );
 
-		return (bool) $result;
+		if(!$results){
+			return;
+		}
+		do_action( "nevamiss_created_$model_slug", $this->wpdb->insert_id );
 	}
 }
