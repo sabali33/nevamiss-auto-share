@@ -19,11 +19,13 @@ class TextArea implements Renderable {
 			)
 		);
 
-        $input_attributes = [
-            'cols' => $attributes['cols'],
-            'class' => $attributes['class'],
-            'rows' => $attributes['rows'],
-        ];
+		$input_attributes = array(
+			'cols'  => $attributes['cols'],
+			'class' => $attributes['class'],
+			'rows'  => $attributes['rows'],
+			'id'    => $attributes['id'] ?? '',
+			'name'  => $attributes['name'] ?? '',
+		);
 
 		$attributes_str = Utils::build_input_attr( $input_attributes );
 
