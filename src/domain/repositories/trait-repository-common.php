@@ -13,7 +13,7 @@ trait Repository_Common_Trait {
 	/**
 	 * @throws \Exception
 	 */
-	public function validate_data( array $data ): array {
+	public function allowed_data( array $data ): array {
 		$validated_data = array();
 
 		foreach ( $data as $key => $value ) {
