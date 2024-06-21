@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Nevamiss\Presentation;
 
 class Utils {
-	public static function build_input_attr( array $attributes ) {
+	public static function build_input_attr( array $attributes ): string
+	{
 		$output = '';
 		foreach ( $attributes as $attr => $value ) {
 			if ( ! $value ) {
