@@ -15,11 +15,11 @@ use Nevamiss\Presentation\Pages\Schedule_Form;
 
 <?php $this->maybe_save_form(); ?>
 
-<div class="wrap">
+<div class="wrap schedule-form">
     <form method="post">
         <?php wp_nonce_field('nevamiss_create_schedule'); ?>
         <?php foreach ($this->fields() as $field): ?>
-            <p> <?php $this->render_field($field); ?> </p>
+            <?php $this->render_field($field); ?>
         <?php endforeach; ?>
         <input type="submit" value="<?php esc_attr_e('Create', 'nevamiss'); ?>">
     </form>
