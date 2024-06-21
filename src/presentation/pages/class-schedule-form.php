@@ -13,6 +13,7 @@ use Nevamiss\Presentation\Components\Input_Fields\Select_Field;
 use Nevamiss\Presentation\Components\Input_Fields\Select_Group_Field;
 use Nevamiss\Presentation\Components\Input_Fields\TextArea;
 use Nevamiss\Presentation\Utils;
+use Nevamiss\Services\Form_Validator;
 
 class Schedule_Form extends Page {
 
@@ -22,6 +23,7 @@ class Schedule_Form extends Page {
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
 		private Network_Account_Repository $account_repository,
+		private Form_Validator $validator,
 		private Factory $factory
 	) {
 		$title = isset( $_REQUEST['schedule_id'] ) ?
@@ -47,27 +49,32 @@ class Schedule_Form extends Page {
 	 */
 	public function render_field( array $field ): void {
 
-		switch ( $field['type'] ) {
-			case 'select':
-				$field_class = Select_Field::class;
-				break;
-			case 'textarea':
-				$field_class = TextArea::class;
-				break;
-			case 'select-group':
-				$field_class = Select_Group_Field::class;
-				break;
-			default:
-				$field_class = Input::class;
-				break;
-		}
+		$field_class = match ($field['type']) {
+			'select' => Select_Field::class,
+			'textarea' => TextArea::class,
+			'select-group' => Select_Group_Field::class,
+			default => Input::class,
+		};
 
 		echo $this->factory()->component( $field_class, $field )->render();
 
 		if ( isset( $field['sub_fields'] ) ) {
-			foreach ( $field['sub_fields'] as $sub_field ) {
+			foreach ( $field['sub_fields'] as $key => $sub_field ) {
 				if ( ! empty( $sub_field ) ) {
-					$this->render_field( $sub_field );
+					$selected_class = $field['value'] === $key ? ' active' : '';
+
+					if(str_contains($key, '!')) {
+
+						if("!{$field['value']}" !== $key){
+							$selected_class = 'active';
+						}
+					}
+
+					$parent_value = esc_attr($key);
+					echo "<div class='sub-field-wrapper{$selected_class} $key' data-repeat-frequency='{$parent_value}'>";
+						$this->render_field( $sub_field );
+						echo $sub_field['has_multiple'] ? __('<button class="add-field-group button"> Add </button>', 'nevamiss') : '';
+					echo '</div>';
 				}
 			}
 		}
@@ -86,13 +93,6 @@ class Schedule_Form extends Page {
 
 			),
 			array(
-				'name'  => 'start_date',
-				'value' => '',
-				'class' => 'start-date',
-				'type'  => 'date',
-				'label' => __( 'Start Date', 'nevamiss' ),
-			),
-			array(
 				'name'       => 'repeat_frequency',
 				'value'      => 'none',
 				'class'      => 'repeat-frequency',
@@ -106,14 +106,30 @@ class Schedule_Form extends Page {
 					'monthly' => __( 'Monthly', 'nevamiss' ),
 				),
 				'sub_fields' => array(
-					'none'    => array(),
+					'!none' => array(
+						'name'  => 'start_date',
+						'value' => '',
+						'class' => 'start-date date',
+						'type'  => 'date',
+						'label' => __( 'Start Date', 'nevamiss' ),
+						'has_multiple' => false,
+					),
+					'none'    => array(
+						'name' => 'one_time_schedule[]',
+						'type' => 'date',
+						'class' => 'datetime date-time',
+						'label' => __('Select Date'),
+						'value' => '',
+						'has_multiple' => true,
+					),
 					'daily'   => array(
 						'name'              => 'daily_times[hours][]',
 						'value'             => array(),
 						'type'              => 'select-group',
 						'class'             => 'daily-times',
-						'label'             => __( 'Daily Times', 'nevamiss' ),
+						'label'             => __( 'Hour', 'nevamiss' ),
 						'choices'           => range( 0, 23 ),
+						'has_multiple'      => true,
 						'complement_fields' => array(
 							array(
 								'name'    => 'daily_times[minutes][]',
@@ -121,7 +137,7 @@ class Schedule_Form extends Page {
 								'type'    => 'select',
 								'class'   => 'daily-times-minute',
 								'label'   => __( 'Minute', 'nevamiss' ),
-								'choices' => range( 0, 60, 5 ),
+								'choices' => range( 1, 60, 5 ),
 								'id'      => 'daily-minute'
 							),
 						),
@@ -131,8 +147,9 @@ class Schedule_Form extends Page {
 						'value'             => '',
 						'type'              => 'select-group',
 						'class'             => 'weekly-times',
-						'id'             => 'weekly-times',
+						'id'                => 'weekly-times',
 						'label'             => __( 'Weekly Times', 'nevamiss' ),
+						'has_multiple'      => true,
 						'choices'           => array(
 							'monday'    => __( 'Monday', 'nevamiss' ),
 							'tuesday'   => __( 'Tuesday', 'nevamiss' ),
@@ -159,7 +176,7 @@ class Schedule_Form extends Page {
 								'class'   => 'daily-times-minute',
 								'id'   => 'daily-times-minute',
 								'label'   => __( 'Minute', 'nevamiss' ),
-								'choices' => range( 0, 60, 5 ),
+								'choices' => range( 1, 60, 1 ),
 							),
 						),
 					),
@@ -171,6 +188,7 @@ class Schedule_Form extends Page {
 						'id'             => 'monthly-times',
 						'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
 						'label'             => __( 'Monthly Times', 'nevamiss' ),
+						'has_multiple'      => true,
 						'complement_fields' => array(
 							array(
 								'name'    => 'monthly_times[hours][]',
@@ -188,7 +206,7 @@ class Schedule_Form extends Page {
 								'class'   => 'monthly-times-minute',
 								'id'      => 'monthly-times-minute',
 								'label'   => __( 'Minute', 'nevamiss' ),
-								'choices' => range( 0, 60, 5 ),
+								'choices' => range( 1, 60, 5 ),
 							),
 						),
 					),
@@ -204,7 +222,7 @@ class Schedule_Form extends Page {
 			),
 			array(
 				'name'     => 'network_accounts[]',
-				'value'    => array(),
+				'value'    => array(0),
 				'class'    => 'network-accounts',
 				'id'       => 'network-accounts',
 				'type'     => 'select',
@@ -315,9 +333,15 @@ class Schedule_Form extends Page {
 			return;
 		}
 
-		$data = $this->schedule_repository->validate_data( $_POST );
+		$data = $this->schedule_repository->allowed_data( $_POST );
 
-		$data = $this->format_dates( $data );
+		$validated_data = $this->validate($data);
+
+		if(!empty($this->validator->errors())){
+			return;
+		}
+
+		$data = $this->format_dates( $validated_data );
 
 		$data = $this->array_to_json( $data );
 
@@ -326,15 +350,10 @@ class Schedule_Form extends Page {
 
 	private function format_dates( array $data ): array
 	{
-		[
-			'daily_times' => $daily_times,
-			'weekly_times' => $weekly_times,
-			'monthly_times' => $monthly_times,
-		]          = $data;
 		$day_times = array(
-			'daily_times'   => $daily_times,
-			'weekly_times'  => $weekly_times,
-			'monthly_times' => $monthly_times,
+			'daily_times'   => $data['daily_times'] ?? null,
+			'weekly_times'  => $data['weekly_times'] ?? null,
+			'monthly_times' => $data['monthly_times'] ?? null,
 		);
 		foreach ( $day_times as $key => $day_time ) {
 			if ( ! $day_time ) {
@@ -344,13 +363,21 @@ class Schedule_Form extends Page {
 			['minutes' => $minutes, 'hours' => $hours ] = $day_time;
 
 			if ( $key === 'daily_times' ) {
-				$data[ $key ] = $this->format_daily_times( $hours, $minutes );
+				$formatted_times = $this->format_daily_times( $hours, $minutes );
+				$data[ $key ] = $this->ensure_unique_date($formatted_times);
+
 				continue;
 			}
 
-			$data[ $key ] = $this->format_weekly_monthly_times( $day_time['days'], $hours, $minutes );
+			$formatted_times = $this->format_weekly_monthly_times( $day_time['days'], $hours, $minutes );
+
+			$data[ $key ] = $this->ensure_unique_date($formatted_times);
 
 		}
+		if(isset($data['one_time_schedule'])){
+			$data['one_time_schedule'] = array_unique($data['one_time_schedule']);
+		}
+
 		return $data;
 	}
 
@@ -387,5 +414,143 @@ class Schedule_Form extends Page {
 			}
 		}
 		return $data;
+	}
+
+	private function validate(array $data): array
+	{
+		$validated_data = [];
+		foreach ($this->schedule_repository->allow_columns() as $key){
+			$datum = $data[$key] ?? null;
+			if(!$datum){
+				continue;
+			}
+			$validated_data[$key] = $this->validation_func($key)($datum);
+		}
+		// Make sure either of the fields is not null
+		$one_has_value = false;
+		foreach (['daily_times', 'weekly_times', 'monthly_times', 'one_time_schedule'] as $required_field){
+			if( isset($validated_data[$required_field]) ){
+				$one_has_value = true;
+			}
+
+		}
+
+		if( !$one_has_value ){
+			$this->validator->add_error('Either one of the repeat frequency sub field must have a value');
+		}
+		return $validated_data;
+	}
+
+	private function validation_func(string $field, ): \Closure
+	{
+		return [
+			'schedule_name' => function(?string $schedule_name) {
+				$this->validator->validate_string('schedule_name', $schedule_name, 4);
+				return $this->validator->sanitize_string($schedule_name);
+			},
+			'repeat_frequency' => function(?string $repeat_frequency) {
+				$this->validator->validate_string('repeat_frequency', $repeat_frequency, 4);
+				return $this->validator->sanitize_string($repeat_frequency);
+			},
+			'start_date' => function(?string $start_date) {
+				if(!$start_date){
+					return null;
+				}
+				$this->validator->validate_date('start_date', $start_date);
+				return $this->validator->sanitize_date($start_date);
+
+			},
+			'daily_times' => function(?array $daily_times) {
+				if(!$daily_times || !$daily_times['hours']){
+					return null;
+				}
+				$this->validator->validate_assoc_array_of_numbers('daily_times', $daily_times);
+
+				return $this->validator->sanitize_assoc_array_of_numbers($daily_times);
+
+			},
+			'weekly_times' => function(?array $weekly_times) {
+				if(!$weekly_times){
+					return null;
+				}
+
+				$weekly_times['days'] = $this->validator->sanitize_array_of_string($weekly_times['days']);
+
+				$weekly_times['hours'] = array_map(function($hour){
+					return $this->validator->sanitize_number($hour);
+				}, $weekly_times['hours']);
+
+				$weekly_times['minutes'] = array_map(function($minute){
+					return $this->validator->sanitize_number($minute);
+				}, $weekly_times['minutes']);
+
+				return $weekly_times;
+			},
+			'monthly_times' => function(?array $monthly_times) {
+				if(!$monthly_times){
+					return null;
+				}
+				$this->validator->validate_assoc_array_of_numbers('monthly_times', $monthly_times);
+
+				return $this->validator->sanitize_assoc_array_of_numbers($monthly_times);
+			},
+			'query_args' => function(?array $query_args) {
+				if(empty($query_args)){
+					$this->validator->add_error('Query args are required');
+					return null;
+				}
+
+				return $this->validator->sanitize_array_of_string($query_args);
+			},
+			'one_time_schedule' => function(?array $one_time_schedule) {
+
+				if(!$one_time_schedule || !$one_time_schedule[0]){
+					return null;
+				}
+
+				return array_map(function($date){
+					return $this->validator->sanitize_date($date, 'Y-m-d H:s');
+				}, $one_time_schedule);
+
+			},
+			'network_accounts' => function(?array $network_accounts) {
+				if(empty($network_accounts)){
+					$this->validator->add_error('You need to select at least one network account');
+					return null;
+				}
+
+				return $this->validator->sanitize_array_of_string($network_accounts);
+			},
+			'social_media_tags' => function(?string $social_media_tags) {
+				if(!$social_media_tags){
+					return null;
+				}
+				$this->validator->validate_string('social_media_tags', $social_media_tags);
+				return $this->validator->sanitize_string($social_media_tags);
+			},
+
+		][$field];
+	}
+
+	private function ensure_unique_date(array $dates): array
+	{
+		$counted = [];
+
+		$unique_date = [];
+		foreach ($dates as $date){
+			$time = "{$date['hour']}-{$date['minute']}";
+
+			if(isset($date['day'])){
+				$time = "{$date['day']}-$time";
+			}
+
+			if(isset($counted[$time])){
+				continue;
+			}
+			$unique_date[] = $date;
+
+			$counted[$time] = 1;
+		}
+		return $unique_date;
 	}
 }
