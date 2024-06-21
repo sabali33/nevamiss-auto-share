@@ -6,9 +6,11 @@ use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
+use Nevamiss\Services\Form_Validator;
 use Nevamiss\Services\Settings;
 use Nevamiss\Services\Network_Post_Provider;
 use Psr\Container\ContainerInterface;
@@ -42,6 +44,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				return new Schedule_Form(
 					$container->get( Schedule_Repository::class ),
 					$container->get( Network_Account_Repository::class ),
+					$container->get(Form_Validator::class),
 					$container->get( Factory::class )
 				);
 			},
@@ -64,10 +67,12 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 		add_action(
 			'admin_menu',
 			static function () use ( $container ) {
+				$container->get( Auto_Share_Page::class )->register();
 				$container->get( Schedules_Page::class )->register();
 				$container->get( Settings_Page::class )->register();
 				$container->get( Schedule_View_Page::class )->register();
 				$container->get( Stats_Page::class )->register();
+				$container->get( Schedule_Form::class )->register();
 			}
 		);
 
