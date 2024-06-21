@@ -14,7 +14,8 @@ class ScheduleForms<O extends typeof flatpickr> {
             document.querySelector('#repeat-frequency').addEventListener(
                 'change',
                 (event)=>{
-                    const target = event.target as HTMLElement;
+                    const target = event.target as HTMLSelectElement;
+
                     const value = target.value;
 
                     this.toggleWrappers(
@@ -29,7 +30,7 @@ class ScheduleForms<O extends typeof flatpickr> {
                 'click',
                 (event) =>{
 
-                    const target = event.target as HTMLElement;
+                    const target = event.target as HTMLButtonElement;
 
                     if(target.tagName.toLowerCase() !== 'button'){
                         return;
@@ -37,7 +38,7 @@ class ScheduleForms<O extends typeof flatpickr> {
 
                     event.preventDefault();
 
-                    const wrapper = event.target.closest('.sub-field-wrapper');
+                    const wrapper = target.closest('.sub-field-wrapper');
 
                     if(target.classList.contains('remove')){
                         wrapper.remove();
@@ -60,6 +61,9 @@ class ScheduleForms<O extends typeof flatpickr> {
     private hideUnselectedOptions() {
 
         const wrappers = Array.from(document.querySelectorAll<HTMLElement>('.sub-field-wrapper'));
+        if(wrappers.length < 1){
+            return;
+        }
         this.loop(wrappers, (wrapper, field) => {
             if(wrapper.classList.contains('active')){
                 return;
