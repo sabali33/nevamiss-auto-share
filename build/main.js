@@ -22,7 +22,11 @@ class ScheduleForms {
     this.hideUnselectedOptions();
     this.negatedWrappers = Array.from(document.querySelectorAll("[data-repeat-frequency^='!']"));
     this.attachDateToField();
-    document.querySelector('#repeat-frequency').addEventListener('change', event => {
+    const repeatFrequencyField = document.querySelector('#repeat-frequency');
+    if (!repeatFrequencyField) {
+      return;
+    }
+    repeatFrequencyField.addEventListener('change', event => {
       const target = event.target;
       const value = target.value;
       this.toggleWrappers(document.querySelectorAll(`.sub-field-wrapper.active`), document.querySelectorAll(`[data-repeat-frequency=${value}]`));
@@ -34,7 +38,7 @@ class ScheduleForms {
         return;
       }
       event.preventDefault();
-      const wrapper = event.target.closest('.sub-field-wrapper');
+      const wrapper = target.closest('.sub-field-wrapper');
       if (target.classList.contains('remove')) {
         wrapper.remove();
         return;
@@ -49,6 +53,9 @@ class ScheduleForms {
   }
   hideUnselectedOptions() {
     const wrappers = Array.from(document.querySelectorAll('.sub-field-wrapper'));
+    if (wrappers.length < 1) {
+      return;
+    }
     this.loop(wrappers, (wrapper, field) => {
       if (wrapper.classList.contains('active')) {
         return;

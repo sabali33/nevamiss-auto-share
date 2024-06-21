@@ -10,8 +10,13 @@ class ScheduleForms<O extends typeof flatpickr> {
         public init() {
             this.hideUnselectedOptions();
             this.negatedWrappers =  Array.from(document.querySelectorAll("[data-repeat-frequency^='!']"));
-            this.attachDateToField()
-            document.querySelector('#repeat-frequency').addEventListener(
+            this.attachDateToField();
+
+            const repeatFrequencyField = document.querySelector('#repeat-frequency');
+            if(!repeatFrequencyField){
+                return;
+            }
+            repeatFrequencyField.addEventListener(
                 'change',
                 (event)=>{
                     const target = event.target as HTMLSelectElement;
