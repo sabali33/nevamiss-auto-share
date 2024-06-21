@@ -21,17 +21,19 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 	use Get_All_Trait;
 
 	private const ENTITY_NAME         = 'Schedule';
+	private const ENTITY_SLUG         = 'schedule';
 	private const ENTITY_CLASS        = Schedule::class;
 	private const ALLOW_TABLE_COLUMNS = array(
-		'id',
-		'name',
+		'schedule_name',
 		'start_date',
 		'repeat_frequency',
 		'daily_times',
 		'weekly_times',
 		'monthly_times',
-		'query',
-		'accounts',
+		'query_args',
+		'network_accounts',
+		'social_media_tags',
+		'one_time_schedule'
 	);
 
 	public function get_total(): int {
@@ -39,6 +41,10 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 	}
 
 	private function table_name(): string {
-		return "{$this->wpdb->prefix}_nevamiss_schedules";
+		return "{$this->wpdb->prefix}nevamiss_schedules";
+	}
+	public function allow_columns(): array
+	{
+		return self::ALLOW_TABLE_COLUMNS;
 	}
 }
