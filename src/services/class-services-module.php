@@ -75,6 +75,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get( Network_Post_Provider::class ),
 				);
 			},
+			Form_Validator::class => fn() => new Form_Validator(),
 		);
 	}
 }
