@@ -14,7 +14,7 @@ trait Get_One_Trait {
 	public function get( int $id ) {
 		$sql = $this->wpdb->prepare( "SELECT * FROM {$this->table_name()} WHERE id='%s'", $id );
 
-		$entity = $this->wpdb->get_results( $sql, ARRAY_A );
+		[$entity] = $this->wpdb->get_results( $sql, ARRAY_A );
 
 		if ( ! $entity ) {
 			throw new Not_Found_Exception( self::ENTITY_NAME . ' with the ID not found' );
