@@ -20,11 +20,12 @@ trait Create_Trait {
 		$placeholder        = join( ',', $placeholder );
 
 		$sql = $this->wpdb->prepare( "INSERT INTO {$this->table_name()} ($columns) VALUES ($placeholder)", ...$values );
+		$this->wpdb->suppress_errors = true;
+		$this->wpdb->query( $sql );
 
-		$results = $this->wpdb->query( $sql );
+		if( $this->wpdb->last_error){
+			throw new \Exception($this->wpdb->last_error);
 
-		if(!$results){
-			return;
 		}
 		do_action( "nevamiss_created_$model_slug", $this->wpdb->insert_id );
 	}
