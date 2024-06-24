@@ -6,9 +6,13 @@ namespace Nevamiss\Services\Contracts;
 
 interface Cron_Interface {
 
-	public function create_schedule(): bool;
+	/**
+	 * @param int $schedule_id
+	 * @return bool
+	 */
+	public function create_schedule(int $schedule_id): bool;
 	public function update_schedule(): bool;
 	public function delete_schedule(): bool;
 
-	public function schedule( mixed $id ): bool;
+	public function next_schedule( int $id ): int|false;
 }
