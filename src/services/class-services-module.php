@@ -20,15 +20,30 @@ class Services_Module implements ServiceModule, ExecutableModule {
 	use ModuleClassNameIdTrait;
 
 	public function run( ContainerInterface $container ): bool {
+		/**
+		 * @var Schedule_Post_Manager $schedule_post_manager
+		 */
+		$schedule_post_manager = $container->get(Schedule_Post_Manager::class);
+
+		/**
+		 * @var WP_Cron_Service $wp_cron_service
+		 */
+		$wp_cron_service = $container->get(WP_Cron_Service::class);
+
 		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
 		add_action( 'schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
+
+		add_action('cron_schedules', array($wp_cron_service, 'add_cron'));
+		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_schedule'));
+
+		add_action( 'nevamiss_multi_time_events', array( $schedule_post_manager, 'run' ) );
+		add_action( 'nevamiss_schedule_single_events', array( $schedule_post_manager, 'run' ) );
 
 		return true;
 	}
 
 	public function services(): array {
 		return array(
-			Date::class                  => fn(): Date => new Date(),
 			Logger::class                => fn(): Logger => new Logger(),
 			Schedule_Post_Manager::class => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
 				$container->get( Schedule_Repository::class ),
