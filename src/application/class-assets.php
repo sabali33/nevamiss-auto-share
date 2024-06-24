@@ -22,14 +22,12 @@ class Assets {
 
 	private function is_page(string $page): bool
 	{
-		var_dump($page);
 		return in_array($page, array(
 			'toplevel_page_auto-share-content',
 			'auto-share_page_schedules',
 			'dashboard_page_edit-schedule',
 			'auto-share_page_nevamiss-settings',
 			'auto-share_page_nevamiss-stats',
-			'admin_page_saas-edit-schedule',
 			'post.php',
 			'post-new.php',
 		));
