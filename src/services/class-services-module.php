@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Nevamiss\Services;
@@ -42,7 +43,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				$container->get( Network_Post_Provider::class ),
 			),
 			Settings::class              => fn(): Settings => new Settings(),
-			WP_Cron_Service::class       => fn(): WP_Cron_Service => new WP_Cron_Service(),
+			WP_Cron_Service::class       => fn(ContainerInterface $container): WP_Cron_Service => new WP_Cron_Service(
+				$container->get(Schedule_Repository::class)
+			),
 			Network_Post_Provider::class => fn( ContainerInterface $container ): Network_Post_Provider => new Network_Post_Provider(
 				$container->get( Settings::class ),
 				$container->get( Network_Account_Repository::class ),
