@@ -338,6 +338,15 @@ class Schedule_Form extends Page {
 		$validated_data = $this->validate($data);
 
 		if(!empty($this->validator->errors())){
+
+			wp_admin_notice(
+				join(", ", $this->validator->errors() ),
+				array(
+					'type'               => 'error',
+					'dismissible'        => false,
+					'additional_classes' => array( 'inline', 'notice-alt' ),
+				)
+			);
 			return;
 		}
 
@@ -345,7 +354,24 @@ class Schedule_Form extends Page {
 
 		$data = $this->array_to_json( $data );
 
-		$this->schedule_repository->create( $data );
+		try {
+			$this->schedule_repository->create( $data );
+			$message = __('Successfully create a schedule', 'nevamiss');
+			$type = 'success';
+		}catch (\Exception $exception){
+			$message = $exception->getMessage();
+			$type = 'error';
+		} finally {
+			wp_admin_notice(
+				$message,
+				array(
+					'type'               => $type,
+					'dismissible'        => false,
+					'additional_classes' => array( 'inline', 'notice-alt' ),
+				)
+			);
+		}
+
 	}
 
 	private function format_dates( array $data ): array
@@ -421,7 +447,7 @@ class Schedule_Form extends Page {
 		$validated_data = [];
 		foreach ($this->schedule_repository->allow_columns() as $key){
 			$datum = $data[$key] ?? null;
-			if(!$datum){
+			if($datum === null){
 				continue;
 			}
 			$validated_data[$key] = $this->validation_func($key)($datum);
@@ -445,6 +471,7 @@ class Schedule_Form extends Page {
 	{
 		return [
 			'schedule_name' => function(?string $schedule_name) {
+
 				$this->validator->validate_string('schedule_name', $schedule_name, 4);
 				return $this->validator->sanitize_string($schedule_name);
 			},
