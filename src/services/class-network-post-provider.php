@@ -43,7 +43,7 @@ class Network_Post_Provider {
 
 				$data_set = array_merge(
 					$data_set,
-					$this->provide_network( $schedule_account->id() )
+					$this->provide_network( $schedule_account )
 				);
 			}
 		}
@@ -72,6 +72,13 @@ class Network_Post_Provider {
 		if ( ! ( $post instanceof \WP_Post ) ) {
 			$post = $this->query->post( $post );
 		}
+		global $wp_rewrite;
+
+		//To make sure permalink function don't throw a warning
+		if(!$wp_rewrite){
+			$wp_rewrite = new \WP_Rewrite();
+		}
+
 		$default_share_format = <<< SHARE_FORMAT
             %TITLE%
             
@@ -88,7 +95,7 @@ class Network_Post_Provider {
 
 		$excerpt = wp_trim_words( $post->post_content, $excerpt_length );
 
-		$link = get_permalink( $post );
+		$link = get_permalink( $post->ID );
 
 		$output = str_replace( '%TITLE%', $post->post_title, $share_format );
 		$output = str_replace( '%LINK%', $link, $output );

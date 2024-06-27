@@ -44,9 +44,11 @@ class Schedule_Post_Manager {
 			$this->instant_post( $data_set );
 			return;
 		}
+
 		$data_set = $this->make_schedule_post_data( $schedule );
 
 		$this->create_tasks( $schedule, $data_set );
+
 	}
 
 	/**
@@ -111,7 +113,7 @@ class Schedule_Post_Manager {
 					'schedule_id'      => $schedule->id(),
 					'parameters'       => array(
 						'post_id'    => $schedule_post->ID,
-						'account_id' => $schedule_account->id(),
+						'account_id' => $schedule_account,
 					),
 				);
 			}
