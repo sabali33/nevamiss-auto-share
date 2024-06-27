@@ -36,8 +36,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action('cron_schedules', array($wp_cron_service, 'add_cron'));
 		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_schedule'));
 
-		add_action( 'nevamiss_multi_time_events', array( $schedule_post_manager, 'run' ) );
-		add_action( 'nevamiss_schedule_single_events', array( $schedule_post_manager, 'run' ) );
+		add_action( WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, array( $schedule_post_manager, 'run' ) );
+		add_action( WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_post_manager, 'run' ) );
 
 		return true;
 	}
