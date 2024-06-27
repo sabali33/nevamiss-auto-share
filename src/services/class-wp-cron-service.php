@@ -11,6 +11,8 @@ use Nevamiss\Services\Contracts\Cron_Interface;
 
 class WP_Cron_Service implements Cron_Interface {
 	const RECURRING_EVENT_HOOK_NAME = 'nevamiss_multi_time_events';
+	const NEVAMISS_SCHEDULE_SINGLE_EVENTS = 'nevamiss_schedule_single_events';
+
 	public function __construct(private Schedule_Repository $schedule_repository)
 	{
 	}
@@ -72,7 +74,7 @@ class WP_Cron_Service implements Cron_Interface {
 		$key = md5( serialize( array($schedule_id) ) );
 
 		$crons = array_filter(get_option( 'cron' ), function($cron) use($key){
-			return isset($cron['nevamiss_multi_time_events'][$key]);
+			return isset($cron[self::RECURRING_EVENT_HOOK_NAME][$key]);
 		} );
 
 		return array_keys($crons);
@@ -88,9 +90,9 @@ class WP_Cron_Service implements Cron_Interface {
 		$schedule = $this->schedule_repository->get($id);
 
 		if($schedule->repeat_frequency() === 'none'){
-			return wp_next_scheduled('nevamiss_schedule_single_events', array($schedule->id()));
+			return wp_next_scheduled(self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array($schedule->id()));
 		}
-		return wp_next_scheduled('nevamiss_multi_time_events', array($schedule->id()));
+		return wp_next_scheduled(self::RECURRING_EVENT_HOOK_NAME, array($schedule->id()));
 	}
 
 	private function to_date(array $dates): array
@@ -106,7 +108,7 @@ class WP_Cron_Service implements Cron_Interface {
 	private function schedule_one_cron(array $dates, int $schedule_id): void
 	{
 		foreach( $dates as $date){
-			wp_schedule_single_event($date, 'nevamiss_schedule_single_events', [$schedule_id]);
+			wp_schedule_single_event($date, self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, [$schedule_id]);
 		}
 	}
 
@@ -119,7 +121,7 @@ class WP_Cron_Service implements Cron_Interface {
 			$scheduled = wp_schedule_event(
 				$date,
 				$frequency,
-				'nevamiss_multi_time_events',
+				self::RECURRING_EVENT_HOOK_NAME,
 				[$schedule_id]
 			);
 			if(!$scheduled){
