@@ -10,6 +10,7 @@ use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\Contracts\Cron_Interface;
 
 class WP_Cron_Service implements Cron_Interface {
+	const RECURRING_EVENT_HOOK_NAME = 'nevamiss_multi_time_events';
 	public function __construct(private Schedule_Repository $schedule_repository)
 	{
 	}
@@ -27,7 +28,7 @@ class WP_Cron_Service implements Cron_Interface {
 	 * @throws Not_Found_Exception
 	 * @throws \Exception
 	 */
-	public function create_schedule(int $schedule_id): bool {
+	public function  create_schedule(int $schedule_id): bool {
 		/**
 		 * @var Schedule $schedule
 		 */
@@ -62,8 +63,19 @@ class WP_Cron_Service implements Cron_Interface {
 
 	}
 
-	public function delete_schedule(): bool {
+	public function unschedule(int $schedule_id): int {
+		return wp_clear_scheduled_hook(self::RECURRING_EVENT_HOOK_NAME, array($schedule_id));
+	}
 
+	public function all(int $schedule_id): array
+	{
+		$key = md5( serialize( array($schedule_id) ) );
+
+		$crons = array_filter(get_option( 'cron' ), function($cron) use($key){
+			return isset($cron['nevamiss_multi_time_events'][$key]);
+		} );
+
+		return array_keys($crons);
 	}
 
 	/**

@@ -12,7 +12,7 @@ interface Cron_Interface {
 	 */
 	public function create_schedule(int $schedule_id): bool;
 	public function update_schedule(): bool;
-	public function delete_schedule(): bool;
+	public function unschedule(int $schedule_id): int;
 
 	public function next_schedule( int $id ): int|false;
 }
