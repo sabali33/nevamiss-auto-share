@@ -31,20 +31,20 @@ class Schedule_Tasks_Runner {
 		}
 		[
 			'class_identifier' => $class_name,
-			'parameter' => $parameters,
+			'parameters' => $parameters,
 		] = $active_task[0];
-
+		$parameters_arr = json_decode($parameters, true);
 		[
 			'account' => $network_account,
 			'network_client' => $network_client
-		] = $this->schedule_provider->provide_network( $parameters['network_account_id'] );
-
+		] = $this->schedule_provider->provide_network( $parameters_arr['account_id'] );
+		$data = $this->schedule_provider->format_post($parameters_arr['post_id'] );
 		/**
 		 * @var Network_Post_Manager $post_manager
 		 */
 		$post_manager = $this->factory->new( $class_name, $network_account, $network_client );
 
-		$post_manager->run( $parameters['post_id'] );
+		$post_manager->post($data);
 
 		do_action( 'schedule_task_complete', $active_task[0]['id'] );
 
