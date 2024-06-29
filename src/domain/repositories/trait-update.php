@@ -12,9 +12,8 @@ trait Update_Trait {
 	 * @throws Exception
 	 */
 	public function update( int $id, mixed $data ): bool {
-		$validated_data = $this->validate_data( $data );
-
-		$updated = $this->wpdb->update( $this->table_name(), $validated_data, array( 'id' => $id ) );
+		$updated = $this->wpdb->update( $this->table_name(), $data, array( 'id' => $id ) );
+		do_action('nevamiss_schedule_updated', $this->wpdb->last_result);
 		return (bool) $updated;
 	}
 }

@@ -11,7 +11,7 @@ trait Create_Trait {
 	/**
 	 * @throws Exception
 	 */
-	public function create( mixed $data ): void {
+	public function create( mixed $data ): int {
 
 		$model_slug =  self::ENTITY_SLUG;
 
@@ -28,5 +28,7 @@ trait Create_Trait {
 
 		}
 		do_action( "nevamiss_created_$model_slug", $this->wpdb->insert_id );
+
+		return $this->wpdb->insert_id;
 	}
 }
