@@ -2950,7 +2950,6 @@ var __webpack_exports__ = {};
   \*******************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _schedule_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schedule-forms */ "./resources/js/schedule-forms/index.ts");
-console.log('Welcome');
 
 document.addEventListener('DOMContentLoaded', () => {
   _schedule_forms__WEBPACK_IMPORTED_MODULE_0__["default"].init();

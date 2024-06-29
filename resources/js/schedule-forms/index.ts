@@ -1,7 +1,7 @@
 import flatpickr from "flatpickr";
 
 class ScheduleForms<O extends typeof flatpickr> {
-    private datePicker: O;
+    private readonly datePicker: O;
     private negatedWrappers: Element[];
         public constructor(datepicker:O) {
             this.datePicker = datepicker;
