@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
@@ -19,7 +20,11 @@ class Schedule_Form extends Page {
 
 	public const TEMPLE_PATH = 'templates/schedule-form';
 	public const SLUG        = 'edit-schedule';
+	private ?Schedule $schedule;
 
+	/**
+	 * @throws Not_Found_Exception
+	 */
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
 		private Network_Account_Repository $account_repository,
@@ -38,10 +43,18 @@ class Schedule_Form extends Page {
 			null,
 			true
 		);
+
+		$this->schedule = (isset($_REQUEST['schedule_id']) && $_REQUEST['schedule_id']) ?
+		$this->schedule_repository->get((int)$_REQUEST['schedule_id']) : null;
 	}
 
 	public function factory(): Factory {
 		return $this->factory;
+	}
+
+	public function schedule()
+	{
+		return $this->schedule;
 	}
 
 	/**
@@ -59,23 +72,29 @@ class Schedule_Form extends Page {
 		echo $this->factory()->component( $field_class, $field )->render();
 
 		if ( isset( $field['sub_fields'] ) ) {
-			foreach ( $field['sub_fields'] as $key => $sub_field ) {
-				if ( ! empty( $sub_field ) ) {
+			foreach ( $field['sub_fields'] as $key => $sub_fields ) {
+
+				foreach ($sub_fields as $sub_field){
+					if ( empty( $sub_field ) ) {
+						continue;
+					}
 					$selected_class = $field['value'] === $key ? ' active' : '';
 
 					if(str_contains($key, '!')) {
 
 						if("!{$field['value']}" !== $key){
-							$selected_class = 'active';
+							$selected_class = ' active';
 						}
 					}
 
 					$parent_value = esc_attr($key);
 					echo "<div class='sub-field-wrapper{$selected_class} $key' data-repeat-frequency='{$parent_value}'>";
-						$this->render_field( $sub_field );
-						echo $sub_field['has_multiple'] ? __('<button class="add-field-group button"> Add </button>', 'nevamiss') : '';
+					$this->render_field( $sub_field );
+					echo isset($sub_field['has_multiple']) ? __('<button class="add-field-group button"> Add </button>', 'nevamiss') : '';
 					echo '</div>';
+
 				}
+
 			}
 		}
 	}
@@ -87,14 +106,14 @@ class Schedule_Form extends Page {
 
 				'label' => __( 'Name', 'nevamiss' ),
 				'name'  => 'schedule_name',
-				'value' => '',
+				'value' => $this->schedule ? $this->schedule->name() : '',
 				'class' => 'schedule-name',
 				'type'  => 'text',
 
 			),
 			array(
 				'name'       => 'repeat_frequency',
-				'value'      => 'none',
+				'value'      => $this->schedule ? $this->schedule->repeat_frequency() : 'none',
 				'class'      => 'repeat-frequency',
 				'id'         => 'repeat-frequency',
 				'type'       => 'select',
@@ -107,114 +126,24 @@ class Schedule_Form extends Page {
 				),
 				'sub_fields' => array(
 					'!none' => array(
-						'name'  => 'start_date',
-						'value' => '',
-						'class' => 'start-date date',
-						'type'  => 'date',
-						'label' => __( 'Start Date', 'nevamiss' ),
-						'has_multiple' => false,
+						array(
+							'name'  => 'start_date',
+							'value' => $this->schedule ? $this->schedule->start_date() : '',
+							'class' => 'start-date date',
+							'type'  => 'date',
+							'label' => __( 'Start Date', 'nevamiss' ),
+							'has_multiple' => false,
+						)
 					),
-					'none'    => array(
-						'name' => 'one_time_schedule[]',
-						'type' => 'date',
-						'class' => 'datetime date-time',
-						'label' => __('Select Date'),
-						'value' => '',
-						'has_multiple' => true,
-					),
-					'daily'   => array(
-						'name'              => 'daily_times[hours][]',
-						'value'             => array(),
-						'type'              => 'select-group',
-						'class'             => 'daily-times',
-						'label'             => __( 'Hour', 'nevamiss' ),
-						'choices'           => range( 0, 23 ),
-						'has_multiple'      => true,
-						'complement_fields' => array(
-							array(
-								'name'    => 'daily_times[minutes][]',
-								'value'   => array(),
-								'type'    => 'select',
-								'class'   => 'daily-times-minute',
-								'label'   => __( 'Minute', 'nevamiss' ),
-								'choices' => range( 1, 60, 5 ),
-								'id'      => 'daily-minute'
-							),
-						),
-					),
-					'weekly'  => array(
-						'name'              => 'weekly_times[days][]',
-						'value'             => '',
-						'type'              => 'select-group',
-						'class'             => 'weekly-times',
-						'id'                => 'weekly-times',
-						'label'             => __( 'Weekly Times', 'nevamiss' ),
-						'has_multiple'      => true,
-						'choices'           => array(
-							'monday'    => __( 'Monday', 'nevamiss' ),
-							'tuesday'   => __( 'Tuesday', 'nevamiss' ),
-							'wednesday' => __( 'Wednesday', 'nevamiss' ),
-							'thursday'  => __( 'Thursday', 'nevamiss' ),
-							'friday'    => __( 'Friday', 'nevamiss' ),
-							'saturday'  => __( 'Saturday', 'nevamiss' ),
-							'sunday'    => __( 'Sunday', 'nevamiss' ),
-						),
-						'complement_fields' => array(
-							array(
-								'name'    => 'weekly_times[hours][]',
-								'value'   => array(),
-								'type'    => 'select',
-								'class'   => 'weekly-daily-hour',
-								'id'   => 'weekly-daily-hour',
-								'label'   => __( 'at', 'nevamiss' ),
-								'choices' => range( 0, 23 ),
-							),
-							array(
-								'name'    => 'weekly_times[minutes][]',
-								'value'   => array(),
-								'type'    => 'select',
-								'class'   => 'daily-times-minute',
-								'id'   => 'daily-times-minute',
-								'label'   => __( 'Minute', 'nevamiss' ),
-								'choices' => range( 1, 60, 1 ),
-							),
-						),
-					),
-					'monthly' => array(
-						'name'              => 'monthly_times[days][]',
-						'value'             => array(),
-						'type'              => 'select-group',
-						'class'             => 'monthly-times',
-						'id'             => 'monthly-times',
-						'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
-						'label'             => __( 'Monthly Times', 'nevamiss' ),
-						'has_multiple'      => true,
-						'complement_fields' => array(
-							array(
-								'name'    => 'monthly_times[hours][]',
-								'value'   => array(),
-								'type'    => 'select',
-								'class'   => 'monthly-daily-times',
-								'id'   => 'monthly-daily-times',
-								'label'   => __( 'at', 'nevamiss' ),
-								'choices' => range( 0, 23 ),
-							),
-							array(
-								'name'    => 'monthly_times[minutes][]',
-								'value'   => array(),
-								'type'    => 'select',
-								'class'   => 'monthly-times-minute',
-								'id'      => 'monthly-times-minute',
-								'label'   => __( 'Minute', 'nevamiss' ),
-								'choices' => range( 1, 60, 5 ),
-							),
-						),
-					),
+					'none'    => $this->one_time_fields(),
+					'daily'   => $this->daily_fields(),
+					'weekly'  => $this->weekly_fields(),
+					'monthly' => $this->monthly_fields(),
 				),
 			),
 			array(
 				'name'  => 'social_media_tags',
-				'value' => '',
+				'value' => $this->schedule ? $this->schedule->social_media_tags() : '',
 				'class' => 'social-media-tags',
 				'id'    => 'social-media-tags',
 				'type'  => 'textarea',
@@ -222,7 +151,7 @@ class Schedule_Form extends Page {
 			),
 			array(
 				'name'     => 'network_accounts[]',
-				'value'    => array(0),
+				'value'    => $this->schedule ? $this->schedule->network_accounts() : array(0),
 				'class'    => 'network-accounts',
 				'id'       => 'network-accounts',
 				'type'     => 'select',
@@ -231,8 +160,8 @@ class Schedule_Form extends Page {
 				'multiple' => true,
 			),
 			array(
-				'name'  => 'query_args[post_per_page]',
-				'value' => 1,
+				'name'  => 'query_args[posts_per_page]',
+				'value' => $this->schedule ? $this->schedule->query_args()['posts_per_page'] : 1,
 				'class' => 'share-count',
 				'type'  => 'number',
 				'min'   => 1,
@@ -241,7 +170,7 @@ class Schedule_Form extends Page {
 			),
 			array(
 				'name'     => 'query_args[post_type][]',
-				'value'    => array( 'post' ),
+				'value'    => $this->schedule ? $this->schedule->query_args()['post_type'] : array( 'post' ),
 				'class'    => 'post-type',
 				'id'       => 'post-type',
 				'type'     => 'select',
@@ -251,7 +180,7 @@ class Schedule_Form extends Page {
 			),
 			array(
 				'name'     => 'query_args[taxonomies][]',
-				'value'    => array( 'category' ),
+				'value'    => $this->schedule ? $this->schedule->query_args()['taxonomies'] : array( 'category' ),
 				'class'    => 'taxonomies',
 				'id'       => 'taxonomies',
 				'type'     => 'select',
@@ -261,7 +190,7 @@ class Schedule_Form extends Page {
 			),
 			array(
 				'name'  => 'query_args[post_ids]',
-				'value' => array(),
+				'value' => $this->schedule ? $this->schedule->query_args()['post_ids'] : array(),
 				'class' => 'post-ids',
 				'type'  => 'text',
 				'label' => __( 'Post IDs', 'nevamiss' ),
@@ -354,10 +283,14 @@ class Schedule_Form extends Page {
 
 		$data = $this->array_to_json( $data );
 
+	    $schedules_url = admin_url('admin.php?page=schedules');
+
 		try {
 			$this->schedule_repository->create( $data );
-			$message = __('Successfully create a schedule', 'nevamiss');
+
+			$message = sprintf(__("Successfully created a schedule <a href='%s'>back</a>", 'nevamiss'), esc_url($schedules_url));
 			$type = 'success';
+
 		}catch (\Exception $exception){
 			$message = $exception->getMessage();
 			$type = 'error';
@@ -372,6 +305,64 @@ class Schedule_Form extends Page {
 			);
 		}
 
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function update_form(): void
+	{
+		if ( ! isset( $_POST['schedule_name'] ) || !$this->schedule()) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' ) ) {
+			return;
+		}
+
+		$data = $this->schedule_repository->allowed_data( $_POST );
+
+		$validated_data = $this->validate($data);
+
+		if(!empty($this->validator->errors())){
+
+			wp_admin_notice(
+				join(", ", $this->validator->errors() ),
+				array(
+					'type'               => 'error',
+					'dismissible'        => false,
+					'additional_classes' => array( 'inline', 'notice-alt' ),
+				)
+			);
+			return;
+		}
+
+		$data = $this->format_dates( $validated_data );
+
+		$data = $this->array_to_json( $data );
+
+		$schedules_url = admin_url('admin.php?page=schedules');
+
+		try {
+			$this->schedule_repository->update($this->schedule()->id(), $data );
+			$message = sprintf(__("Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss'), esc_url($schedules_url));
+			$type = 'success';
+
+			do_action('nevamiss_after_schedule_updated', $this->schedule);
+
+		}catch (\Exception $exception){
+			$message = $exception->getMessage();
+			$type = 'error';
+		}
+		wp_admin_notice(
+			$message,
+			array(
+				'type'               => $type,
+				'dismissible'        => false,
+				'additional_classes' => array( 'inline', 'notice-alt' ),
+			)
+		);
+		$this->schedule = $this->schedule_repository->get($this->schedule->id());
 	}
 
 	private function format_dates( array $data ): array
@@ -445,13 +436,16 @@ class Schedule_Form extends Page {
 	private function validate(array $data): array
 	{
 		$validated_data = [];
+
 		foreach ($this->schedule_repository->allow_columns() as $key){
 			$datum = $data[$key] ?? null;
-			if($datum === null){
+
+			if($datum === null && !$this->schedule){
 				continue;
 			}
 			$validated_data[$key] = $this->validation_func($key)($datum);
 		}
+
 		// Make sure either of the fields is not null
 		$one_has_value = false;
 		foreach (['daily_times', 'weekly_times', 'monthly_times', 'one_time_schedule'] as $required_field){
@@ -579,5 +573,251 @@ class Schedule_Form extends Page {
 			$counted[$time] = 1;
 		}
 		return $unique_date;
+	}
+
+	private function one_time_fields(): array
+	{
+		if(!$this->schedule || !$this->schedule->one_time_schedule()){
+			return array(
+				array(
+					'name' => 'one_time_schedule[]',
+					'type' => 'date',
+					'class' => 'datetime date-time',
+					'label' => __('Select Date'),
+					'value' => '',
+					'has_multiple' => true,
+				)
+			);
+		}
+
+		$fields = [];
+		foreach ($this->schedule->one_time_schedule() as $value){
+			$fields[] = array(
+				'name' => 'one_time_schedule[]',
+				'type' => 'date',
+				'class' => 'datetime date-time',
+				'label' => __('Select Date'),
+				'value' => $value,
+			);
+		}
+		return $fields;
+	}
+
+	private function daily_fields(): array
+	{
+		if(!$this->schedule || !$this->schedule->daily_times()){
+			return array(
+				array(
+					'name'              => 'daily_times[hours][]',
+					'value'             => array(),
+					'type'              => 'select-group',
+					'class'             => 'daily-times',
+					'label'             => __( 'Hour', 'nevamiss' ),
+					'choices'           => range( 0, 23 ),
+					'has_multiple'      => true,
+					'complement_fields' => array(
+						array(
+							'name'    => 'daily_times[minutes][]',
+							'value'   => array(),
+							'type'    => 'select',
+							'class'   => 'daily-times-minute',
+							'label'   => __( 'Minute', 'nevamiss' ),
+							'choices' => range( 1, 60, 5 ),
+							'id'      => 'daily-minute'
+						),
+					),
+				)
+			);
+		}
+
+
+		$fields = [];
+
+		foreach ($this->schedule->daily_times() as $time){
+			$fields[] = array(
+				'name'              => 'daily_times[hours][]',
+				'value'             => $time['hour'],
+				'type'              => 'select-group',
+				'class'             => 'daily-times',
+				'label'             => __( 'Hour', 'nevamiss' ),
+				'choices'           => range( 0, 23 ),
+				'has_multiple'      => true,
+				'complement_fields' => array(
+					array(
+						'name'    => 'daily_times[minutes][]',
+						'value'   => $time['minute'],
+						'type'    => 'select',
+						'class'   => 'daily-times-minute',
+						'label'   => __( 'Minute', 'nevamiss' ),
+						'choices' => range( 1, 60, 5 ),
+						'id'      => 'daily-minute'
+					),
+				),
+			);
+		}
+		return $fields;
+	}
+
+	private function weekly_fields(): array
+	{
+		if(!$this->schedule || !$this->schedule->weekly_times()){
+			return array(
+				array(
+					'name'              => 'weekly_times[days][]',
+					'value'             => '',
+					'type'              => 'select-group',
+					'class'             => 'weekly-times',
+					'id'                => 'weekly-times',
+					'label'             => __( 'Weekly Times', 'nevamiss' ),
+					'has_multiple'      => true,
+					'choices'           => array(
+						'monday'    => __( 'Monday', 'nevamiss' ),
+						'tuesday'   => __( 'Tuesday', 'nevamiss' ),
+						'wednesday' => __( 'Wednesday', 'nevamiss' ),
+						'thursday'  => __( 'Thursday', 'nevamiss' ),
+						'friday'    => __( 'Friday', 'nevamiss' ),
+						'saturday'  => __( 'Saturday', 'nevamiss' ),
+						'sunday'    => __( 'Sunday', 'nevamiss' ),
+					),
+					'complement_fields' => array(
+						array(
+							'name'    => 'weekly_times[hours][]',
+							'value'   => array(),
+							'type'    => 'select',
+							'class'   => 'weekly-daily-hour',
+							'id'   => 'weekly-daily-hour',
+							'label'   => __( 'at', 'nevamiss' ),
+							'choices' => range( 0, 23 ),
+						),
+						array(
+							'name'    => 'weekly_times[minutes][]',
+							'value'   => array(),
+							'type'    => 'select',
+							'class'   => 'daily-times-minute',
+							'id'   => 'daily-times-minute',
+							'label'   => __( 'Minute', 'nevamiss' ),
+							'choices' => range( 1, 60, 1 ),
+						),
+					),
+				),
+			);
+		}
+		$fields = [];
+
+		foreach ($this->schedule->weekly_times() as $index => $week_time){
+			$fields[] = array(
+				'name'              => 'weekly_times[days][]',
+				'value'             => $week_time['day'],
+				'type'              => 'select-group',
+				'class'             => 'weekly-times',
+				'id'                => "weekly-times-$index",
+				'label'             => __( 'Weekly Times', 'nevamiss' ),
+				'has_multiple'      => true,
+				'choices'           => array(
+					'monday'    => __( 'Monday', 'nevamiss' ),
+					'tuesday'   => __( 'Tuesday', 'nevamiss' ),
+					'wednesday' => __( 'Wednesday', 'nevamiss' ),
+					'thursday'  => __( 'Thursday', 'nevamiss' ),
+					'friday'    => __( 'Friday', 'nevamiss' ),
+					'saturday'  => __( 'Saturday', 'nevamiss' ),
+					'sunday'    => __( 'Sunday', 'nevamiss' ),
+				),
+				'complement_fields' => array(
+					array(
+						'name'    => 'weekly_times[hours][]',
+						'value'   => $week_time['hour'],
+						'type'    => 'select',
+						'class'   => 'weekly-daily-hour',
+						'id'   => "weekly-daily-hour-$index",
+						'label'   => __( 'at', 'nevamiss' ),
+						'choices' => range( 0, 23 ),
+					),
+					array(
+						'name'    => 'weekly_times[minutes][]',
+						'value'   => $week_time['minute'],
+						'type'    => 'select',
+						'class'   => 'daily-times-minute',
+						'id'   => "daily-times-minute-$index",
+						'label'   => __( 'Minute', 'nevamiss' ),
+						'choices' => range( 1, 60, 1 ),
+					),
+				),
+			);
+		}
+
+		return $fields;
+	}
+
+	private function monthly_fields()
+	{
+		if(!$this->schedule || !$this->schedule->monthly_times()){
+			return array(
+				array(
+					'name'              => 'monthly_times[days][]',
+					'value'             => array(),
+					'type'              => 'select-group',
+					'class'             => 'monthly-times',
+					'id'             => 'monthly-times',
+					'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
+					'label'             => __( 'Monthly Times', 'nevamiss' ),
+					'has_multiple'      => true,
+					'complement_fields' => array(
+						array(
+							'name'    => 'monthly_times[hours][]',
+							'value'   => array(),
+							'type'    => 'select',
+							'class'   => 'monthly-daily-times',
+							'id'   => 'monthly-daily-times',
+							'label'   => __( 'at', 'nevamiss' ),
+							'choices' => range( 0, 23 ),
+						),
+						array(
+							'name'    => 'monthly_times[minutes][]',
+							'value'   => array(),
+							'type'    => 'select',
+							'class'   => 'monthly-times-minute',
+							'id'      => 'monthly-times-minute',
+							'label'   => __( 'Minute', 'nevamiss' ),
+							'choices' => range( 1, 60, 5 ),
+						),
+					),
+				),
+			);
+		}
+		$fields = [];
+
+		foreach ($this->schedule->monthly_times() as $index => $monthly_time){
+			$fields[] = array(
+				'name'              => 'monthly_times[days][]',
+				'value'             => $monthly_time['day'],
+				'type'              => 'select-group',
+				'class'             => 'monthly-times',
+				'id'             => "monthly-times-$index",
+				'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
+				'label'             => __( 'Monthly Times', 'nevamiss' ),
+				'has_multiple'      => true,
+				'complement_fields' => array(
+					array(
+						'name'    => 'monthly_times[hours][]',
+						'value'   => $monthly_time['hour'],
+						'type'    => 'select',
+						'class'   => 'monthly-daily-times',
+						'id'   => "monthly-daily-times-$index",
+						'label'   => __( 'at', 'nevamiss' ),
+						'choices' => range( 0, 23 ),
+					),
+					array(
+						'name'    => 'monthly_times[minutes][]',
+						'value'   => $monthly_time['minute'],
+						'type'    => 'select',
+						'class'   => 'monthly-times-minute',
+						'id'      => "monthly-times-minute-$index",
+						'label'   => __( 'Minute', 'nevamiss' ),
+						'choices' => range( 1, 60, 5 ),
+					),
+				),
+			);
+		}
+		return $fields;
 	}
 }

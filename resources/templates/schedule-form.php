@@ -13,7 +13,16 @@ use Nevamiss\Presentation\Pages\Schedule_Form;
     <?php echo esc_html($this->title); ?>
 </h1>
 
-<?php $this->maybe_save_form(); ?>
+<?php
+if($this->schedule()){
+    $this->update_form();
+    $button_label = __('Update', 'nevamiss');
+}else{
+	$this->maybe_save_form();
+	$button_label = __('Create', 'nevamiss');
+}
+
+?>
 
 <div class="wrap schedule-form">
     <form method="post">
@@ -21,6 +30,6 @@ use Nevamiss\Presentation\Pages\Schedule_Form;
         <?php foreach ($this->fields() as $field): ?>
             <?php $this->render_field($field); ?>
         <?php endforeach; ?>
-        <input type="submit" value="<?php esc_attr_e('Create', 'nevamiss'); ?>">
+        <input type="submit" value="<?php esc_attr_e($button_label); ?>">
     </form>
 </div>
