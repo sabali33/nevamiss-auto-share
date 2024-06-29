@@ -10,7 +10,7 @@ interface Cron_Interface {
 	 * @param int $schedule_id
 	 * @return bool
 	 */
-	public function create_schedule(int $schedule_id): bool;
+	public function create_cron(int $schedule_id): bool;
 	public function update_schedule(): bool;
 	public function unschedule(int $schedule_id): int;
 

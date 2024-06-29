@@ -28,14 +28,21 @@ class WP_Cron_Service implements Cron_Interface {
 
 	/**
 	 * @throws Not_Found_Exception
-	 * @throws \Exception
 	 */
-	public function  create_schedule(int $schedule_id): bool {
-		/**
-		 * @var Schedule $schedule
-		 */
+	public function create_cron(int $schedule_id): bool
+	{
 		$schedule = $this->schedule_repository->get($schedule_id);
+		return $this->create_schedule($schedule);
 
+	}
+	/**
+	 * @param Schedule $schedule
+	 * @return bool
+	 * @throws Not_Found_Exception|\Exception
+	 */
+	private function  create_schedule(Schedule $schedule): bool {
+
+		$schedule_id = $schedule->id();
 
 		if($schedule->one_time_schedule()){
 			$dates = $this->to_date($schedule->one_time_schedule());
@@ -59,6 +66,32 @@ class WP_Cron_Service implements Cron_Interface {
 		$this->schedule_cron($timestamps, $schedule_id, 'monthly');
 
 		return true;
+	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	public function maybe_reschedule_cron(Schedule $schedule): void
+	{
+		/**
+		 * @var Schedule $new_schedule
+		 */
+		$new_schedule = $this->schedule_repository->get($schedule->id());
+
+		$can_reschedule = match(true){
+			$new_schedule->repeat_frequency() !== $schedule->repeat_frequency(),
+			$new_schedule->daily_times() != $schedule->daily_times(),
+			$new_schedule->monthly_times() != $schedule->monthly_times(),
+			$new_schedule->weekly_times() != $schedule->weekly_times(),
+			$new_schedule->start_date() !== $schedule->start_date(),
+			$new_schedule->one_time_schedule() != $schedule->one_time_schedule() => true,
+			default => false
+		};
+
+		if($can_reschedule){
+
+			$this->reschedule_cron($new_schedule);
+		}
 	}
 
 	public function update_schedule(): bool {
@@ -189,5 +222,16 @@ class WP_Cron_Service implements Cron_Interface {
 			$timestamps[] = $date->timestamp();
 		}
 		return $timestamps;
+	}
+
+	/**
+	 * @param Schedule $new_schedule
+	 * @return bool
+	 * @throws Not_Found_Exception
+	 */
+	private function reschedule_cron(Schedule $new_schedule): bool
+	{
+		$this->unschedule($new_schedule->id());
+		return $this->create_schedule($new_schedule);
 	}
 }

@@ -34,7 +34,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
 
 		add_action('cron_schedules', array($wp_cron_service, 'add_cron'));
-		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_schedule'));
+		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_cron'));
+		add_action('nevamiss_after_schedule_updated', array($wp_cron_service, 'maybe_reschedule_cron'), 10, 2);
 
 		add_action( WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, array( $schedule_post_manager, 'run' ) );
 		add_action( WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_post_manager, 'run' ) );
