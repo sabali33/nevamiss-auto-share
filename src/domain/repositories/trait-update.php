@@ -13,7 +13,9 @@ trait Update_Trait {
 	 */
 	public function update( int $id, mixed $data ): bool {
 		$updated = $this->wpdb->update( $this->table_name(), $data, array( 'id' => $id ) );
-		do_action('nevamiss_schedule_updated', $this->wpdb->last_result);
+		$model_slug = self::ENTITY_SLUG;
+		do_action("nevamiss_{$model_slug}_updated", $this->wpdb->last_result);
+
 		return (bool) $updated;
 	}
 }

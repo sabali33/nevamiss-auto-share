@@ -195,6 +195,14 @@ class Schedule_Form extends Page {
 				'type'  => 'text',
 				'label' => __( 'Post IDs', 'nevamiss' ),
 			),
+			array(
+				'name'  => 'query_args[orderby]',
+				'value' => $this->schedule ? $this->schedule->query_args()['orderby'] : array('date'),
+				'class' => 'sort-by',
+				'type'  => 'select',
+				'label' => __( 'Sort posts by', 'nevamiss' ),
+				'choices' => $this->sort_posts()
+			),
 		);
 	}
 
@@ -294,16 +302,15 @@ class Schedule_Form extends Page {
 		}catch (\Exception $exception){
 			$message = $exception->getMessage();
 			$type = 'error';
-		} finally {
-			wp_admin_notice(
-				$message,
-				array(
-					'type'               => $type,
-					'dismissible'        => false,
-					'additional_classes' => array( 'inline', 'notice-alt' ),
-				)
-			);
 		}
+	    wp_admin_notice(
+		    $message,
+		    array(
+			    'type'               => $type,
+			    'dismissible'        => false,
+			    'additional_classes' => array( 'inline', 'notice-alt' ),
+		    )
+	    );
 
 	}
 
@@ -819,5 +826,21 @@ class Schedule_Form extends Page {
 			);
 		}
 		return $fields;
+	}
+
+	private function sort_posts()
+	{
+		$criteria = array(
+			'newest' => __('Newest', 'nevamiss'),
+			'post_title' => __('Title', 'nevamiss'),
+			'oldest' => __('Oldest', 'nevamiss'),
+			'modified_date' => __('Modified Date', 'nevamiss'),
+			'comment_count' => __('Comments Count', 'nevamiss'),
+			'rand' => __('Random', 'nevamiss'),
+		);
+		if($this->schedule()){
+			$criteria['queue_order'] = __('Keep as ordered in queue', 'nevamiss');
+		}
+		return $criteria;
 	}
 }
