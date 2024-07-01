@@ -97,12 +97,57 @@ class Schedules_Table_List extends \WP_List_Table {
 		return 'schedule_name';
 	}
 
-	public function column_schedule_name( array $item ) {
+	public function column_schedule_name( array $item ): void
+	{
 		echo $item['schedule_name'];
+
+		$actions = array_map(function($action){
+			return $this->link($action);
+
+		}, $this->action_list((int)$item['id']));
+
 		echo $this->row_actions(
-			array(
-				'<a href="#">edit</a>',
-			)
+			$actions
 		);
+	}
+
+	private function action_list(int $schedule_id): array
+	{
+		$nonce = wp_create_nonce('nevamiss_schedules');
+		return array(
+			array(
+				'name' => 'edit',
+				'label' => __('Edit', 'nevamiss'),
+				'url' => admin_url("?page=edit-schedule&schedule_id=$schedule_id"),
+				'class' => 'edit'
+			),
+			array(
+				'name' => 'share',
+				'label' => __('Share Next Posts Now', 'nevamiss'),
+				'url' => admin_url("admin-post.php?schedule_id=$schedule_id&action=nevamiss_schedule_share&nonce=$nonce")
+			),
+			array(
+				'name' => 'delete',
+				'label' => __('Delete', 'nevamiss'),
+				'url' => admin_url("admin-post.php?schedule_id=$schedule_id&action=nevamiss_schedule_delete&nonce=$nonce"),
+				'class' => 'trash'
+			),
+			array(
+				'name' => 'unschedule',
+				'label' => __('Unschedule', 'nevamiss'),
+				'url' => admin_url("admin-post.php?schedule_id=$schedule_id&action=nevamiss_schedule_unschedule&nonce=$nonce")
+			)
+
+		);
+	}
+
+	private function link(array $action): string
+	{
+		if(!isset($action['url'])){
+			return '';
+		}
+		$title = $action['label'] ?? __('no label', 'nevamiss');
+		$class = $action['class'] ?? '';
+		return "<span class='$class'><a href='{$action['url']}' title='$title' class='$class'> $title</a></span>";
 	}
 }

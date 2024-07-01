@@ -11,6 +11,7 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
 
 ?>
 <div class="wrap">
+    <?php $this->notices(); ?>
     <p>
         <h1 class="wp-heading-inline">
             <?php echo esc_html($this->title); ?>
