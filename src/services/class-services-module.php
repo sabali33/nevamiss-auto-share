@@ -10,6 +10,7 @@ use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
+use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Networks\Network_Clients;
@@ -35,12 +36,21 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 */
 		$post_handler = $container->get(Post_Handler::class);
 
+		/**
+		 * @var Schedule_Queue $schedule_queue
+		 */
+		$schedule_queue = $container->get(Schedule_Queue::class);
+
 		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
-		add_action( 'schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
+		add_action( 'nevamiss_schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
 
 		add_action('cron_schedules', array($wp_cron_service, 'add_cron'));
 		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_cron'));
-		add_action('nevamiss_after_schedule_updated', array($wp_cron_service, 'maybe_reschedule_cron'), 10, 2);
+		add_action('nevamiss_after_schedule_updated', array($wp_cron_service, 'maybe_reschedule_cron'), 10);
+
+		add_action( 'nevamiss_created_schedule', array( $schedule_queue, 'create_queue_callback'));
+		add_action('nevamiss_after_schedule_updated', array($schedule_queue, 'maybe_update_schedule_queue'), 10);
+		add_action('nevamiss_schedule_task_complete', array($schedule_queue, 'update_schedule_queue_callback'), 10, 2);
 
 		add_action( WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, array( $schedule_post_manager, 'run' ) );
 		add_action( WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_post_manager, 'run' ) );
@@ -93,6 +103,13 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get(Schedule_Post_Manager::class)
 				);
 			},
+			Schedule_Queue::class => function(ContainerInterface $container){
+				return new Schedule_Queue(
+					$container->get(Schedule_Repository::class),
+					$container->get(Schedule_Queue_Repository::class),
+					$container->get(Query::class)
+				);
+			}
 		);
 	}
 }

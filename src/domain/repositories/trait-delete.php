@@ -12,7 +12,7 @@ trait Delete_Trait {
 	 * @throws Exception
 	 */
 	public function delete( int $id ): bool {
-		$sql = $this->wpdb->prepare( "DELETE * FROM {$this->table_name()} WHERE id='%s'", $id );
+		$sql = $this->wpdb->prepare( "DELETE FROM {$this->table_name()} WHERE id='%s'", $id );
 
 		$entity = $this->wpdb->query( $sql );
 
