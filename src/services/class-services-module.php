@@ -30,6 +30,11 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 */
 		$wp_cron_service = $container->get(WP_Cron_Service::class);
 
+		/**
+		 * @var Post_Handler $post_handler
+		 */
+		$post_handler = $container->get(Post_Handler::class);
+
 		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
 		add_action( 'schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
 
@@ -39,6 +44,10 @@ class Services_Module implements ServiceModule, ExecutableModule {
 
 		add_action( WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, array( $schedule_post_manager, 'run' ) );
 		add_action( WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_post_manager, 'run' ) );
+
+		add_action('admin_post_nevamiss_schedule_delete', [$post_handler, 'delete_schedule_callback']);
+		add_action('admin_post_nevamiss_schedule_unschedule', [$post_handler, 'unschedule_callback']);
+		add_action('admin_post_nevamiss_schedule_share', [$post_handler, 'share_schedule_posts_callback']);
 
 		return true;
 	}
@@ -77,6 +86,13 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 			Form_Validator::class => fn() => new Form_Validator(),
+			Post_Handler::class => function (ContainerInterface $container) {
+				return new Post_Handler(
+					$container->get(Schedule_Repository::class),
+					$container->get(WP_Cron_Service::class),
+					$container->get(Schedule_Post_Manager::class)
+				);
+			},
 		);
 	}
 }

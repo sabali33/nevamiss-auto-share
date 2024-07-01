@@ -28,4 +28,25 @@ class Schedules_Page extends Page {
 			esc_html__( 'Add Schedule' )
 		);
 	}
+
+	public function notices(): void
+	{
+		if(
+			! isset($_GET['notice']) &&
+			! isset($_GET['type'])
+		){
+			return;
+		}
+		if(! (isset($_GET['message']) && $_GET['message'] )){
+			return;
+		}
+		wp_admin_notice(
+			$_GET['message'],
+			array(
+				'type'               => $_GET['type'],
+				'dismissible'        => false,
+				'additional_classes' => array( 'inline', 'notice-alt' ),
+			)
+		);
+	}
 }
