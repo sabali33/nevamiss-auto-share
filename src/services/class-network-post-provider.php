@@ -9,6 +9,7 @@ use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
+use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 
 class Network_Post_Provider {
@@ -17,6 +18,7 @@ class Network_Post_Provider {
 		private Settings $settings,
 		private Network_Account_Repository $account_repository,
 		private Query $query,
+		private Schedule_Queue_Repository $queue_repository,
 		private array $network_clients,
 	) {
 	}
@@ -26,9 +28,11 @@ class Network_Post_Provider {
 	 * @return array{data: string, account: Network_Account, network_client: Network_Clients_Interface}
 	 * @throws Not_Found_Exception
 	 */
-	public function provide_for_schedule( Schedule $schedule ): array {
+	public function provide_instant_share_data( Schedule $schedule ): array {
+
 		$schedule_accounts = $schedule->network_accounts();
-		$schedule_posts    = $this->query->query( $schedule->query_args() );
+		$schedule_posts    = $this->schedule_posts($schedule);
+
 		$schedule_tags     = $schedule->social_media_tags();
 		$data_set          = array();
 
@@ -105,5 +109,56 @@ class Network_Post_Provider {
 
 	private function format_tags( string $tags, $data ): array|string {
 		return str_replace( '%TAGS%', $tags, $data );
+	}
+
+	/**
+	 * @param Schedule $schedule
+	 * @return array{class_identifier: string, parameters: array, schedule_id: int}
+	 * @throws Not_Found_Exception
+	 */
+	public function provide_for_schedule(Schedule $schedule): array
+	{
+		$schedule_posts = $this->schedule_posts($schedule);
+
+		/**
+		 * @var Network_Account $schedule_accounts
+		 */
+		$schedule_accounts = $schedule->network_accounts();
+
+		$post_data = array();
+
+		foreach ( $schedule_accounts as $schedule_account ) {
+
+			foreach ( $schedule_posts as $schedule_post ) {
+
+				$post_data[] = array(
+					'class_identifier' => Schedule_Tasks_Runner::class,
+					'schedule_id'      => $schedule->id(),
+					'parameters'       => array(
+						'post_id'    => $schedule_post->ID,
+						'account_id' => $schedule_account,
+					),
+				);
+			}
+		}
+
+		return $post_data;
+	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	private function schedule_posts(Schedule $schedule): array
+	{
+		$posts_count = $schedule->query_args()['posts_per_page'];
+		$schedule_queue = $this->queue_repository->get_schedule_queue_by_schedule_id($schedule->id());
+
+		if(!$schedule_queue){
+			error_log("Error from Nevamiss: unable to retrieve Schedule Queue");
+			return [];
+		}
+		$post_ids = array_slice($schedule_queue->all_posts_ids(), 0, (int)$posts_count);
+
+		return $this->query->query( ['post__in' => $post_ids]);
 	}
 }

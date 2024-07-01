@@ -46,7 +46,11 @@ class Schedule_Tasks_Runner {
 
 		$post_manager->post($data);
 
-		do_action( 'schedule_task_complete', $active_task[0]['id'] );
+		do_action(
+			'nevamiss_schedule_task_complete',
+			$active_task[0]['id'],
+			['schedule_id' => $schedule_id, 'post_id' =>$parameters_arr['post_id']]
+		);
 
 		sleep( 2 );
 

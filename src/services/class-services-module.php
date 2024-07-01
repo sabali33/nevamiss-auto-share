@@ -85,6 +85,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				$container->get( Settings::class ),
 				$container->get( Network_Account_Repository::class ),
 				$container->get( Query::class ),
+				$container->get(Schedule_Queue_Repository::class),
 				$container->get( Network_Clients::class )
 			),
 			Schedule_Tasks_Runner::class => function ( ContainerInterface $container ) {
