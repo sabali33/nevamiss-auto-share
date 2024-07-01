@@ -39,13 +39,13 @@ class Schedule_Post_Manager {
 
 		if ( ! $schedule->is_heavy() ) {
 
-			$data_set = $this->schedule_provider->provide_for_schedule( $schedule );
+			$data_set = $this->schedule_provider->provide_instant_share_data( $schedule );
 
 			$this->instant_post( $data_set );
 			return;
 		}
 
-		$data_set = $this->make_schedule_post_data( $schedule );
+		$data_set = $this->schedule_provider->provide_for_schedule( $schedule );
 
 		$this->create_tasks( $schedule, $data_set );
 
@@ -90,35 +90,5 @@ class Schedule_Post_Manager {
 		do_action( 'schedule_create_tasks_completed', $schedule->id() );
 	}
 
-	/**
-	 * @param Schedule $schedule
-	 * @return array{class_identifier: string, parameters: array, schedule_id: int}
-	 */
-	private function make_schedule_post_data( Schedule $schedule ): array {
-		$schedule_posts = $this->query->query( $schedule->query_args() );
 
-		/**
-		 * @var Network_Account $schedule_accounts
-		 */
-		$schedule_accounts = $schedule->network_accounts();
-
-		$post_data = array();
-
-		foreach ( $schedule_accounts as $schedule_account ) {
-
-			foreach ( $schedule_posts as $schedule_post ) {
-
-				$post_data[] = array(
-					'class_identifier' => Schedule_Tasks_Runner::class,
-					'schedule_id'      => $schedule->id(),
-					'parameters'       => array(
-						'post_id'    => $schedule_post->ID,
-						'account_id' => $schedule_account,
-					),
-				);
-			}
-		}
-
-		return $post_data;
-	}
 }
