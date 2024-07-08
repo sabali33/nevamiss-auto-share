@@ -16,7 +16,7 @@ class Network_Authenticator{
 	{
 
 		if( !$this->authorize('facebook') ){
-			$this->redirect(['status' => 'error', 'message' => 'Not authorized']);
+			$this->redirect($this->unauthorize_message());
 			exit;
 		}
 		$code = $_GET['code'];
@@ -24,9 +24,18 @@ class Network_Authenticator{
 		 * @var Facebook_Client $facebook_client
 		 */
 		$facebook_client = $this->collection->get('facebook');
-		$user = $facebook_client->auth($code);
+		try {
+			$data = $facebook_client->auth($code);
+			$this->redirect([
+				'status' => 'success',
+				'message' => $this->success_message($data)
+			]);
+		}catch (\Exception $exception){
+			$this->redirect($this->error_message($exception));
+		}
 
-		$this->redirect($user['name']);
+
+
 	}
 
 	/**
@@ -35,9 +44,10 @@ class Network_Authenticator{
 	public function linkedin_auth(): void
 	{
 		if( !$this->authorize('linkedin') ){
-			$this->redirect('No user');
+			$this->redirect($this->unauthorize_message());
 			exit;
 		}
+
 		$code = $_GET['code'];
 		/**
 		 * @var Linkedin_Client $linkedin_client
@@ -50,14 +60,11 @@ class Network_Authenticator{
 
 			$this->redirect([
 				'status' => 'success',
-				'message' => urlencode("{$data['name']} has successfully logged in to {$data['network_label']}!")
+				'message' => $this->success_message($data)
 			]);
 
 		}catch (\Exception $exception){
-			$this->redirect([
-				'status' => 'error',
-				'message' => urlencode($exception->getMessage())
-			]);
+			$this->redirect($this->error_message($exception));
 			exit;
 		}
 
@@ -77,6 +84,38 @@ class Network_Authenticator{
 		);
 
 		wp_redirect($redirect_url);
+	}
+
+	/**
+	 * @param array $data
+	 * @return string
+	 */
+	private function success_message(array $data): string
+	{
+		return urlencode("{$data['name']} has successfully logged in to {$data['network_label']}!");
+	}
+
+	/**
+	 * @return array
+	 */
+	private function unauthorize_message(): array
+	{
+		return [
+			'status' => 'error',
+			'message' => __("Not authorized", 'nevamiss')
+		];
+	}
+
+	/**
+	 * @param \Exception $exception
+	 * @return array
+	 */
+	private function error_message(\Exception $exception): array
+	{
+		return [
+			'status' => 'error',
+			'message' => $exception->getMessage()
+		];
 	}
 }
 
