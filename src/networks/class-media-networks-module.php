@@ -52,6 +52,29 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 					'instagram' => $container->get( Instagram_Client::class ),
 				);
 			},
+			Media_Network_Collection::class => function (ContainerInterface $container) {
+				$collection = new Media_Network_Collection();
+				foreach( $container->get(Network_Clients::class) as $network_slug => $client){
+					$collection->register($network_slug, $client);
+				}
+				return $collection;
+			},
+			Network_Authenticator::class => function (ContainerInterface $container) {
+				return new Network_Authenticator($container->get(Media_Network_Collection::class));
+			}
 		);
+	}
+
+	public function run(ContainerInterface $container): bool
+	{
+		/**
+		 * @var Network_Authenticator $network_authenticator
+		 */
+		$network_authenticator = $container->get(Network_Authenticator::class);
+
+		add_action('admin_post_facebook', [$network_authenticator, 'facebook_auth']);
+		add_action('admin_post_linkedin', [$network_authenticator, 'linkedin_auth']);
+
+		return true;
 	}
 }

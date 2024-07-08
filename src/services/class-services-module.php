@@ -41,6 +41,11 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 */
 		$schedule_queue = $container->get(Schedule_Queue::class);
 
+		/**
+		 * @var Accounts_Manager $accounts_manager
+		 */
+		$accounts_manager = $container->get(Accounts_Manager::class);
+
 		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
 		add_action( 'nevamiss_schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
 
@@ -58,6 +63,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action('admin_post_nevamiss_schedule_delete', [$post_handler, 'delete_schedule_callback']);
 		add_action('admin_post_nevamiss_schedule_unschedule', [$post_handler, 'unschedule_callback']);
 		add_action('admin_post_nevamiss_schedule_share', [$post_handler, 'share_schedule_posts_callback']);
+
+		add_action('nevamiss_user_network_login', [$accounts_manager, 'network_login_callback'], 10, 2);
 
 		return true;
 	}
@@ -110,6 +117,12 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get(Schedule_Queue_Repository::class),
 					$container->get(Query::class)
 				);
+			},
+			Http_Request::class => function () {
+				return new Http_Request();
+			},
+			Accounts_Manager::class => function(ContainerInterface $container){
+				return new Accounts_Manager($container->get(Network_Account_Repository::class));
 			}
 		);
 	}
