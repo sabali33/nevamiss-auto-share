@@ -209,14 +209,6 @@ class Schedule_Form extends Page {
 	private function accounts(): array {
 		$accounts = $this->account_repository->get_all();
 
-		if ( ! $accounts ) {
-			return array(
-				'SwimGhana',
-				'Nevafade',
-				'Nice Bracelets',
-			);
-		}
-
 		return array_reduce(
 			$accounts,
 			static function ( array $acc, array $account ) {
