@@ -27,10 +27,12 @@ class Posts_Stats_Repository implements Create_Interface, Delete_Interface, Get_
 		'status',
 	);
 
+	private const ENTITY_SLUG         = 'posts_stats';
+
 	public function clear() {
 	}
 
 	private function table_name(): string {
-		return "{$this->wpdb->prefix}_nevamiss_stats";
+		return "{$this->wpdb->prefix}nevamiss_stats";
 	}
 }

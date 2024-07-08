@@ -20,6 +20,7 @@ trait Get_One_Trait {
 			throw new Not_Found_Exception( self::ENTITY_NAME . ' with the ID not found' );
 		}
 		[$entity] = $results;
+
 		return $this->factory->new( self::ENTITY_CLASS, $entity );
 	}
 }

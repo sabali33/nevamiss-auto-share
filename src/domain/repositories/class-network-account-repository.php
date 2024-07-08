@@ -22,6 +22,8 @@ class Network_Account_Repository implements Create_Interface, Delete_Interface, 
 	private const ENTITY_NAME  = 'Network Account';
 	private const ENTITY_CLASS = Network_Account::class;
 
+	private const ENTITY_SLUG         = 'network_account';
+
 	private const ALLOWED_TABLE_COLUMNS = array(
 		'id',
 		'name',
