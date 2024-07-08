@@ -22,6 +22,17 @@ class Accounts_Manager
 			'linkedin' => $this->prepare_linkedin_accounts($user),
 		};
 		foreach ($posts_data as $posts_datum){
+			$remote_account = $this->account_repository->get_by_remote_id($posts_datum['remote_account_id']);
+			if($remote_account){
+				$this->account_repository->update(
+					$posts_datum['remote_account_id'],
+					[
+						'token' => $posts_datum['token'],
+						'name' => $posts_datum['name']
+					]
+				);
+				continue;
+			}
 			$this->account_repository->create($posts_datum);
 		}
 

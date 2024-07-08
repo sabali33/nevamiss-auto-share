@@ -77,7 +77,7 @@ class DB {
             id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(50),
             network VARCHAR(50),
-            remote_account_id INT UNIQUE,
+            remote_account_id VARCHAR(60),
             parent_remote_id VARCHAR(60),
             token TEXT DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

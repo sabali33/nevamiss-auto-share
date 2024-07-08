@@ -8,7 +8,7 @@ trait Get_All_Trait {
 
 	/**
 	 */
-	public function get_all( array $options = array() ): array|object|null {
+	public function get_all( array $options = array() ): array {
 		[$where_clause, $data] = $this->where_clause( $options );
 		$sql                   = "SELECT * FROM {$this->table_name()}";
 
@@ -20,14 +20,22 @@ trait Get_All_Trait {
 			);
 		}
 
-		return $this->wpdb->get_results( $sql, ARRAY_A );
+		$entities = $this->wpdb->get_results( $sql, ARRAY_A );
+		if(!$entities){
+			return [];
+		}
+		return $entities;
 	}
 
 	private function where_clause( array $options ): array {
+
+		if(!isset($options['where'])){
+			return [];
+		}
 		$where_string = '';
 		$data         = array();
 
-		foreach ( $options as $key => $option ) {
+		foreach ( $options['where'] as $key => $option ) {
 			if ( ! $option ) {
 				continue;
 			}
