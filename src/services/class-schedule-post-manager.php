@@ -66,7 +66,9 @@ class Schedule_Post_Manager {
 				'network_client' => $network_client,
 				'data' => $data
 			] = $item;
-
+			/**
+			 * @var Network_Post_Manager $network_post_manager
+			 */
 			$network_post_manager = $this->factory->new(
 				Network_Post_Manager::class,
 				$network_account,

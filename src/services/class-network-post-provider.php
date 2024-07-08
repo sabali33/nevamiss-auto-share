@@ -8,6 +8,7 @@ use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Schedule;
+use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
@@ -20,6 +21,7 @@ class Network_Post_Provider {
 		private Query $query,
 		private Schedule_Queue_Repository $queue_repository,
 		private array $network_clients,
+		private Factory $factory,
 	) {
 	}
 
@@ -43,12 +45,10 @@ class Network_Post_Provider {
 				$data = $this->format_post( $schedule_post );
 				$data = $this->format_tags( $schedule_tags, $data );
 
-				$data_set['data'] = $data;
-
-				$data_set = array_merge(
-					$data_set,
-					$this->provide_network( $schedule_account )
-				);
+				$data_unit = [
+					'data' => $data
+				];
+				$data_set[] = array_merge($data_unit, $this->provide_network($schedule_account));
 			}
 		}
 
@@ -57,10 +57,17 @@ class Network_Post_Provider {
 
 	/**
 	 * @throws Not_Found_Exception
+	 * @throws \Exception
 	 */
 	public function provide_network( int $account_id ): array {
+		/**
+		 * @var Network_Account $network_account
+		 */
 		$network_account = $this->account_repository->get( $account_id );
 
+		if(!$network_account->token()){
+			$network_account = $this->new_network_account($network_account);
+		}
 		return array(
 			'account'        => $network_account,
 			'network_client' => $this->network_clients[ $network_account->network() ],
@@ -160,5 +167,23 @@ class Network_Post_Provider {
 		$post_ids = array_slice($schedule_queue->all_posts_ids(), 0, (int)$posts_count);
 
 		return $this->query->query( ['post__in' => $post_ids]);
+	}
+
+	/**
+	 * @param Network_Account $network_account
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	private function new_network_account(Network_Account $network_account): Network_Account
+	{
+		$parent = $this->account_repository->get_all(['where' => ['remote_account_id' => $network_account->parent_remote_id()]]);
+		if (empty($parent)) {
+			throw new \Exception('Token is empty');
+		}
+		[$parent] = $parent;
+
+		$network_account_arr = array_merge($network_account->to_array(), ['token' => $parent['token']]);
+
+		return $this->factory->new(Network_Account::class, $network_account_arr);
 	}
 }

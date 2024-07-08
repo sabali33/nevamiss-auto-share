@@ -24,4 +24,20 @@ class Network_Account {
 	public function network(): string {
 		return $this->account['network'];
 	}
+
+	public function to_array(): array
+	{
+		return [
+			'name' => $this->name(),
+			'remote_account_id' => $this->remote_account_id(),
+			'id' => $this->id(),
+			'token' => $this->token(),
+			'network' => $this->network(),
+		];
+	}
+
+	public function parent_remote_id()
+	{
+		return $this->account['parent_remote_id'];
+	}
 }
