@@ -13,11 +13,11 @@ class Instagram_Client implements Network_Clients_Interface {
 		// TODO: Implement auth_link() method.
 	}
 
-	public function auth() {
+	public function auth(string $code) {
 		// TODO: Implement auth() method.
 	}
 
-	public function get_account() {
+	public function get_account(string $access_token) {
 		// TODO: Implement get_account() method.
 	}
 
