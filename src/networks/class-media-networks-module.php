@@ -39,6 +39,7 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 				$settings = $container->get(Settings::class);
 				return new Linkedin_Client(
 					$container->get(Http_Request::class),
+					$container->get(Settings::class),
 					$settings->network_credentials('linkedin')
 				);
 			},

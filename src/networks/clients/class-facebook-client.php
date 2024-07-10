@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nevamiss\Networks\Clients;
 
 use Exception;
+use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Http_Request;
 
@@ -84,8 +85,8 @@ class Facebook_Client implements Network_Clients_Interface {
 		// TODO: Implement get_account() method.
 	}
 
-	public function post( string $data, mixed $account ) {
-		// TODO: Implement post() method.
+	public function post( array $data, Network_Account $account ) {
+		var_dump($data);
 	}
 
 	/**

@@ -32,16 +32,18 @@ trait Get_All_Trait {
 		if(!isset($options['where'])){
 			return [];
 		}
-		$where_string = '';
+		$where_string = [];
 		$data         = array();
 
 		foreach ( $options['where'] as $key => $option ) {
 			if ( ! $option ) {
 				continue;
 			}
-			$where_string .= " $key= %s";
+
+			$where_string[] = "$key= %s";
 			$data[]        = $option;
 		}
+		$where_string = join(' AND ', $where_string);
 		return array( $where_string, $data );
 	}
 }

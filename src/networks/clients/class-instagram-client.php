@@ -21,7 +21,7 @@ class Instagram_Client implements Network_Clients_Interface {
 		// TODO: Implement get_account() method.
 	}
 
-	public function post( string $data, mixed $account ) {
+	public function post( array $data, mixed $account ) {
 		// TODO: Implement post() method.
 	}
 }

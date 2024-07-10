@@ -33,6 +33,7 @@ class Network_Account {
 			'id' => $this->id(),
 			'token' => $this->token(),
 			'network' => $this->network(),
+			'parent_remote_id' => $this->parent_remote_id(),
 		];
 	}
 

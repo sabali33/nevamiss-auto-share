@@ -22,7 +22,7 @@ class Post_Handler {
 	 * @throws Not_Found_Exception
 	 * @throws \Exception
 	 */
-	public function share_schedule_posts_callback()
+	public function share_schedule_posts_callback(): void
 	{
 		$authorized = $this->authorize();
 
@@ -41,7 +41,7 @@ class Post_Handler {
 			]);
 
 			exit;
-		}catch (Not_Found_Exception $exception){
+		}catch (Not_Found_Exception|\Exception $exception){
 			$this->redirect([
 				'type' => 'error',
 				'message' => $exception->getMessage(),
@@ -52,13 +52,12 @@ class Post_Handler {
 		}
 
 
-
 	}
 
 	/**
 	 * @throws \Exception
 	 */
-	public function delete_schedule_callback()
+	public function delete_schedule_callback(): void
 	{
 		$authorized = $this->authorize();
 

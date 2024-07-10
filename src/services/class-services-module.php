@@ -14,13 +14,19 @@ use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Networks\Network_Clients;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Services_Module implements ServiceModule, ExecutableModule {
 
 	use ModuleClassNameIdTrait;
 
-	public function run( ContainerInterface $container ): bool {
+	/**
+	 * @throws NotFoundExceptionInterface
+	 * @throws ContainerExceptionInterface
+	 */
+	public function run(ContainerInterface $container ): bool {
 		/**
 		 * @var Schedule_Post_Manager $schedule_post_manager
 		 */
