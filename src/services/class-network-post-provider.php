@@ -39,11 +39,15 @@ class Network_Post_Provider {
 		$data_set          = array();
 
 		foreach ( $schedule_accounts as $schedule_account ) {
-
+			/**
+			 * @var \WP_Post $schedule_post
+			 */
 			foreach ( $schedule_posts as $schedule_post ) {
 
 				$data = $this->format_post( $schedule_post );
-				$data = $this->format_tags( $schedule_tags, $data );
+
+
+				$data['status_text'] = $this->format_tags( $schedule_tags, $data['status_text'] );
 
 				$data_unit = [
 					'data' => $data
@@ -79,9 +83,10 @@ class Network_Post_Provider {
 	 * @param null         $share_format
 	 * @return string
 	 */
-	public function format_post( \WP_Post|int $post, $share_format = null ): string {
-		if ( ! ( $post instanceof \WP_Post ) ) {
-			$post = $this->query->post( $post );
+	public function format_post( int|\WP_Post $post, $share_format = null ): array {
+
+		if(!($post instanceof \WP_Post)){
+			$post = $this->query->post($post);
 		}
 		global $wp_rewrite;
 
@@ -110,8 +115,15 @@ class Network_Post_Provider {
 
 		$output = str_replace( '%TITLE%', $post->post_title, $share_format );
 		$output = str_replace( '%LINK%', $link, $output );
+		$output = str_replace( '%EXCERPT%', $excerpt, $output );
 
-		return str_replace( '%EXCERPT%', $excerpt, $output );
+		$data = ['status_text' => $output];
+		$data['image_url'] = get_the_post_thumbnail_url($post->ID);
+		$data['title'] = $post->post_title;
+		$data['excerpt'] = $post->post_excerpt;
+		$data['link'] = get_permalink($post->ID);
+
+		return $data;
 	}
 
 	private function format_tags( string $tags, $data ): array|string {
@@ -139,7 +151,7 @@ class Network_Post_Provider {
 			foreach ( $schedule_posts as $schedule_post ) {
 
 				$post_data[] = array(
-					'class_identifier' => Schedule_Tasks_Runner::class,
+					'class_identifier' => Network_Post_Manager::class,
 					'schedule_id'      => $schedule->id(),
 					'parameters'       => array(
 						'post_id'    => $schedule_post->ID,

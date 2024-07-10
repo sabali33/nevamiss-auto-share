@@ -24,7 +24,12 @@ class Schedule_Tasks_Runner {
 	public function run( int $schedule_id ): void {
 		do_action( 'schedule_task_begins', $schedule_id );
 
-		$active_task = $this->task_repository->get_all( array( 'schedule_id' => $schedule_id ) );
+		$active_task = $this->task_repository->get_all( array(
+			'where' => [
+				'schedule_id' => $schedule_id,
+				'status' => 'pending'
+			] )
+		);
 
 		if ( ! $active_task ) {
 			return;
@@ -38,7 +43,9 @@ class Schedule_Tasks_Runner {
 			'account' => $network_account,
 			'network_client' => $network_client
 		] = $this->schedule_provider->provide_network( $parameters_arr['account_id'] );
+
 		$data = $this->schedule_provider->format_post($parameters_arr['post_id'] );
+
 		/**
 		 * @var Network_Post_Manager $post_manager
 		 */
@@ -63,6 +70,6 @@ class Schedule_Tasks_Runner {
 	 * @throws Exception
 	 */
 	public function update_task( int $task_id ): void {
-		$this->task_repository->update( $task_id, array( 'status' => 1 ) );
+		$this->task_repository->update( $task_id, array( 'status' => 'succeeded' ) );
 	}
 }

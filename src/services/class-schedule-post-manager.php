@@ -41,7 +41,8 @@ class Schedule_Post_Manager {
 
 			$data_set = $this->schedule_provider->provide_instant_share_data( $schedule );
 
-			$this->instant_post( $data_set );
+			$this->instant_post( $data_set, $schedule_id );
+
 			return;
 		}
 
@@ -55,7 +56,7 @@ class Schedule_Post_Manager {
 	 * @param array[] $data_set
 	 * @throws Not_Found_Exception
 	 */
-	private function instant_post( array $data_set ): void {
+	private function instant_post( array $data_set, int $schedule_id ): void {
 		/**
 		 * @var array{data: string, account: Network_Account, network_client: Network_Clients_Interface} $item
 		 */
@@ -75,7 +76,9 @@ class Schedule_Post_Manager {
 				$network_client
 			);
 
-			$network_post_manager->post( $data );
+			$remote_id = $network_post_manager->post( $data );
+
+			do_action('nevamiss_schedule_network_share', $remote_id, $schedule_id);
 
 			sleep( 1 );
 		}
