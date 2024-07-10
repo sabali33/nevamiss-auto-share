@@ -44,7 +44,11 @@ class Http_Request {
 			throw new \Exception($response['response']['message']);
 		}
 
-		return $body ? json_decode($body, true) : $response['response'];
+		if(!$body && isset($args['headers']['Linkedin-Version'])){
+			return $response['headers']['data']['x-restli-id'];
+		}
+
+		return json_decode($body, true);
 	}
 
 	/**
