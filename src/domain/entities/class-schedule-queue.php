@@ -21,7 +21,7 @@ class Schedule_Queue {
 		$this->all_posts_ids    = $this->to_array( $queue_data['all_posts_ids'] );
 	}
 
-	public function schedule_id(): string {
+	public function schedule_id(): int {
 		return $this->schedule_id;
 	}
 
@@ -49,7 +49,8 @@ class Schedule_Queue {
 		);
 	}
 
-	public function cycles() {
+	public function cycles(): int
+	{
 		return $this->cycles;
 	}
 }
