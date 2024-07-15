@@ -10,6 +10,7 @@ use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
+use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
@@ -48,9 +49,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		$schedule_queue = $container->get(Schedule_Queue::class);
 
 		/**
-		 * @var Accounts_Manager $accounts_manager
+		 * @var Stats_Manager $stats_manager
 		 */
-		$accounts_manager = $container->get(Accounts_Manager::class);
+		$stats_manager = $container->get(Stats_Manager::class);
 
 		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
 		add_action( 'nevamiss_schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
@@ -62,6 +63,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'nevamiss_created_schedule', array( $schedule_queue, 'create_queue_callback'));
 		add_action('nevamiss_after_schedule_updated', array($schedule_queue, 'maybe_update_schedule_queue'), 10);
 		add_action('nevamiss_schedule_task_complete', array($schedule_queue, 'update_schedule_queue_callback'), 10, 2);
+
+		add_action('nevamiss_schedule_task_complete', array($stats_manager, 'record_stats_callback'), 10, 2);
 
 		add_action( WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, array( $schedule_post_manager, 'run' ) );
 		add_action( WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_post_manager, 'run' ) );
@@ -128,7 +131,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			},
 			Accounts_Manager::class => function(ContainerInterface $container){
 				return new Accounts_Manager($container->get(Network_Account_Repository::class));
-			}
+			},
+			Stats_Manager::class => fn(ContainerInterface $container) => new Stats_Manager($container->get(Posts_Stats_Repository::class))
 		);
 	}
 }

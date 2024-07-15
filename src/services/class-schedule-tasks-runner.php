@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Nevamiss\Services;
 
 use Exception;
+use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
-use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
+use Nevamiss\Services\Contracts\Task_Runner_Interface;
 
-class Schedule_Tasks_Runner {
+class Schedule_Tasks_Runner implements  Task_Runner_Interface {
 
 	public function __construct(
 		private Task_Repository $task_repository,
@@ -19,7 +20,8 @@ class Schedule_Tasks_Runner {
 	}
 
 	/**
-	 * @throws Exception
+	 * @param int $schedule_id
+	 * @throws Not_Found_Exception
 	 */
 	public function run( int $schedule_id ): void {
 		do_action( 'schedule_task_begins', $schedule_id );
@@ -51,12 +53,16 @@ class Schedule_Tasks_Runner {
 		 */
 		$post_manager = $this->factory->new( $class_name, $network_account, $network_client );
 
-		$post_manager->post($data);
+		$remote_post_id = $post_manager->post($data);
 
 		do_action(
 			'nevamiss_schedule_task_complete',
 			$active_task[0]['id'],
-			['schedule_id' => $schedule_id, 'post_id' =>$parameters_arr['post_id']]
+			[
+				'schedule_id' => $schedule_id,
+				'post_id' =>$parameters_arr['post_id'],
+				'remote_post_id' => $remote_post_id,
+			]
 		);
 
 		sleep( 2 );

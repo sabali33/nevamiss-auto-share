@@ -10,9 +10,12 @@ use Nevamiss\Networks\Clients\Instagram_Client;
 use Nevamiss\Networks\Clients\Linkedin_Client;
 use Nevamiss\Networks\Clients\X_Client;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Services\Accounts_Manager;
 use Nevamiss\Services\Http_Request;
 use Nevamiss\Services\Settings;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Media_Networks_Module implements ServiceModule, ExecutableModule {
 
@@ -30,8 +33,16 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 					$container->get(Http_Request::class),
 					$settings->network_credentials( 'facebook')
 				);
-			} ,
-			X_Client::class         => fn() => new X_Client(),
+			},
+			X_Client::class         => function(ContainerInterface $container) {
+				$settings = $container->get(Settings::class);
+
+				return new X_Client(
+					$container->get(Http_Request::class),
+					$container->get(Settings::class),
+					$settings->network_credentials('x')
+				);
+			},
 			Linkedin_Client::class  => function (ContainerInterface $container) {
 				/**
 				 * @var Settings $settings
@@ -82,6 +93,7 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 
 		add_action('admin_post_facebook', [$network_authenticator, 'facebook_auth']);
 		add_action('admin_post_linkedin', [$network_authenticator, 'linkedin_auth']);
+		add_action('admin_post_x', [$network_authenticator, 'x_auth']);
 
 		return true;
 	}
