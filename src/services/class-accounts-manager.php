@@ -20,6 +20,7 @@ class Accounts_Manager
 		$posts_data = match($network){
 			'facebook' => $this->prepare_facebook_accounts($user),
 			'linkedin' => $this->prepare_linkedin_accounts($user),
+			'x' => $this->prepare_x_accounts($user),
 		};
 		foreach ($posts_data as $posts_datum){
 			$remote_account = $this->account_repository->get_by_remote_id($posts_datum['remote_account_id']);
@@ -86,5 +87,17 @@ class Accounts_Manager
 			];
 		}
 		return $accounts;
+	}
+
+	private function prepare_x_accounts(array $user): array
+	{
+		return array(
+			[
+				'name' => $user['name'],
+				'network' => 'x',
+				'remote_account_id' => $user['id'],
+				'token' => $user['access_token']
+			]
+		);
 	}
 }
