@@ -13,6 +13,7 @@ use Nevamiss\Domain\Entities\Schedule_Queue;
 class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, Update_Interface {
 
 	use Repository_Common_Trait;
+	use To_Model_Trait;
 	use Create_Trait;
 	use Update_Trait;
 	use Get_One_Trait;

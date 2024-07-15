@@ -6,6 +6,7 @@ namespace Nevamiss\Services;
 
 use Exception;
 use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Domain\Entities\Task;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Services\Contracts\Task_Runner_Interface;
@@ -36,17 +37,20 @@ class Schedule_Tasks_Runner implements  Task_Runner_Interface {
 		if ( ! $active_task ) {
 			return;
 		}
-		[
-			'class_identifier' => $class_name,
-			'parameters' => $parameters,
-		] = $active_task[0];
-		$parameters_arr = json_decode($parameters, true);
+
+		/**
+		 * @var Task $active_task
+		 */
+		[$active_task] = $active_task;
+		$class_name = $active_task->class_identifier();
+		$parameters = $active_task->parameters();
+
 		[
 			'account' => $network_account,
 			'network_client' => $network_client
-		] = $this->schedule_provider->provide_network( $parameters_arr['account_id'] );
+		] = $this->schedule_provider->provide_network( $parameters['account_id'] );
 
-		$data = $this->schedule_provider->format_post($parameters_arr['post_id'] );
+		$data = $this->schedule_provider->format_post($parameters['post_id'] );
 
 		/**
 		 * @var Network_Post_Manager $post_manager
@@ -60,7 +64,7 @@ class Schedule_Tasks_Runner implements  Task_Runner_Interface {
 			$active_task[0]['id'],
 			[
 				'schedule_id' => $schedule_id,
-				'post_id' =>$parameters_arr['post_id'],
+				'post_id' =>$parameters['post_id'],
 				'remote_post_id' => $remote_post_id,
 			]
 		);

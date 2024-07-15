@@ -24,7 +24,7 @@ trait Get_All_Trait {
 		if(!$entities){
 			return [];
 		}
-		return $entities;
+		return $this->to_models($entities);
 	}
 
 	private function where_clause( array $options ): array {

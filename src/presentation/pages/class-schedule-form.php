@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
@@ -211,8 +212,8 @@ class Schedule_Form extends Page {
 
 		return array_reduce(
 			$accounts,
-			static function ( array $acc, array $account ) {
-				$acc[ $account['id'] ] = $account['name'];
+			static function ( array $acc, Network_Account $account ) {
+				$acc[ $account->id() ] = $account->name();
 				return $acc;
 			},
 			array()

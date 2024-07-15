@@ -18,6 +18,7 @@ class Task_Repository implements Create_Interface, Get_One_Interface, Get_All_In
 	use Update_Trait;
 	use Get_One_Trait;
 	use Get_All_Trait;
+	use To_Model_Trait;
 
 	private const ENTITY_NAME           = 'Task';
 	private const ENTITY_CLASS          = Task::class;

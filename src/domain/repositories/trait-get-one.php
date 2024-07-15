@@ -21,6 +21,6 @@ trait Get_One_Trait {
 		}
 		[$entity] = $results;
 
-		return $this->factory->new( self::ENTITY_CLASS, $entity );
+		return $this->to_model( $entity );
 	}
 }

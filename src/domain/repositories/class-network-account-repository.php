@@ -17,6 +17,7 @@ class Network_Account_Repository implements
 	Delete_Interface, Get_All_Interface, Get_One_Interface, Update_Interface {
 
 	use Repository_Common_Trait;
+	use To_Model_Trait;
 	use Create_Trait;
 	use Get_One_Trait;
 	use Delete_Trait;
