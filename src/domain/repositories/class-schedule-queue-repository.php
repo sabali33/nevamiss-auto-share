@@ -46,7 +46,7 @@ class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, 
 		if( empty($results ) ){
 			return false;
 		}
-		return $this->factory->new(Schedule_Queue::class, $results[0]);
+		return $this->to_model($results[0]);
 	}
 
 	private function table_name(): string {
