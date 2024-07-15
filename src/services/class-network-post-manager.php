@@ -17,7 +17,7 @@ class Network_Post_Manager implements Remote_Post_Interface {
 	) {
 	}
 
-	public function post( array $data ): Share_Response {
+	public function post( array $data ): string {
 		return $this->network_client->post( $data, $this->account );
 	}
 }
