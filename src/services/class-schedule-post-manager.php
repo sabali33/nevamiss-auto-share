@@ -49,7 +49,6 @@ class Schedule_Post_Manager {
 		$data_set = $this->schedule_provider->provide_for_schedule( $schedule );
 
 		$this->create_tasks( $schedule, $data_set );
-
 	}
 
 	/**
@@ -78,7 +77,7 @@ class Schedule_Post_Manager {
 
 			$remote_id = $network_post_manager->post( $data );
 
-			do_action('nevamiss_schedule_network_share', $remote_id, $schedule_id);
+			do_action( 'nevamiss_schedule_network_share', $remote_id, $schedule_id );
 
 			sleep( 1 );
 		}
@@ -94,6 +93,4 @@ class Schedule_Post_Manager {
 
 		do_action( 'schedule_create_tasks_completed', $schedule->id() );
 	}
-
-
 }

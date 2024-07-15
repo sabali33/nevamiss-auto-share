@@ -4,7 +4,7 @@ namespace Nevamiss\Domain\Entities;
 
 class Network_Account {
 
-	public function __construct(private array $account ) {
+	public function __construct( private array $account ) {
 	}
 
 	public function name(): string {
@@ -25,20 +25,18 @@ class Network_Account {
 		return $this->account['network'];
 	}
 
-	public function to_array(): array
-	{
-		return [
-			'name' => $this->name(),
+	public function to_array(): array {
+		return array(
+			'name'              => $this->name(),
 			'remote_account_id' => $this->remote_account_id(),
-			'id' => $this->id(),
-			'token' => $this->token(),
-			'network' => $this->network(),
-			'parent_remote_id' => $this->parent_remote_id(),
-		];
+			'id'                => $this->id(),
+			'token'             => $this->token(),
+			'network'           => $this->network(),
+			'parent_remote_id'  => $this->parent_remote_id(),
+		);
 	}
 
-	public function parent_remote_id()
-	{
+	public function parent_remote_id() {
 		return $this->account['parent_remote_id'];
 	}
 }

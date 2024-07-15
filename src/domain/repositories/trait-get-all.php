@@ -11,10 +11,9 @@ trait Get_All_Trait {
 	public function get_all( array $options = array() ): array {
 
 		[$where_clause, $data] = $this->where_clause( $options );
-		$limit = $this->limit_clause($options);
+		$limit                 = $this->limit_clause( $options );
 
-		$sql                   = "SELECT * FROM {$this->table_name()}";
-
+		$sql = "SELECT * FROM {$this->table_name()}";
 
 		if ( $where_clause ) {
 			$sql .= ' WHERE ' . $where_clause;
@@ -23,23 +22,23 @@ trait Get_All_Trait {
 				...$data
 			);
 		}
-		if($limit){
+		if ( $limit ) {
 			$sql .= $limit;
 		}
 
 		$entities = $this->wpdb->get_results( $sql, ARRAY_A );
-		if(!$entities){
-			return [];
+		if ( ! $entities ) {
+			return array();
 		}
-		return $this->to_models($entities);
+		return $this->to_models( $entities );
 	}
 
 	private function where_clause( array $options ): array {
 
-		if(!isset($options['where'])){
-			return [null, null];
+		if ( ! isset( $options['where'] ) ) {
+			return array( null, null );
 		}
-		$where_string = [];
+		$where_string = array();
 		$data         = array();
 
 		foreach ( $options['where'] as $key => $option ) {
@@ -48,15 +47,16 @@ trait Get_All_Trait {
 			}
 
 			$where_string[] = "$key= %s";
-			$data[]        = $option;
+			$data[]         = $option;
 		}
-		$where_string = join(' AND ', $where_string);
+
+		$where_string = join( ' AND ', $where_string );
+
 		return array( $where_string, $data );
 	}
 
-	public function limit_clause(array $options): ?string
-	{
-		if(!isset($options['per_page'])){
+	public function limit_clause( array $options ): ?string {
+		if ( ! isset( $options['per_page'] ) ) {
 			return null;
 		}
 		return "LIMIT {$options['per_page']}";

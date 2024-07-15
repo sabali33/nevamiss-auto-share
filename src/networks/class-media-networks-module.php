@@ -23,39 +23,39 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 
 	public function services(): array {
 		return array(
-			Facebook_Client::class  => function(ContainerInterface $container){
+			Facebook_Client::class          => function ( ContainerInterface $container ) {
 				/**
 				 * @var Settings $settings
 				 */
-				$settings = $container->get(Settings::class);
+				$settings = $container->get( Settings::class );
 
 				return new Facebook_Client(
-					$container->get(Http_Request::class),
-					$settings->network_credentials( 'facebook')
+					$container->get( Http_Request::class ),
+					$settings->network_credentials( 'facebook' )
 				);
 			},
-			X_Client::class         => function(ContainerInterface $container) {
-				$settings = $container->get(Settings::class);
+			X_Client::class                 => function ( ContainerInterface $container ) {
+				$settings = $container->get( Settings::class );
 
 				return new X_Client(
-					$container->get(Http_Request::class),
-					$container->get(Settings::class),
-					$settings->network_credentials('x')
+					$container->get( Http_Request::class ),
+					$container->get( Settings::class ),
+					$settings->network_credentials( 'x' )
 				);
 			},
-			Linkedin_Client::class  => function (ContainerInterface $container) {
+			Linkedin_Client::class          => function ( ContainerInterface $container ) {
 				/**
 				 * @var Settings $settings
 				 */
-				$settings = $container->get(Settings::class);
+				$settings = $container->get( Settings::class );
 				return new Linkedin_Client(
-					$container->get(Http_Request::class),
-					$container->get(Settings::class),
-					$settings->network_credentials('linkedin')
+					$container->get( Http_Request::class ),
+					$container->get( Settings::class ),
+					$settings->network_credentials( 'linkedin' )
 				);
 			},
-			Instagram_Client::class => fn() => new Instagram_Client(),
-			Network_Clients::class  => function ( ContainerInterface $container ) {
+			Instagram_Client::class         => fn() => new Instagram_Client(),
+			Network_Clients::class          => function ( ContainerInterface $container ) {
 
 				return array(
 					'facebook'  => $container->get( Facebook_Client::class ),
@@ -64,19 +64,19 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 					'instagram' => $container->get( Instagram_Client::class ),
 				);
 			},
-			Media_Network_Collection::class => function (ContainerInterface $container) {
+			Media_Network_Collection::class => function ( ContainerInterface $container ) {
 				$collection = new Media_Network_Collection();
-				foreach( $container->get(Network_Clients::class) as $network_slug => $client){
-					$collection->register($network_slug, $client);
+				foreach ( $container->get( Network_Clients::class ) as $network_slug => $client ) {
+					$collection->register( $network_slug, $client );
 				}
 				return $collection;
 			},
-			Network_Authenticator::class => function (ContainerInterface $container) {
+			Network_Authenticator::class    => function ( ContainerInterface $container ) {
 				return new Network_Authenticator(
-					$container->get(Media_Network_Collection::class),
-					$container->get(Accounts_Manager::class),
+					$container->get( Media_Network_Collection::class ),
+					$container->get( Accounts_Manager::class ),
 				);
-			}
+			},
 		);
 	}
 
@@ -84,16 +84,15 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 	 * @throws ContainerExceptionInterface
 	 * @throws NotFoundExceptionInterface
 	 */
-	public function run(ContainerInterface $container): bool
-	{
+	public function run( ContainerInterface $container ): bool {
 		/**
 		 * @var Network_Authenticator $network_authenticator
 		 */
-		$network_authenticator = $container->get(Network_Authenticator::class);
+		$network_authenticator = $container->get( Network_Authenticator::class );
 
-		add_action('admin_post_facebook', [$network_authenticator, 'facebook_auth']);
-		add_action('admin_post_linkedin', [$network_authenticator, 'linkedin_auth']);
-		add_action('admin_post_x', [$network_authenticator, 'x_auth']);
+		add_action( 'admin_post_facebook', array( $network_authenticator, 'facebook_auth' ) );
+		add_action( 'admin_post_linkedin', array( $network_authenticator, 'linkedin_auth' ) );
+		add_action( 'admin_post_x', array( $network_authenticator, 'x_auth' ) );
 
 		return true;
 	}

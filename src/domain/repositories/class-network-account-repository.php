@@ -14,7 +14,10 @@ use Nevamiss\Domain\Entities\Network_Account;
 
 class Network_Account_Repository implements
 	Create_Interface,
-	Delete_Interface, Get_All_Interface, Get_One_Interface, Update_Interface {
+	Delete_Interface,
+	Get_All_Interface,
+	Get_One_Interface,
+	Update_Interface {
 
 	use Repository_Common_Trait;
 	use To_Model_Trait;
@@ -26,7 +29,7 @@ class Network_Account_Repository implements
 	private const ENTITY_NAME  = 'Network Account';
 	private const ENTITY_CLASS = Network_Account::class;
 
-	private const ENTITY_SLUG         = 'network_account';
+	private const ENTITY_SLUG = 'network_account';
 
 	private const ALLOWED_TABLE_COLUMNS = array(
 		'id',
@@ -36,24 +39,22 @@ class Network_Account_Repository implements
 		'network',
 	);
 
-	public function get_by_remote_id(string|int $remote_account_id): array|false
-	{
-		$account = $this->get_all(['where' => ['remote_account_id' => $remote_account_id]]);
+	public function get_by_remote_id( string|int $remote_account_id ): array|false {
+		$account = $this->get_all( array( 'where' => array( 'remote_account_id' => $remote_account_id ) ) );
 
-		return empty($account) ? false : $account[0];
+		return empty( $account ) ? false : $account[0];
 	}
 
 	/**
 	 * @param int|string $id Remote account ID.
-	 * @param array $data
+	 * @param array      $data
 	 * @return bool
 	 */
-	public function update(string|int $id, array $data): bool
-	{
-		$updated = $this->wpdb->update( $this->table_name(), $data, array( 'remote_account_id' => $id ) );
+	public function update( string|int $id, array $data ): bool {
+		$updated    = $this->wpdb->update( $this->table_name(), $data, array( 'remote_account_id' => $id ) );
 		$model_slug = self::ENTITY_SLUG;
 
-		do_action("nevamiss_{$model_slug}_updated", $this->wpdb->last_result);
+		do_action( "nevamiss_{$model_slug}_updated", $this->wpdb->last_result );
 
 		return (bool) $updated;
 	}

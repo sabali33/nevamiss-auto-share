@@ -45,16 +45,15 @@ class Schedule_Form extends Page {
 			true
 		);
 
-		$this->schedule = (isset($_REQUEST['schedule_id']) && $_REQUEST['schedule_id']) ?
-		$this->schedule_repository->get((int)$_REQUEST['schedule_id']) : null;
+		$this->schedule = ( isset( $_REQUEST['schedule_id'] ) && $_REQUEST['schedule_id'] ) ?
+		$this->schedule_repository->get( (int) $_REQUEST['schedule_id'] ) : null;
 	}
 
 	public function factory(): Factory {
 		return $this->factory;
 	}
 
-	public function schedule()
-	{
+	public function schedule() {
 		return $this->schedule;
 	}
 
@@ -63,7 +62,7 @@ class Schedule_Form extends Page {
 	 */
 	public function render_field( array $field ): void {
 
-		$field_class = match ($field['type']) {
+		$field_class = match ( $field['type'] ) {
 			'select' => Select_Field::class,
 			'textarea' => TextArea::class,
 			'select-group' => Select_Group_Field::class,
@@ -75,27 +74,26 @@ class Schedule_Form extends Page {
 		if ( isset( $field['sub_fields'] ) ) {
 			foreach ( $field['sub_fields'] as $key => $sub_fields ) {
 
-				foreach ($sub_fields as $sub_field){
+				foreach ( $sub_fields as $sub_field ) {
 					if ( empty( $sub_field ) ) {
 						continue;
 					}
 					$selected_class = $field['value'] === $key ? ' active' : '';
 
-					if(str_contains($key, '!')) {
+					if ( str_contains( $key, '!' ) ) {
 
-						if("!{$field['value']}" !== $key){
+						if ( "!{$field['value']}" !== $key ) {
 							$selected_class = ' active';
 						}
 					}
 
-					$parent_value = esc_attr($key);
+					$parent_value = esc_attr( $key );
 					echo "<div class='sub-field-wrapper{$selected_class} $key' data-repeat-frequency='{$parent_value}'>";
 					$this->render_field( $sub_field );
-					echo isset($sub_field['has_multiple']) ? __('<button class="add-field-group button"> Add </button>', 'nevamiss') : '';
+					echo isset( $sub_field['has_multiple'] ) ? __( '<button class="add-field-group button"> Add </button>', 'nevamiss' ) : '';
 					echo '</div>';
 
 				}
-
 			}
 		}
 	}
@@ -126,15 +124,15 @@ class Schedule_Form extends Page {
 					'monthly' => __( 'Monthly', 'nevamiss' ),
 				),
 				'sub_fields' => array(
-					'!none' => array(
+					'!none'   => array(
 						array(
-							'name'  => 'start_date',
-							'value' => $this->schedule ? $this->schedule->start_date() : '',
-							'class' => 'start-date date',
-							'type'  => 'date',
-							'label' => __( 'Start Date', 'nevamiss' ),
+							'name'         => 'start_date',
+							'value'        => $this->schedule ? $this->schedule->start_date() : '',
+							'class'        => 'start-date date',
+							'type'         => 'date',
+							'label'        => __( 'Start Date', 'nevamiss' ),
 							'has_multiple' => false,
-						)
+						),
 					),
 					'none'    => $this->one_time_fields(),
 					'daily'   => $this->daily_fields(),
@@ -152,7 +150,7 @@ class Schedule_Form extends Page {
 			),
 			array(
 				'name'     => 'network_accounts[]',
-				'value'    => $this->schedule ? $this->schedule->network_accounts() : array(0),
+				'value'    => $this->schedule ? $this->schedule->network_accounts() : array( 0 ),
 				'class'    => 'network-accounts',
 				'id'       => 'network-accounts',
 				'type'     => 'select',
@@ -197,12 +195,12 @@ class Schedule_Form extends Page {
 				'label' => __( 'Post IDs', 'nevamiss' ),
 			),
 			array(
-				'name'  => 'query_args[orderby]',
-				'value' => $this->schedule ? $this->schedule->query_args()['orderby'] : array('date'),
-				'class' => 'sort-by',
-				'type'  => 'select',
-				'label' => __( 'Sort posts by', 'nevamiss' ),
-				'choices' => $this->sort_posts()
+				'name'    => 'query_args[orderby]',
+				'value'   => $this->schedule ? $this->schedule->query_args()['orderby'] : array( 'date' ),
+				'class'   => 'sort-by',
+				'type'    => 'select',
+				'label'   => __( 'Sort posts by', 'nevamiss' ),
+				'choices' => $this->sort_posts(),
 			),
 		);
 	}
@@ -251,11 +249,11 @@ class Schedule_Form extends Page {
 		return 30;
 	}
 
-    /**
-     *
-     * @throws \Exception
-     */
-    public function maybe_save_form(): void {
+	/**
+	 *
+	 * @throws \Exception
+	 */
+	public function maybe_save_form(): void {
 		if ( ! isset( $_POST['schedule_name'] ) ) {
 			return;
 		}
@@ -265,12 +263,12 @@ class Schedule_Form extends Page {
 
 		$data = $this->schedule_repository->allowed_data( $_POST );
 
-		$validated_data = $this->validate($data);
+		$validated_data = $this->validate( $data );
 
-		if(!empty($this->validator->errors())){
+		if ( ! empty( $this->validator->errors() ) ) {
 
 			wp_admin_notice(
-				join(", ", $this->validator->errors() ),
+				join( ', ', $this->validator->errors() ),
 				array(
 					'type'               => 'error',
 					'dismissible'        => false,
@@ -284,75 +282,17 @@ class Schedule_Form extends Page {
 
 		$data = $this->array_to_json( $data );
 
-	    $schedules_url = admin_url('admin.php?page=schedules');
+		$schedules_url = admin_url( 'admin.php?page=schedules' );
 
 		try {
 			$this->schedule_repository->create( $data );
 
-			$message = sprintf(__("Successfully created a schedule <a href='%s'>back</a>", 'nevamiss'), esc_url($schedules_url));
-			$type = 'success';
+			$message = sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) );
+			$type    = 'success';
 
-		}catch (\Exception $exception){
+		} catch ( \Exception $exception ) {
 			$message = $exception->getMessage();
-			$type = 'error';
-		}
-	    wp_admin_notice(
-		    $message,
-		    array(
-			    'type'               => $type,
-			    'dismissible'        => false,
-			    'additional_classes' => array( 'inline', 'notice-alt' ),
-		    )
-	    );
-
-	}
-
-	/**
-	 * @throws \Exception
-	 */
-	public function update_form(): void
-	{
-		if ( ! isset( $_POST['schedule_name'] ) || !$this->schedule()) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' ) ) {
-			return;
-		}
-
-		$data = $this->schedule_repository->allowed_data( $_POST );
-
-		$validated_data = $this->validate($data);
-
-		if(!empty($this->validator->errors())){
-
-			wp_admin_notice(
-				join(", ", $this->validator->errors() ),
-				array(
-					'type'               => 'error',
-					'dismissible'        => false,
-					'additional_classes' => array( 'inline', 'notice-alt' ),
-				)
-			);
-			return;
-		}
-
-		$data = $this->format_dates( $validated_data );
-
-		$data = $this->array_to_json( $data );
-
-		$schedules_url = admin_url('admin.php?page=schedules');
-
-		try {
-			$this->schedule_repository->update($this->schedule()->id(), $data );
-			$message = sprintf(__("Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss'), esc_url($schedules_url));
-			$type = 'success';
-
-			do_action('nevamiss_after_schedule_updated', $this->schedule);
-
-		}catch (\Exception $exception){
-			$message = $exception->getMessage();
-			$type = 'error';
+			$type    = 'error';
 		}
 		wp_admin_notice(
 			$message,
@@ -362,11 +302,66 @@ class Schedule_Form extends Page {
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)
 		);
-		$this->schedule = $this->schedule_repository->get($this->schedule->id());
 	}
 
-	private function format_dates( array $data ): array
-	{
+	/**
+	 * @throws \Exception
+	 */
+	public function update_form(): void {
+		if ( ! isset( $_POST['schedule_name'] ) || ! $this->schedule() ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' ) ) {
+			return;
+		}
+
+		$data = $this->schedule_repository->allowed_data( $_POST );
+
+		$validated_data = $this->validate( $data );
+
+		if ( ! empty( $this->validator->errors() ) ) {
+
+			wp_admin_notice(
+				join( ', ', $this->validator->errors() ),
+				array(
+					'type'               => 'error',
+					'dismissible'        => false,
+					'additional_classes' => array( 'inline', 'notice-alt' ),
+				)
+			);
+			return;
+		}
+
+		$data = $this->format_dates( $validated_data );
+
+		$data = $this->array_to_json( $data );
+
+		$schedules_url = admin_url( 'admin.php?page=schedules' );
+
+		try {
+			$this->schedule_repository->update( $this->schedule()->id(), $data );
+			$message = sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) );
+			$type    = 'success';
+
+			do_action( 'nevamiss_after_schedule_updated', $this->schedule );
+
+		} catch ( \Exception $exception ) {
+			$message = $exception->getMessage();
+			$type    = 'error';
+		}
+		wp_admin_notice(
+			$message,
+			array(
+				'type'               => $type,
+				'dismissible'        => false,
+				'additional_classes' => array( 'inline', 'notice-alt' ),
+			)
+		);
+		$this->schedule = $this->schedule_repository->get( $this->schedule->id() );
+	}
+
+	private function format_dates( array $data ): array {
 		$day_times = array(
 			'daily_times'   => $data['daily_times'] ?? null,
 			'weekly_times'  => $data['weekly_times'] ?? null,
@@ -381,18 +376,18 @@ class Schedule_Form extends Page {
 
 			if ( $key === 'daily_times' ) {
 				$formatted_times = $this->format_daily_times( $hours, $minutes );
-				$data[ $key ] = $this->ensure_unique_date($formatted_times);
+				$data[ $key ]    = $this->ensure_unique_date( $formatted_times );
 
 				continue;
 			}
 
 			$formatted_times = $this->format_weekly_monthly_times( $day_time['days'], $hours, $minutes );
 
-			$data[ $key ] = $this->ensure_unique_date($formatted_times);
+			$data[ $key ] = $this->ensure_unique_date( $formatted_times );
 
 		}
-		if(isset($data['one_time_schedule'])){
-			$data['one_time_schedule'] = array_unique($data['one_time_schedule']);
+		if ( isset( $data['one_time_schedule'] ) ) {
+			$data['one_time_schedule'] = array_unique( $data['one_time_schedule'] );
 		}
 
 		return $data;
@@ -433,179 +428,179 @@ class Schedule_Form extends Page {
 		return $data;
 	}
 
-	private function validate(array $data): array
-	{
-		$validated_data = [];
+	private function validate( array $data ): array {
+		$validated_data = array();
 
-		foreach ($this->schedule_repository->allow_columns() as $key){
-			$datum = $data[$key] ?? null;
+		foreach ( $this->schedule_repository->allow_columns() as $key ) {
+			$datum = $data[ $key ] ?? null;
 
-			if($datum === null && !$this->schedule){
+			if ( $datum === null && ! $this->schedule ) {
 				continue;
 			}
-			$validated_data[$key] = $this->validation_func($key)($datum);
+			$validated_data[ $key ] = $this->validation_func( $key )( $datum );
 		}
 
 		// Make sure either of the fields is not null
 		$one_has_value = false;
-		foreach (['daily_times', 'weekly_times', 'monthly_times', 'one_time_schedule'] as $required_field){
-			if( isset($validated_data[$required_field]) ){
+		foreach ( array( 'daily_times', 'weekly_times', 'monthly_times', 'one_time_schedule' ) as $required_field ) {
+			if ( isset( $validated_data[ $required_field ] ) ) {
 				$one_has_value = true;
 			}
-
 		}
 
-		if( !$one_has_value ){
-			$this->validator->add_error('Either one of the repeat frequency sub field must have a value');
+		if ( ! $one_has_value ) {
+			$this->validator->add_error( 'Either one of the repeat frequency sub field must have a value' );
 		}
 		return $validated_data;
 	}
 
-	private function validation_func(string $field, ): \Closure
-	{
-		return [
-			'schedule_name' => function(?string $schedule_name) {
+	private function validation_func( string $field, ): \Closure {
+		return array(
+			'schedule_name'     => function ( ?string $schedule_name ) {
 
-				$this->validator->validate_string('schedule_name', $schedule_name, 4);
-				return $this->validator->sanitize_string($schedule_name);
+				$this->validator->validate_string( 'schedule_name', $schedule_name, 4 );
+				return $this->validator->sanitize_string( $schedule_name );
 			},
-			'repeat_frequency' => function(?string $repeat_frequency) {
-				$this->validator->validate_string('repeat_frequency', $repeat_frequency, 4);
-				return $this->validator->sanitize_string($repeat_frequency);
+			'repeat_frequency'  => function ( ?string $repeat_frequency ) {
+				$this->validator->validate_string( 'repeat_frequency', $repeat_frequency, 4 );
+				return $this->validator->sanitize_string( $repeat_frequency );
 			},
-			'start_date' => function(?string $start_date) {
-				if(!$start_date){
+			'start_date'        => function ( ?string $start_date ) {
+				if ( ! $start_date ) {
 					return null;
 				}
-				$this->validator->validate_date('start_date', $start_date);
-				return $this->validator->sanitize_date($start_date);
-
+				$this->validator->validate_date( 'start_date', $start_date );
+				return $this->validator->sanitize_date( $start_date );
 			},
-			'daily_times' => function(?array $daily_times) {
-				if(!$daily_times || !$daily_times['hours']){
+			'daily_times'       => function ( ?array $daily_times ) {
+				if ( ! $daily_times || ! $daily_times['hours'] ) {
 					return null;
 				}
-				$this->validator->validate_assoc_array_of_numbers('daily_times', $daily_times);
+				$this->validator->validate_assoc_array_of_numbers( 'daily_times', $daily_times );
 
-				return $this->validator->sanitize_assoc_array_of_numbers($daily_times);
-
+				return $this->validator->sanitize_assoc_array_of_numbers( $daily_times );
 			},
-			'weekly_times' => function(?array $weekly_times) {
-				if(!$weekly_times){
+			'weekly_times'      => function ( ?array $weekly_times ) {
+				if ( ! $weekly_times ) {
 					return null;
 				}
 
-				$weekly_times['days'] = $this->validator->sanitize_array_of_string($weekly_times['days']);
+				$weekly_times['days'] = $this->validator->sanitize_array_of_string( $weekly_times['days'] );
 
-				$weekly_times['hours'] = array_map(function($hour){
-					return $this->validator->sanitize_number($hour);
-				}, $weekly_times['hours']);
+				$weekly_times['hours'] = array_map(
+					function ( $hour ) {
+						return $this->validator->sanitize_number( $hour );
+					},
+					$weekly_times['hours']
+				);
 
-				$weekly_times['minutes'] = array_map(function($minute){
-					return $this->validator->sanitize_number($minute);
-				}, $weekly_times['minutes']);
+				$weekly_times['minutes'] = array_map(
+					function ( $minute ) {
+						return $this->validator->sanitize_number( $minute );
+					},
+					$weekly_times['minutes']
+				);
 
 				return $weekly_times;
 			},
-			'monthly_times' => function(?array $monthly_times) {
-				if(!$monthly_times){
+			'monthly_times'     => function ( ?array $monthly_times ) {
+				if ( ! $monthly_times ) {
 					return null;
 				}
-				$this->validator->validate_assoc_array_of_numbers('monthly_times', $monthly_times);
+				$this->validator->validate_assoc_array_of_numbers( 'monthly_times', $monthly_times );
 
-				return $this->validator->sanitize_assoc_array_of_numbers($monthly_times);
+				return $this->validator->sanitize_assoc_array_of_numbers( $monthly_times );
 			},
-			'query_args' => function(?array $query_args) {
-				if(empty($query_args)){
-					$this->validator->add_error('Query args are required');
-					return null;
-				}
-
-				return $this->validator->sanitize_array_of_string($query_args);
-			},
-			'one_time_schedule' => function(?array $one_time_schedule) {
-
-				if(!$one_time_schedule || !$one_time_schedule[0]){
+			'query_args'        => function ( ?array $query_args ) {
+				if ( empty( $query_args ) ) {
+					$this->validator->add_error( 'Query args are required' );
 					return null;
 				}
 
-				return array_map(function($date){
-					return $this->validator->sanitize_date($date, 'Y-m-d H:s');
-				}, $one_time_schedule);
-
+				return $this->validator->sanitize_array_of_string( $query_args );
 			},
-			'network_accounts' => function(?array $network_accounts) {
-				if(empty($network_accounts)){
-					$this->validator->add_error('You need to select at least one network account');
+			'one_time_schedule' => function ( ?array $one_time_schedule ) {
+
+				if ( ! $one_time_schedule || ! $one_time_schedule[0] ) {
 					return null;
 				}
 
-				return $this->validator->sanitize_array_of_string($network_accounts);
+				return array_map(
+					function ( $date ) {
+						return $this->validator->sanitize_date( $date, 'Y-m-d H:s' );
+					},
+					$one_time_schedule
+				);
 			},
-			'social_media_tags' => function(?string $social_media_tags) {
-				if(!$social_media_tags){
+			'network_accounts'  => function ( ?array $network_accounts ) {
+				if ( empty( $network_accounts ) ) {
+					$this->validator->add_error( 'You need to select at least one network account' );
 					return null;
 				}
-				$this->validator->validate_string('social_media_tags', $social_media_tags);
-				return $this->validator->sanitize_string($social_media_tags);
+
+				return $this->validator->sanitize_array_of_string( $network_accounts );
+			},
+			'social_media_tags' => function ( ?string $social_media_tags ) {
+				if ( ! $social_media_tags ) {
+					return null;
+				}
+				$this->validator->validate_string( 'social_media_tags', $social_media_tags );
+				return $this->validator->sanitize_string( $social_media_tags );
 			},
 
-		][$field];
+		)[ $field ];
 	}
 
-	private function ensure_unique_date(array $dates): array
-	{
-		$counted = [];
+	private function ensure_unique_date( array $dates ): array {
+		$counted = array();
 
-		$unique_date = [];
-		foreach ($dates as $date){
+		$unique_date = array();
+		foreach ( $dates as $date ) {
 			$time = "{$date['hour']}-{$date['minute']}";
 
-			if(isset($date['day'])){
+			if ( isset( $date['day'] ) ) {
 				$time = "{$date['day']}-$time";
 			}
 
-			if(isset($counted[$time])){
+			if ( isset( $counted[ $time ] ) ) {
 				continue;
 			}
 			$unique_date[] = $date;
 
-			$counted[$time] = 1;
+			$counted[ $time ] = 1;
 		}
 		return $unique_date;
 	}
 
-	private function one_time_fields(): array
-	{
-		if(!$this->schedule || !$this->schedule->one_time_schedule()){
+	private function one_time_fields(): array {
+		if ( ! $this->schedule || ! $this->schedule->one_time_schedule() ) {
 			return array(
 				array(
-					'name' => 'one_time_schedule[]',
-					'type' => 'date',
-					'class' => 'datetime date-time',
-					'label' => __('Select Date'),
-					'value' => '',
+					'name'         => 'one_time_schedule[]',
+					'type'         => 'date',
+					'class'        => 'datetime date-time',
+					'label'        => __( 'Select Date' ),
+					'value'        => '',
 					'has_multiple' => true,
-				)
+				),
 			);
 		}
 
-		$fields = [];
-		foreach ($this->schedule->one_time_schedule() as $value){
+		$fields = array();
+		foreach ( $this->schedule->one_time_schedule() as $value ) {
 			$fields[] = array(
-				'name' => 'one_time_schedule[]',
-				'type' => 'date',
+				'name'  => 'one_time_schedule[]',
+				'type'  => 'date',
 				'class' => 'datetime date-time',
-				'label' => __('Select Date'),
+				'label' => __( 'Select Date' ),
 				'value' => $value,
 			);
 		}
 		return $fields;
 	}
 
-	private function daily_fields(): array
-	{
-		if(!$this->schedule || !$this->schedule->daily_times()){
+	private function daily_fields(): array {
+		if ( ! $this->schedule || ! $this->schedule->daily_times() ) {
 			return array(
 				array(
 					'name'              => 'daily_times[hours][]',
@@ -623,17 +618,16 @@ class Schedule_Form extends Page {
 							'class'   => 'daily-times-minute',
 							'label'   => __( 'Minute', 'nevamiss' ),
 							'choices' => range( 1, 60, 5 ),
-							'id'      => 'daily-minute'
+							'id'      => 'daily-minute',
 						),
 					),
-				)
+				),
 			);
 		}
 
+		$fields = array();
 
-		$fields = [];
-
-		foreach ($this->schedule->daily_times() as $time){
+		foreach ( $this->schedule->daily_times() as $time ) {
 			$fields[] = array(
 				'name'              => 'daily_times[hours][]',
 				'value'             => $time['hour'],
@@ -650,7 +644,7 @@ class Schedule_Form extends Page {
 						'class'   => 'daily-times-minute',
 						'label'   => __( 'Minute', 'nevamiss' ),
 						'choices' => range( 1, 60, 5 ),
-						'id'      => 'daily-minute'
+						'id'      => 'daily-minute',
 					),
 				),
 			);
@@ -658,9 +652,8 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function weekly_fields(): array
-	{
-		if(!$this->schedule || !$this->schedule->weekly_times()){
+	private function weekly_fields(): array {
+		if ( ! $this->schedule || ! $this->schedule->weekly_times() ) {
 			return array(
 				array(
 					'name'              => 'weekly_times[days][]',
@@ -685,7 +678,7 @@ class Schedule_Form extends Page {
 							'value'   => array(),
 							'type'    => 'select',
 							'class'   => 'weekly-daily-hour',
-							'id'   => 'weekly-daily-hour',
+							'id'      => 'weekly-daily-hour',
 							'label'   => __( 'at', 'nevamiss' ),
 							'choices' => range( 0, 23 ),
 						),
@@ -694,7 +687,7 @@ class Schedule_Form extends Page {
 							'value'   => array(),
 							'type'    => 'select',
 							'class'   => 'daily-times-minute',
-							'id'   => 'daily-times-minute',
+							'id'      => 'daily-times-minute',
 							'label'   => __( 'Minute', 'nevamiss' ),
 							'choices' => range( 1, 60, 1 ),
 						),
@@ -702,9 +695,9 @@ class Schedule_Form extends Page {
 				),
 			);
 		}
-		$fields = [];
+		$fields = array();
 
-		foreach ($this->schedule->weekly_times() as $index => $week_time){
+		foreach ( $this->schedule->weekly_times() as $index => $week_time ) {
 			$fields[] = array(
 				'name'              => 'weekly_times[days][]',
 				'value'             => $week_time['day'],
@@ -728,7 +721,7 @@ class Schedule_Form extends Page {
 						'value'   => $week_time['hour'],
 						'type'    => 'select',
 						'class'   => 'weekly-daily-hour',
-						'id'   => "weekly-daily-hour-$index",
+						'id'      => "weekly-daily-hour-$index",
 						'label'   => __( 'at', 'nevamiss' ),
 						'choices' => range( 0, 23 ),
 					),
@@ -737,7 +730,7 @@ class Schedule_Form extends Page {
 						'value'   => $week_time['minute'],
 						'type'    => 'select',
 						'class'   => 'daily-times-minute',
-						'id'   => "daily-times-minute-$index",
+						'id'      => "daily-times-minute-$index",
 						'label'   => __( 'Minute', 'nevamiss' ),
 						'choices' => range( 1, 60, 1 ),
 					),
@@ -748,16 +741,15 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function monthly_fields()
-	{
-		if(!$this->schedule || !$this->schedule->monthly_times()){
+	private function monthly_fields() {
+		if ( ! $this->schedule || ! $this->schedule->monthly_times() ) {
 			return array(
 				array(
 					'name'              => 'monthly_times[days][]',
 					'value'             => array(),
 					'type'              => 'select-group',
 					'class'             => 'monthly-times',
-					'id'             => 'monthly-times',
+					'id'                => 'monthly-times',
 					'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
 					'label'             => __( 'Monthly Times', 'nevamiss' ),
 					'has_multiple'      => true,
@@ -767,7 +759,7 @@ class Schedule_Form extends Page {
 							'value'   => array(),
 							'type'    => 'select',
 							'class'   => 'monthly-daily-times',
-							'id'   => 'monthly-daily-times',
+							'id'      => 'monthly-daily-times',
 							'label'   => __( 'at', 'nevamiss' ),
 							'choices' => range( 0, 23 ),
 						),
@@ -784,15 +776,15 @@ class Schedule_Form extends Page {
 				),
 			);
 		}
-		$fields = [];
+		$fields = array();
 
-		foreach ($this->schedule->monthly_times() as $index => $monthly_time){
+		foreach ( $this->schedule->monthly_times() as $index => $monthly_time ) {
 			$fields[] = array(
 				'name'              => 'monthly_times[days][]',
 				'value'             => $monthly_time['day'],
 				'type'              => 'select-group',
 				'class'             => 'monthly-times',
-				'id'             => "monthly-times-$index",
+				'id'                => "monthly-times-$index",
 				'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
 				'label'             => __( 'Monthly Times', 'nevamiss' ),
 				'has_multiple'      => true,
@@ -802,7 +794,7 @@ class Schedule_Form extends Page {
 						'value'   => $monthly_time['hour'],
 						'type'    => 'select',
 						'class'   => 'monthly-daily-times',
-						'id'   => "monthly-daily-times-$index",
+						'id'      => "monthly-daily-times-$index",
 						'label'   => __( 'at', 'nevamiss' ),
 						'choices' => range( 0, 23 ),
 					),
@@ -821,18 +813,17 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function sort_posts()
-	{
+	private function sort_posts() {
 		$criteria = array(
-			'newest' => __('Newest', 'nevamiss'),
-			'post_title' => __('Title', 'nevamiss'),
-			'oldest' => __('Oldest', 'nevamiss'),
-			'modified_date' => __('Modified Date', 'nevamiss'),
-			'comment_count' => __('Comments Count', 'nevamiss'),
-			'rand' => __('Random', 'nevamiss'),
+			'newest'        => __( 'Newest', 'nevamiss' ),
+			'post_title'    => __( 'Title', 'nevamiss' ),
+			'oldest'        => __( 'Oldest', 'nevamiss' ),
+			'modified_date' => __( 'Modified Date', 'nevamiss' ),
+			'comment_count' => __( 'Comments Count', 'nevamiss' ),
+			'rand'          => __( 'Random', 'nevamiss' ),
 		);
-		if($this->schedule()){
-			$criteria['queue_order'] = __('Keep as ordered in queue', 'nevamiss');
+		if ( $this->schedule() ) {
+			$criteria['queue_order'] = __( 'Keep as ordered in queue', 'nevamiss' );
 		}
 		return $criteria;
 	}

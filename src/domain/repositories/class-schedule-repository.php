@@ -34,7 +34,7 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 		'query_args',
 		'network_accounts',
 		'social_media_tags',
-		'one_time_schedule'
+		'one_time_schedule',
 	);
 
 	public function get_total(): int {
@@ -44,8 +44,7 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 	private function table_name(): string {
 		return "{$this->wpdb->prefix}nevamiss_schedules";
 	}
-	public function allow_columns(): array
-	{
+	public function allow_columns(): array {
 		return self::ALLOW_TABLE_COLUMNS;
 	}
 }

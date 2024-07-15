@@ -25,22 +25,19 @@ class Settings_Page extends Page {
 		);
 	}
 
-	public function network_collection(): Media_Network_Collection
-	{
+	public function network_collection(): Media_Network_Collection {
 		return $this->network_collection;
 	}
 
-	public function settings(): Settings
-	{
+	public function settings(): Settings {
 		return $this->data;
 	}
 
-	public function notices(): void
-	{
-		if(!isset($_GET['status'] )){
+	public function notices(): void {
+		if ( ! isset( $_GET['status'] ) ) {
 			return;
 		}
-		if(!isset($_GET['message'])){
+		if ( ! isset( $_GET['message'] ) ) {
 			return;
 		}
 		wp_admin_notice(

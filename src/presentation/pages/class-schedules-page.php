@@ -29,15 +29,14 @@ class Schedules_Page extends Page {
 		);
 	}
 
-	public function notices(): void
-	{
-		if(
-			! isset($_GET['notice']) &&
-			! isset($_GET['type'])
-		){
+	public function notices(): void {
+		if (
+			! isset( $_GET['notice'] ) &&
+			! isset( $_GET['type'] )
+		) {
 			return;
 		}
-		if(! (isset($_GET['message']) && $_GET['message'] )){
+		if ( ! ( isset( $_GET['message'] ) && $_GET['message'] ) ) {
 			return;
 		}
 		wp_admin_notice(

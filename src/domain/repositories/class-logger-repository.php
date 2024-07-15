@@ -23,7 +23,7 @@ class Logger_Repository implements Create_Interface, Delete_Interface, Get_All_I
 		'messages',
 	);
 
-	private const ENTITY_SLUG         = 'logger';
+	private const ENTITY_SLUG = 'logger';
 	private function table_name(): string {
 		return "{$this->wpdb->prefix}nevamiss_logs";
 	}

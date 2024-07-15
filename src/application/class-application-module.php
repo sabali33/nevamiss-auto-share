@@ -15,12 +15,12 @@ class Application_Module implements ServiceModule, ExecutableModule {
 
 	public function services(): array {
 		return array(
-			DB::class    => static function () {
+			DB::class     => static function () {
 				global $wpdb;
 				return new DB( $wpdb );
 			},
-			Setup::class => static fn() => new Setup( DB::class ),
-			Query::class => fn() => new Query( new \WP_Query() ),
+			Setup::class  => static fn() => new Setup( DB::class ),
+			Query::class  => fn() => new Query( new \WP_Query() ),
 			Assets::class => fn() => new Assets(),
 		);
 	}
@@ -32,7 +32,7 @@ class Application_Module implements ServiceModule, ExecutableModule {
 			array( $container->get( Setup::class ), 'deactivate' )
 		);
 
-		add_action('admin_enqueue_scripts', [$container->get(Assets::class), 'enqueue_script']);
+		add_action( 'admin_enqueue_scripts', array( $container->get( Assets::class ), 'enqueue_script' ) );
 
 		return true;
 	}

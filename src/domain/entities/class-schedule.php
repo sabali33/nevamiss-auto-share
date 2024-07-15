@@ -19,43 +19,48 @@ class Schedule {
 	public function __construct(
 		array $schedule
 	) {
-		$this->id = $schedule['id'];
-		$this->schedule_name = $schedule['schedule_name'];
-		$this->start_date = $schedule['start_date'];
-		$this->repeat_frequency = $schedule['repeat_frequency'];
-		$this->network_accounts = array_map('intval', json_decode($schedule['network_accounts'], true));
-		$this->query_args = json_decode($schedule['query_args'], true);
+		$this->id                = $schedule['id'];
+		$this->schedule_name     = $schedule['schedule_name'];
+		$this->start_date        = $schedule['start_date'];
+		$this->repeat_frequency  = $schedule['repeat_frequency'];
+		$this->network_accounts  = array_map( 'intval', json_decode( $schedule['network_accounts'], true ) );
+		$this->query_args        = json_decode( $schedule['query_args'], true );
 		$this->social_media_tags = $schedule['social_media_tags'];
-		$this->daily_times = $schedule['daily_times'] ?
-			$this->to_numeric(json_decode($schedule['daily_times'], true)) :
+		$this->daily_times       = $schedule['daily_times'] ?
+			$this->to_numeric( json_decode( $schedule['daily_times'], true ) ) :
 			null;
-		$this->monthly_times = $schedule['monthly_times'] ?
-			$this->to_numeric(json_decode($schedule['monthly_times'], true)) :
+		$this->monthly_times     = $schedule['monthly_times'] ?
+			$this->to_numeric( json_decode( $schedule['monthly_times'], true ) ) :
 			null;
-		$this->weekly_times = $schedule['weekly_times'] ?
-			$this->to_numeric(json_decode($schedule['weekly_times'], true)) :
+		$this->weekly_times      = $schedule['weekly_times'] ?
+			$this->to_numeric( json_decode( $schedule['weekly_times'], true ) ) :
 			null;
 		$this->one_time_schedule = $schedule['one_time_schedule'] ?
-			json_decode($schedule['one_time_schedule']) : null;
+			json_decode( $schedule['one_time_schedule'] ) : null;
 	}
 
 	public function post_data(): array {
 		return array();
 	}
-	private function to_numeric(array $times): array
-	{
-		return array_map(function($time){
-			return array_map(function($unit){
-				if(is_numeric($unit)){
-					return intval($unit);
-				}
-				return $unit;
-			}, $time);
-		}, $times);
+	private function to_numeric( array $times ): array {
+		return array_map(
+			function ( $time ) {
+				return array_map(
+					function ( $unit ) {
+						if ( is_numeric( $unit ) ) {
+							return intval( $unit );
+						}
+						return $unit;
+					},
+					$time
+				);
+			},
+			$times
+		);
 	}
 
 	public function is_heavy(): bool {
-		$total_posting_required_at_once = count($this->network_accounts()) * $this->query_args()['posts_per_page'];
+		$total_posting_required_at_once = count( $this->network_accounts() ) * $this->query_args()['posts_per_page'];
 		return $total_posting_required_at_once > 6;
 	}
 

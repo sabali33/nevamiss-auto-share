@@ -27,31 +27,31 @@ class Services_Module implements ServiceModule, ExecutableModule {
 	 * @throws NotFoundExceptionInterface
 	 * @throws ContainerExceptionInterface
 	 */
-	public function run(ContainerInterface $container ): bool {
+	public function run( ContainerInterface $container ): bool {
 		/**
 		 * @var Schedule_Post_Manager $schedule_post_manager
 		 */
-		$schedule_post_manager = $container->get(Schedule_Post_Manager::class);
+		$schedule_post_manager = $container->get( Schedule_Post_Manager::class );
 
 		/**
 		 * @var WP_Cron_Service $wp_cron_service
 		 */
-		$wp_cron_service = $container->get(WP_Cron_Service::class);
+		$wp_cron_service = $container->get( WP_Cron_Service::class );
 
 		/**
 		 * @var Post_Handler $post_handler
 		 */
-		$post_handler = $container->get(Post_Handler::class);
+		$post_handler = $container->get( Post_Handler::class );
 
 		/**
 		 * @var Schedule_Queue $schedule_queue
 		 */
-		$schedule_queue = $container->get(Schedule_Queue::class);
+		$schedule_queue = $container->get( Schedule_Queue::class );
 
 		/**
 		 * @var Stats_Manager $stats_manager
 		 */
-		$stats_manager = $container->get(Stats_Manager::class);
+		$stats_manager = $container->get( Stats_Manager::class );
 
 		/**
 		 * @var Schedule_Tasks_Runner $schedule_tasks_runner
@@ -61,22 +61,22 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
 		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ) );
 
-		add_action('cron_schedules', array($wp_cron_service, 'add_cron'));
-		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_cron'));
-		add_action('nevamiss_after_schedule_updated', array($wp_cron_service, 'maybe_reschedule_cron'), 10);
+		add_action( 'cron_schedules', array( $wp_cron_service, 'add_cron' ) );
+		add_action( 'nevamiss_created_schedule', array( $wp_cron_service, 'create_cron' ) );
+		add_action( 'nevamiss_after_schedule_updated', array( $wp_cron_service, 'maybe_reschedule_cron' ), 10 );
 
-		add_action( 'nevamiss_created_schedule', array( $schedule_queue, 'create_queue_callback'));
-		add_action('nevamiss_after_schedule_updated', array($schedule_queue, 'maybe_update_schedule_queue'), 10);
-		add_action('nevamiss_schedule_task_complete', array($schedule_queue, 'update_schedule_queue_callback'), 10, 2);
+		add_action( 'nevamiss_created_schedule', array( $schedule_queue, 'create_queue_callback' ) );
+		add_action( 'nevamiss_after_schedule_updated', array( $schedule_queue, 'maybe_update_schedule_queue' ), 10 );
+		add_action( 'nevamiss_schedule_task_complete', array( $schedule_queue, 'update_schedule_queue_callback' ), 10, 2 );
 
-		add_action('nevamiss_schedule_task_complete', array($stats_manager, 'record_stats_callback'), 10, 2);
+		add_action( 'nevamiss_schedule_task_complete', array( $stats_manager, 'record_stats_callback' ), 10, 2 );
 
 		add_action( WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, array( $schedule_post_manager, 'run' ) );
 		add_action( WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_post_manager, 'run' ) );
 
-		add_action('admin_post_nevamiss_schedule_delete', [$post_handler, 'delete_schedule_callback']);
-		add_action('admin_post_nevamiss_schedule_unschedule', [$post_handler, 'unschedule_callback']);
-		add_action('admin_post_nevamiss_schedule_share', [$post_handler, 'share_schedule_posts_callback']);
+		add_action( 'admin_post_nevamiss_schedule_delete', array( $post_handler, 'delete_schedule_callback' ) );
+		add_action( 'admin_post_nevamiss_schedule_unschedule', array( $post_handler, 'unschedule_callback' ) );
+		add_action( 'admin_post_nevamiss_schedule_share', array( $post_handler, 'share_schedule_posts_callback' ) );
 
 		return true;
 	}
@@ -97,16 +97,16 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				$container->get( Network_Post_Provider::class ),
 			),
 			Settings::class              => fn(): Settings => new Settings(),
-			WP_Cron_Service::class       => fn(ContainerInterface $container): WP_Cron_Service => new WP_Cron_Service(
-				$container->get(Schedule_Repository::class)
+			WP_Cron_Service::class       => fn( ContainerInterface $container ): WP_Cron_Service => new WP_Cron_Service(
+				$container->get( Schedule_Repository::class )
 			),
 			Network_Post_Provider::class => fn( ContainerInterface $container ): Network_Post_Provider => new Network_Post_Provider(
 				$container->get( Settings::class ),
 				$container->get( Network_Account_Repository::class ),
 				$container->get( Query::class ),
-				$container->get(Schedule_Queue_Repository::class),
+				$container->get( Schedule_Queue_Repository::class ),
 				$container->get( Network_Clients::class ),
-				$container->get(Factory::class),
+				$container->get( Factory::class ),
 			),
 			Schedule_Tasks_Runner::class => function ( ContainerInterface $container ) {
 
@@ -116,28 +116,28 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get( Network_Post_Provider::class ),
 				);
 			},
-			Form_Validator::class => fn() => new Form_Validator(),
-			Post_Handler::class => function (ContainerInterface $container) {
+			Form_Validator::class        => fn() => new Form_Validator(),
+			Post_Handler::class          => function ( ContainerInterface $container ) {
 				return new Post_Handler(
-					$container->get(Schedule_Repository::class),
-					$container->get(WP_Cron_Service::class),
-					$container->get(Schedule_Post_Manager::class)
+					$container->get( Schedule_Repository::class ),
+					$container->get( WP_Cron_Service::class ),
+					$container->get( Schedule_Post_Manager::class )
 				);
 			},
-			Schedule_Queue::class => function(ContainerInterface $container){
+			Schedule_Queue::class        => function ( ContainerInterface $container ) {
 				return new Schedule_Queue(
-					$container->get(Schedule_Repository::class),
-					$container->get(Schedule_Queue_Repository::class),
-					$container->get(Query::class)
+					$container->get( Schedule_Repository::class ),
+					$container->get( Schedule_Queue_Repository::class ),
+					$container->get( Query::class )
 				);
 			},
-			Http_Request::class => function () {
+			Http_Request::class          => function () {
 				return new Http_Request();
 			},
-			Accounts_Manager::class => function(ContainerInterface $container){
-				return new Accounts_Manager($container->get(Network_Account_Repository::class));
+			Accounts_Manager::class      => function ( ContainerInterface $container ) {
+				return new Accounts_Manager( $container->get( Network_Account_Repository::class ) );
 			},
-			Stats_Manager::class => fn(ContainerInterface $container) => new Stats_Manager($container->get(Posts_Stats_Repository::class))
+			Stats_Manager::class         => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
 		);
 	}
 }

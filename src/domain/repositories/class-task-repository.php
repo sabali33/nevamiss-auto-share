@@ -22,7 +22,7 @@ class Task_Repository implements Create_Interface, Get_One_Interface, Get_All_In
 
 	private const ENTITY_NAME           = 'Task';
 	private const ENTITY_CLASS          = Task::class;
-	private const ENTITY_SLUG         = 'task';
+	private const ENTITY_SLUG           = 'task';
 	private const ALLOWED_TABLE_COLUMNS = array(
 		'id',
 		'class_identifier',

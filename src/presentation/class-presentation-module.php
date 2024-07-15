@@ -33,7 +33,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			Settings_Page::class        => static function ( ContainerInterface $container ) {
 				return new Settings_Page(
 					$container->get( Settings::class ),
-					$container->get(Media_Network_Collection::class)
+					$container->get( Media_Network_Collection::class )
 				);
 			},
 
@@ -50,7 +50,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				return new Schedule_Form(
 					$container->get( Schedule_Repository::class ),
 					$container->get( Network_Account_Repository::class ),
-					$container->get(Form_Validator::class),
+					$container->get( Form_Validator::class ),
 					$container->get( Factory::class )
 				);
 			},
@@ -65,8 +65,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			},
 			Schedules_Table_List::class => fn( ContainerInterface $container ) => new Schedules_Table_List(
 				$container->get( Schedule_Repository::class ),
-				$container->get(Posts_Stats_Repository::class),
-				$container->get(Schedule_Queue::class),
+				$container->get( Posts_Stats_Repository::class ),
+				$container->get( Schedule_Queue::class ),
 			),
 		);
 	}

@@ -12,13 +12,13 @@ class Schedule_Queue {
 	private ?array $all_posts_ids;
 	private int $cycles;
 
-	public function __construct(array $queue_data ) {
-		$this->id = (int) $queue_data['id'];
+	public function __construct( array $queue_data ) {
+		$this->id          = (int) $queue_data['id'];
 		$this->schedule_id = (int) $queue_data['schedule_id'];
-		$this->cycles = (int) $queue_data['cycles'];
+		$this->cycles      = (int) $queue_data['cycles'];
 
-		$this->shared_posts_ids = $queue_data['shared_posts_ids'] ? $this->to_array($queue_data['shared_posts_ids']): [];
-		$this->all_posts_ids =  $this->to_array($queue_data['all_posts_ids']);
+		$this->shared_posts_ids = $queue_data['shared_posts_ids'] ? $this->to_array( $queue_data['shared_posts_ids'] ) : array();
+		$this->all_posts_ids    = $this->to_array( $queue_data['all_posts_ids'] );
 	}
 
 	public function schedule_id(): string {
@@ -35,20 +35,21 @@ class Schedule_Queue {
 		return $this->all_posts_ids;
 	}
 
-	private function to_array(string $shared_posts_ids): array
-	{
-		$decoded_post_ids = json_decode($shared_posts_ids, true);
+	private function to_array( string $shared_posts_ids ): array {
+		$decoded_post_ids = json_decode( $shared_posts_ids, true );
 
-		if(!$decoded_post_ids){
-			return [];
+		if ( ! $decoded_post_ids ) {
+			return array();
 		}
-		return array_map(function($post_id){
-			return intval($post_id);
-		}, $decoded_post_ids);
+		return array_map(
+			function ( $post_id ) {
+				return intval( $post_id );
+			},
+			$decoded_post_ids
+		);
 	}
 
-	public function cycles()
-	{
+	public function cycles() {
 		return $this->cycles;
 	}
 }

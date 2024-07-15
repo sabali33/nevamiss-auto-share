@@ -29,14 +29,16 @@ trait Repository_Common_Trait {
 
 	public function format_create_data( array $data ): array {
 		$columns = implode( ',', array_keys( $data ) );
-		$values  = $this->items_to_string(array_values( $data ));
+		$values  = $this->items_to_string( array_values( $data ) );
 
 		return array( $columns, $values );
 	}
-	private function items_to_string(array $values): array
-	{
-		return array_map(function($value){
-			return is_array($value) ? json_encode($value) : $value;
-		}, $values);
+	private function items_to_string( array $values ): array {
+		return array_map(
+			function ( $value ) {
+				return is_array( $value ) ? json_encode( $value ) : $value;
+			},
+			$values
+		);
 	}
 }
