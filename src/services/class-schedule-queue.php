@@ -75,7 +75,7 @@ class Schedule_Queue {
 	 * @throws Not_Found_Exception
 	 * @throws Exception
 	 */
-	public function update_schedule_queue_callback(int $task_id, $args): void
+	public function update_schedule_queue_callback(int $task_id, array $args): void
 	{
 		[
 			'schedule_id' => $schedule_id,
@@ -87,25 +87,35 @@ class Schedule_Queue {
 		if(!$schedule_queue){
 			return;
 		}
+		$shared_posts = $schedule_queue->shared_posts_ids();
+
+		if(in_array($post_id, $shared_posts)){
+			return;
+		}
 
 		$all_posts_ids = $schedule_queue->all_posts_ids();
-		$post_to_remove = array_pop($all_posts_ids);
+		$cycles = $schedule_queue->cycles();
+
+		$post_to_remove = array_shift($all_posts_ids);
 
 		if($post_to_remove !== $post_id){
 			error_log("A wrong post was shared. Expected $post_to_remove, but got $post_id");
 		}
-		$shared_posts = [...$schedule_queue->shared_posts_ids(), $post_id];
+
+		$shared_posts = [...$shared_posts, $post_id];
 		$sorted_all_posts_ids = [...$all_posts_ids, $post_to_remove];
 
 		if($shared_posts == $sorted_all_posts_ids){
-			$shared_posts= [];
+			$shared_posts= null;
+			$cycles = $schedule_queue->cycles() + 1;
 		}
 
 		$this->queue_repository->update(
 			$schedule_queue->id(),
 			[
-				'shared_posts_ids' => $shared_posts,
-				'all_posts_ids' => $sorted_all_posts_ids
+				'shared_posts_ids' => $shared_posts ? json_encode($shared_posts) : null,
+				'all_posts_ids' => json_encode($sorted_all_posts_ids),
+				'cycles' => $cycles
 			],
 		);
 
