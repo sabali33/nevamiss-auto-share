@@ -5,6 +5,7 @@ namespace Nevamiss\Presentation\Pages;
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
+use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
@@ -12,6 +13,7 @@ use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Networks\Media_Network_Collection;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Services\Form_Validator;
+use Nevamiss\Services\Schedule_Queue;
 use Nevamiss\Services\Settings;
 use Nevamiss\Services\Network_Post_Provider;
 use Psr\Container\ContainerInterface;
@@ -62,7 +64,9 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 			Schedules_Table_List::class => fn( ContainerInterface $container ) => new Schedules_Table_List(
-				$container->get( Schedule_Repository::class )
+				$container->get( Schedule_Repository::class ),
+				$container->get(Posts_Stats_Repository::class),
+				$container->get(Schedule_Queue::class),
 			),
 		);
 	}

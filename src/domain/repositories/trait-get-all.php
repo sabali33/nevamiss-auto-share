@@ -9,8 +9,12 @@ trait Get_All_Trait {
 	/**
 	 */
 	public function get_all( array $options = array() ): array {
+
 		[$where_clause, $data] = $this->where_clause( $options );
+		$limit = $this->limit_clause($options);
+
 		$sql                   = "SELECT * FROM {$this->table_name()}";
+
 
 		if ( $where_clause ) {
 			$sql .= ' WHERE ' . $where_clause;
@@ -18,6 +22,9 @@ trait Get_All_Trait {
 				$sql,
 				...$data
 			);
+		}
+		if($limit){
+			$sql .= $limit;
 		}
 
 		$entities = $this->wpdb->get_results( $sql, ARRAY_A );
@@ -45,5 +52,13 @@ trait Get_All_Trait {
 		}
 		$where_string = join(' AND ', $where_string);
 		return array( $where_string, $data );
+	}
+
+	public function limit_clause(array $options): ?string
+	{
+		if(!isset($options['per_page'])){
+			return null;
+		}
+		return "LIMIT {$options['per_page']}";
 	}
 }

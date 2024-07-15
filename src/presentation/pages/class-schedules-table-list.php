@@ -4,11 +4,21 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Pages;
 
+use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Domain\Entities\Schedule;
+use Nevamiss\Domain\Entities\Stats;
+use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Services\Schedule_Queue as Schedule_Queue_Service;
 
 class Schedules_Table_List extends \WP_List_Table {
 
-	public function __construct( private Schedule_Repository $schedule_repository, $args = array() ) {
+	public function __construct(
+		private Schedule_Repository $schedule_repository,
+		private Posts_Stats_Repository $stats_repository,
+		private Schedule_Queue_Service $queue_service,
+		$args = array()
+	) {
 		parent::__construct(
 			array(
 				'singular' => 'schedule',
@@ -72,12 +82,11 @@ class Schedules_Table_List extends \WP_List_Table {
 			'schedule_name'    => __( 'Name', 'nevamiss' ),
 			'start_time'       => __( 'Start Time', 'nevamiss' ),
 			'repeat_frequency' => __( 'Repeat Frequency', 'nevamiss' ),
-			'query_args'       => __( 'Query Args', 'nevamiss' ),
 			'network_accounts' => __( 'Network Accounts', 'nevamiss' ),
-			'weekly_times'     => __( 'Weekly Times', 'nevamiss' ),
-			'monthly_times'    => __( 'monthly Times', 'nevamiss' ),
-			'daily_times'      => __( 'Daily Times', 'nevamiss' ),
-			'created_at'       => __( 'Created At', 'nevamiss' ),
+			'next_post'       => __( 'Next Post', 'nevamiss' ),
+			'last_shared_posts'    => __( 'Last Shared Posts', 'nevamiss' ),
+			'estimate_completion'     => __( 'Estimated Completion date', 'nevamiss' ),
+
 		);
 	}
 
@@ -97,20 +106,63 @@ class Schedules_Table_List extends \WP_List_Table {
 		return 'schedule_name';
 	}
 
-	public function column_schedule_name( array $item ): void
+	public function column_schedule_name( Schedule $item ): void
 	{
-		echo $item['schedule_name'];
+		echo $item->name();
 
 		$actions = array_map(function($action){
 			return $this->link($action);
 
-		}, $this->action_list((int)$item['id']));
+		}, $this->action_list((int)$item->id()));
 
 		echo $this->row_actions(
 			$actions
 		);
 	}
 
+	public function column_repeat_frequency(Schedule $schedule): void
+	{
+		echo $schedule->repeat_frequency();
+	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	public function column_next_post(Schedule $schedule): void
+	{
+		/**
+		 * @var array{post_title: string, link: string } $posts
+		 */
+		$posts = $this->queue_service->schedule_posts($schedule);
+
+		foreach ($posts as $post){
+			echo $this->link([
+				'url' => $post['link'],
+				'label' => $post['post_title']
+			]) . PHP_EOL;
+		}
+	}
+
+	public function column_last_shared_posts(Schedule $schedule): void
+	{
+		$schedule_stats = $this->stats_repository->get_all([
+			'where' => [
+				'schedule_id' => $schedule->id()
+			],
+			'per_page' => intval($schedule->query_args()['posts_per_page'])
+		]);
+		$post_ids = array_map(function(Stats $stat){
+			return $stat->post_id();
+		}, $schedule_stats);
+
+		$posts = $this->queue_service->posts_by_ids($post_ids);
+		foreach ($posts as $post){
+			echo $this->link([
+					'url' => $post['link'],
+					'label' => $post['post_title']
+				]) . PHP_EOL;
+		}
+	}
 	private function action_list(int $schedule_id): array
 	{
 		$nonce = wp_create_nonce('nevamiss_schedules');

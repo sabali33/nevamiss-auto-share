@@ -194,4 +194,32 @@ class Schedule_Queue {
 			]
 		);
 	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	public function schedule_posts(Schedule $schedule): array
+	{
+		/**
+		 * @var \Nevamiss\Domain\Entities\Schedule_Queue $queue
+		 */
+		$queue = $this->queue_repository->get_schedule_queue_by_schedule_id($schedule->id());
+		$posts_count = (int) $schedule->query_args()['posts_per_page'];
+		$post_ids = array_slice($queue->all_posts_ids(),0, $posts_count) ;
+
+		return $this->posts_by_ids($post_ids);
+
+	}
+
+	public function posts_by_ids(array $post_ids): array
+	{
+		$posts = $this->query->query(['post__in' => $post_ids]);
+
+		return array_map(function(\WP_Post $post){
+			return [
+				'post_title' => $post->post_title,
+				'link' => get_permalink($post->ID),
+			];
+		}, $posts);
+	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nevamiss\Domain\Entities;
 
 class Schedule_Queue {
@@ -11,9 +13,9 @@ class Schedule_Queue {
 	private int $cycles;
 
 	public function __construct(array $queue_data ) {
-		$this->id = $queue_data['id'];
-		$this->schedule_id = $queue_data['schedule_id'];
-		$this->cycles = $queue_data['cycles'];
+		$this->id = (int) $queue_data['id'];
+		$this->schedule_id = (int) $queue_data['schedule_id'];
+		$this->cycles = (int) $queue_data['cycles'];
 
 		$this->shared_posts_ids = $queue_data['shared_posts_ids'] ? $this->to_array($queue_data['shared_posts_ids']): [];
 		$this->all_posts_ids =  $this->to_array($queue_data['all_posts_ids']);
