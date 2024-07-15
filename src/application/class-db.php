@@ -39,6 +39,7 @@ class DB {
         CREATE TABLE $schedule_queue_table_name (
             id INT NOT NULL AUTO_INCREMENT,
             schedule_id INT,
+            cycles INT DEFAULT 0 CHECK (cycles >= 0),
             shared_posts_ids JSON,
             all_posts_ids JSON,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,11 +50,9 @@ class DB {
             id INT NOT NULL AUTO_INCREMENT,
             schedule_id INT NOT NULL,
             posted_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            posts_ids JSON NOT NULL,
-            cycles_count INT DEFAULT 0 CHECK (cycles_count >= 0),
+            post_id INT NOT NULL,
+            remote_post_id VARCHAR(60) NOT NULL,
             remote_posted ENUM('0', '1') DEFAULT '0',
-            status JSON,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset_collate;
         CREATE TABLE $task_table_name (
