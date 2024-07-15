@@ -70,8 +70,6 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action('admin_post_nevamiss_schedule_unschedule', [$post_handler, 'unschedule_callback']);
 		add_action('admin_post_nevamiss_schedule_share', [$post_handler, 'share_schedule_posts_callback']);
 
-		add_action('nevamiss_user_network_login', [$accounts_manager, 'network_login_callback'], 10, 2);
-
 		return true;
 	}
 

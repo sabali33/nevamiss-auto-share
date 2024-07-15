@@ -61,11 +61,18 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 				return $collection;
 			},
 			Network_Authenticator::class => function (ContainerInterface $container) {
-				return new Network_Authenticator($container->get(Media_Network_Collection::class));
+				return new Network_Authenticator(
+					$container->get(Media_Network_Collection::class),
+					$container->get(Accounts_Manager::class),
+				);
 			}
 		);
 	}
 
+	/**
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
+	 */
 	public function run(ContainerInterface $container): bool
 	{
 		/**
