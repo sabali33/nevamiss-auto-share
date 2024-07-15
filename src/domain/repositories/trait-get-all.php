@@ -30,7 +30,7 @@ trait Get_All_Trait {
 	private function where_clause( array $options ): array {
 
 		if(!isset($options['where'])){
-			return [];
+			return [null, null];
 		}
 		$where_string = [];
 		$data         = array();
