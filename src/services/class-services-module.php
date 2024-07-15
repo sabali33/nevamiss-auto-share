@@ -53,8 +53,13 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 */
 		$stats_manager = $container->get(Stats_Manager::class);
 
-		add_action( 'schedule_create_tasks_completed', array( $container->get( Schedule_Tasks_Runner::class ), 'run' ) );
-		add_action( 'nevamiss_schedule_task_complete', array( $container->get( Schedule_Tasks_Runner::class ), 'update_task' ) );
+		/**
+		 * @var Schedule_Tasks_Runner $schedule_tasks_runner
+		 */
+		$schedule_tasks_runner = $container->get( Schedule_Tasks_Runner::class );
+
+		add_action( 'schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
+		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ) );
 
 		add_action('cron_schedules', array($wp_cron_service, 'add_cron'));
 		add_action( 'nevamiss_created_schedule', array( $wp_cron_service , 'create_cron'));
