@@ -23,10 +23,15 @@ class Date implements Date_Interface {
 	}
 
 	public function posting_time_in_month( array $dates ): array {
-		// TODO: Implement posting_time_in_month() method.
+
 	}
 
-	public static function create_from_format( string $date, string $format = 'Y-m-d H:i:s' ): self {
+	public static function now(): Date
+	{
+		return new self(new \DateTime('now'));
+	}
+
+	public static function create_from_format( string $date, string $format = 'Y-m-d' ): self {
 		return new self( \DateTime::createFromFormat( $format, $date ) );
 	}
 
@@ -56,12 +61,22 @@ class Date implements Date_Interface {
 		return strtolower( $this->date->format( 'l' ) );
 	}
 
-	public function next_date(): void {
-		$this->date->modify( '+1 day' );
+	public function next_day(): void {
+		$this->modify('+1 day');
 	}
 
 	public static function timestamp_to_date( int $timestamp ): string {
 		$date = ( new \DateTime() )->setTimestamp( $timestamp );
 		return $date->format( 'Y-m-d H:i:s' );
+	}
+
+	public function format(string $date): string
+	{
+		return $this->date->format($date);
+	}
+
+	public function modify(string $modifier): void
+	{
+		$this->date->modify( $modifier );
 	}
 }

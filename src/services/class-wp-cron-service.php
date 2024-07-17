@@ -183,7 +183,7 @@ class WP_Cron_Service implements Cron_Interface {
 			for ( $day = 0; $day < 7; $day++ ) {
 
 				if ( $time['day'] !== $date->day() ) {
-					$date->next_date();
+					$date->next_day();
 					continue;
 				}
 
@@ -191,7 +191,7 @@ class WP_Cron_Service implements Cron_Interface {
 					$date->next_active_date( '+7 day' );
 				}
 				$timestamps[] = $date->timestamp();
-				$date->next_date();
+				$date->next_day();
 			}
 		}
 

@@ -153,6 +153,10 @@ class Schedules_Table_List extends \WP_List_Table {
 				'per_page' => intval( $schedule->query_args()['posts_per_page'] ),
 			)
 		);
+
+		if(empty($schedule_stats)){
+			return;
+		}
 		$post_ids       = array_map(
 			function ( Stats $stat ) {
 				return $stat->post_id();
@@ -169,6 +173,50 @@ class Schedules_Table_List extends \WP_List_Table {
 				)
 			) . PHP_EOL;
 		}
+	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	public function column_estimate_completion(Schedule $schedule): void
+	{
+		$time_units = $this->queue_service->estimate_schedule_cycle_completion($schedule);
+
+		$message = __('Will complete a cycle in ', 'nevamiss');
+
+		$finish_date = $time_units['finish_date'];
+
+		unset($time_units['finish_date']);
+
+		$parts = $this->format_estimate_message($time_units);
+		$message .= $parts;
+
+		if(empty($parts)){
+			$message = __('No time estimates, too close', 'nevamiss');
+		}
+
+		$message .= sprintf(__(' ( on %s)', 'nevamiss'), $finish_date);
+
+		echo $message;
+	}
+
+	private function format_estimate_message($time_units): string
+	{
+		$parts = [];
+		foreach ($time_units as $unit => $value) {
+			if ($value > 0) {
+				$parts[] = sprintf(_n("%s $unit", "%s ${unit}s", $value, 'nevamiss'), $value);
+			} elseif (!empty($parts)) {
+				$parts[] = sprintf(_n("%s $unit", "%s ${unit}s", 0, 'nevamiss'), 0);
+			}
+		}
+
+		if(empty($parts)){
+			return '';
+		}
+
+		return join(', ', $parts);
+
 	}
 	private function action_list( int $schedule_id ): array {
 		$nonce = wp_create_nonce( 'nevamiss_schedules' );
