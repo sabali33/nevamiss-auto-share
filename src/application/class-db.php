@@ -23,7 +23,7 @@ class DB {
 		$sql = "CREATE TABLE $schedule_table_name (
             id INT NOT NULL AUTO_INCREMENT,
             schedule_name VARCHAR(255) UNIQUE NOT NULL,
-            start_date TIMESTAMP,
+            start_date DATE,
             repeat_frequency ENUM('none', 'daily', 'weekly', 'monthly') NOT NULL DEFAULT 'none',
             social_media_tags VARCHAR(255),
             one_time_schedule JSON,

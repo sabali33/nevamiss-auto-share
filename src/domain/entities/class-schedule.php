@@ -36,7 +36,7 @@ class Schedule {
 			$this->to_numeric( json_decode( $schedule['weekly_times'], true ) ) :
 			null;
 		$this->one_time_schedule = $schedule['one_time_schedule'] ?
-			json_decode( $schedule['one_time_schedule'] ) : null;
+			json_decode( $schedule['one_time_schedule'], true ) : null;
 	}
 
 	public function post_data(): array {

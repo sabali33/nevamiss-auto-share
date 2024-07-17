@@ -31,8 +31,8 @@ class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, 
 
 	/**
 	 * @param int $schedule_id
-	 * @return Schedule_Queue
-	 * @throws Not_Found_Exception|\Exception
+	 * @return Schedule_Queue|false
+	 * @throws Not_Found_Exception
 	 */
 	public function get_schedule_queue_by_schedule_id( int $schedule_id ): Schedule_Queue|false {
 		$sql = $this->wpdb->prepare( "SELECT * FROM {$this->table_name()} WHERE schedule_id='%s'", $schedule_id );
