@@ -12,15 +12,22 @@ trait Get_All_Trait {
 
 		[$where_clause, $data] = $this->where_clause( $options );
 		$limit                 = $this->limit_clause( $options );
+		$order                 = $this->order_clause( $options );
 
 		$sql = "SELECT * FROM {$this->table_name()}";
 
 		if ( $where_clause ) {
 			$sql .= ' WHERE ' . $where_clause;
-			$sql  = $this->wpdb->prepare(
-				$sql,
-				...$data
-			);
+
+			if($data){
+				$sql  = $this->wpdb->prepare(
+					$sql,
+					...$data
+				);
+			}
+		}
+		if($order){
+			$sql .= $order;
 		}
 		if ( $limit ) {
 			$sql .= $limit;
@@ -65,6 +72,15 @@ trait Get_All_Trait {
 		if ( ! isset( $options['per_page'] ) ) {
 			return null;
 		}
-		return "LIMIT {$options['per_page']}";
+		return " LIMIT {$options['per_page']}";
+	}
+
+	public function order_clause(array $args): ?string
+	{
+		if(!isset($args['order']) && !isset($args['orderby'])){
+			return null;
+		}
+
+		return " ORDER BY {$args['orderby']} {$args['order']}";
 	}
 }

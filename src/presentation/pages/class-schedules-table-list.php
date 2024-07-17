@@ -92,8 +92,8 @@ class Schedules_Table_List extends \WP_List_Table {
 
 	protected function get_sortable_columns(): array {
 		return array(
-			'schedule_name' => array( 'Name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
-			'created_at'    => array( 'Created Date', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
+			'schedule_name' => array( 'schedule_name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
+			'created_at'    => array( 'created_at', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
 		);
 	}
 
@@ -104,6 +104,65 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 	protected function get_default_primary_column_name(): string {
 		return 'schedule_name';
+	}
+	protected function get_bulk_actions(): array
+	{
+		return [
+			'edit' => 'Edit',
+			'trash' => 'Trash'
+		];
+	}
+	protected function handle_row_actions( $item, $column_name, $primary )
+	{
+		if ($primary !== $column_name) {
+			return '';
+		}
+	}
+
+	public function current_action(): bool|string
+	{
+		if ( isset( $_REQUEST['delete_all'] ) || isset( $_REQUEST['delete_all2'] ) ) {
+			return 'delete_all';
+		}
+
+		return parent::current_action();
+	}
+
+	/**
+	 * @param Schedule $item
+	 * @return void
+	 */
+	public function column_cb( $item): void
+	{
+		$show = current_user_can( 'edit_post', $item->id() );
+
+		if(!$show){
+			return;
+		}
+		?>
+		<input id="cb-select-<?php esc_attr_e($item->id()); ?>" type="checkbox" name="schedules[]" value="<?php esc_attr_e($item->id()); ?>" />
+		<label for="cb-select-<?php esc_attr_e($item->id()); ?>">
+			<span class="screen-reader-text">
+			<?php
+			/* translators: %s: Post title. */
+			printf( __( 'Select %s' ), $item->name() );
+			?>
+			</span>
+		</label>
+		<div class="locked-indicator">
+			<span class="locked-indicator-icon" aria-hidden="true"></span>
+			<span class="screen-reader-text">
+			<?php
+			printf(
+			/* translators: Hidden accessibility text. %s: Post title. */
+				__( '&#8220;%s&#8221; is locked' ),
+				$item->name()
+			);
+			?>
+			</span>
+		</div>
+		<?php
+
 	}
 
 	public function column_schedule_name( Schedule $item ): void {
