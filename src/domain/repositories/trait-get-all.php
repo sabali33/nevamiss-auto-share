@@ -35,10 +35,16 @@ trait Get_All_Trait {
 
 	private function where_clause( array $options ): array {
 
-		if ( ! isset( $options['where'] ) ) {
+		if ( ! isset( $options['where'] ) && ! isset( $options['search'] ) ) {
 			return array( null, null );
 		}
 		$where_string = array();
+
+		if(isset($options['search'])){
+			$search_text = "%{$options['search']}%";
+			return [$this->wpdb->prepare("schedule_name LIKE %s", $search_text), null];
+		}
+
 		$data         = array();
 
 		foreach ( $options['where'] as $key => $option ) {

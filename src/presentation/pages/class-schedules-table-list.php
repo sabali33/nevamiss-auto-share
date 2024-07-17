@@ -45,7 +45,7 @@ class Schedules_Table_List extends \WP_List_Table {
 		);
 
 		if ( '' !== $args['search'] ) {
-			$args['search'] = '*' . $args['search'] . '*';
+			$args['search'] = $args['search'] ;
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
@@ -56,7 +56,7 @@ class Schedules_Table_List extends \WP_List_Table {
 			$args['order'] = $_REQUEST['order'];
 		}
 
-		$this->items = $this->schedule_repository->get_all( array() );
+		$this->items = $this->schedule_repository->get_all( $args );
 
 		$this->set_pagination_args(
 			array(
