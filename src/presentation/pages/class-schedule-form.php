@@ -608,7 +608,7 @@ class Schedule_Form extends Page {
 					'type'              => 'select-group',
 					'class'             => 'daily-times',
 					'label'             => __( 'Hour', 'nevamiss' ),
-					'choices'           => range( 0, 23 ),
+					'choices'           => $this->hours(),
 					'has_multiple'      => true,
 					'complement_fields' => array(
 						array(
@@ -617,7 +617,7 @@ class Schedule_Form extends Page {
 							'type'    => 'select',
 							'class'   => 'daily-times-minute',
 							'label'   => __( 'Minute', 'nevamiss' ),
-							'choices' => range( 1, 60, 5 ),
+							'choices' => $this->minutes(),
 							'id'      => 'daily-minute',
 						),
 					),
@@ -634,7 +634,7 @@ class Schedule_Form extends Page {
 				'type'              => 'select-group',
 				'class'             => 'daily-times',
 				'label'             => __( 'Hour', 'nevamiss' ),
-				'choices'           => range( 0, 23 ),
+				'choices'           => $this->hours(),
 				'has_multiple'      => true,
 				'complement_fields' => array(
 					array(
@@ -643,7 +643,7 @@ class Schedule_Form extends Page {
 						'type'    => 'select',
 						'class'   => 'daily-times-minute',
 						'label'   => __( 'Minute', 'nevamiss' ),
-						'choices' => range( 1, 60, 5 ),
+						'choices' => $this->minutes(),
 						'id'      => 'daily-minute',
 					),
 				),
@@ -680,7 +680,7 @@ class Schedule_Form extends Page {
 							'class'   => 'weekly-daily-hour',
 							'id'      => 'weekly-daily-hour',
 							'label'   => __( 'at', 'nevamiss' ),
-							'choices' => range( 0, 23 ),
+							'choices' => $this->hours(),
 						),
 						array(
 							'name'    => 'weekly_times[minutes][]',
@@ -689,7 +689,7 @@ class Schedule_Form extends Page {
 							'class'   => 'daily-times-minute',
 							'id'      => 'daily-times-minute',
 							'label'   => __( 'Minute', 'nevamiss' ),
-							'choices' => range( 1, 60, 1 ),
+							'choices' => $this->minutes(),
 						),
 					),
 				),
@@ -723,7 +723,7 @@ class Schedule_Form extends Page {
 						'class'   => 'weekly-daily-hour',
 						'id'      => "weekly-daily-hour-$index",
 						'label'   => __( 'at', 'nevamiss' ),
-						'choices' => range( 0, 23 ),
+						'choices' => $this->hours(),
 					),
 					array(
 						'name'    => 'weekly_times[minutes][]',
@@ -732,7 +732,7 @@ class Schedule_Form extends Page {
 						'class'   => 'daily-times-minute',
 						'id'      => "daily-times-minute-$index",
 						'label'   => __( 'Minute', 'nevamiss' ),
-						'choices' => range( 1, 60, 1 ),
+						'choices' => $this->minutes(),
 					),
 				),
 			);
@@ -741,7 +741,8 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function monthly_fields() {
+	private function monthly_fields(): array
+	{
 		if ( ! $this->schedule || ! $this->schedule->monthly_times() ) {
 			return array(
 				array(
@@ -751,7 +752,7 @@ class Schedule_Form extends Page {
 					'class'             => 'monthly-times',
 					'id'                => 'monthly-times',
 					'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
-					'label'             => __( 'Monthly Times', 'nevamiss' ),
+					'label'             => __( 'On day', 'nevamiss' ),
 					'has_multiple'      => true,
 					'complement_fields' => array(
 						array(
@@ -761,7 +762,7 @@ class Schedule_Form extends Page {
 							'class'   => 'monthly-daily-times',
 							'id'      => 'monthly-daily-times',
 							'label'   => __( 'at', 'nevamiss' ),
-							'choices' => range( 0, 23 ),
+							'choices' => $this->hours(),
 						),
 						array(
 							'name'    => 'monthly_times[minutes][]',
@@ -770,7 +771,7 @@ class Schedule_Form extends Page {
 							'class'   => 'monthly-times-minute',
 							'id'      => 'monthly-times-minute',
 							'label'   => __( 'Minute', 'nevamiss' ),
-							'choices' => range( 1, 60, 5 ),
+							'choices' => $this->minutes(),
 						),
 					),
 				),
@@ -786,7 +787,7 @@ class Schedule_Form extends Page {
 				'class'             => 'monthly-times',
 				'id'                => "monthly-times-$index",
 				'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
-				'label'             => __( 'Monthly Times', 'nevamiss' ),
+				'label'             => __( 'On day', 'nevamiss' ),
 				'has_multiple'      => true,
 				'complement_fields' => array(
 					array(
@@ -796,7 +797,7 @@ class Schedule_Form extends Page {
 						'class'   => 'monthly-daily-times',
 						'id'      => "monthly-daily-times-$index",
 						'label'   => __( 'at', 'nevamiss' ),
-						'choices' => range( 0, 23 ),
+						'choices' => $this->hours(),
 					),
 					array(
 						'name'    => 'monthly_times[minutes][]',
@@ -805,7 +806,7 @@ class Schedule_Form extends Page {
 						'class'   => 'monthly-times-minute',
 						'id'      => "monthly-times-minute-$index",
 						'label'   => __( 'Minute', 'nevamiss' ),
-						'choices' => range( 1, 60, 5 ),
+						'choices' => $this->minutes(),
 					),
 				),
 			);
@@ -813,7 +814,8 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function sort_posts() {
+	private function sort_posts(): array
+	{
 		$criteria = array(
 			'newest'        => __( 'Newest', 'nevamiss' ),
 			'post_title'    => __( 'Title', 'nevamiss' ),
@@ -826,5 +828,24 @@ class Schedule_Form extends Page {
 			$criteria['queue_order'] = __( 'Keep as ordered in queue', 'nevamiss' );
 		}
 		return $criteria;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function minutes(): array
+	{
+		return array_reduce(range(1, 60, 1), function($acc, $curr){
+			$acc[$curr] = $curr;
+			return $acc;
+		}, []);
+	}
+
+	/**
+	 * @return array
+	 */
+	private function hours(): array
+	{
+		return range(0, 23);
 	}
 }
