@@ -38,7 +38,9 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 	);
 
 	public function get_total(): int {
-		return 2;
+		$sql = "SELECT COUNT(*) FROM {$this->table_name()}";
+		[$count] = $this->wpdb->get_results($sql, ARRAY_N);
+		return intval($count[0]);
 	}
 
 	private function table_name(): string {
