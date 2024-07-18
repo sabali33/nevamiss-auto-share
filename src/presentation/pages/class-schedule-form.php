@@ -86,11 +86,19 @@ class Schedule_Form extends Page {
 							$selected_class = ' active';
 						}
 					}
-
+					$has_multiple = isset( $sub_field['has_multiple'] ) && $sub_field['has_multiple'];
+					$can_be_removed = isset( $sub_field['can_be_removed'] ) && $sub_field['can_be_removed'];
 					$parent_value = esc_attr( $key );
 					echo "<div class='sub-field-wrapper{$selected_class} $key' data-repeat-frequency='{$parent_value}'>";
-					$this->render_field( $sub_field );
-					echo isset( $sub_field['has_multiple'] ) ? __( '<button class="add-field-group button"> Add </button>', 'nevamiss' ) : '';
+						if($can_be_removed){
+							echo '<button class="remove"> X </button>';
+						}
+						$this->render_field( $sub_field );
+
+						if($has_multiple){
+							printf('<button class="add-field-group button"> %s </button>', __( 'Add', 'nevamiss' ));
+						}
+
 					echo '</div>';
 
 				}
@@ -627,7 +635,8 @@ class Schedule_Form extends Page {
 
 		$fields = array();
 
-		foreach ( $this->schedule->daily_times() as $time ) {
+		foreach ( $this->schedule->daily_times() as $index => $time ) {
+			$last_field = $index === (count($this->schedule->daily_times()) -1) ;
 			$fields[] = array(
 				'name'              => 'daily_times[hours][]',
 				'value'             => $time['hour'],
@@ -635,7 +644,8 @@ class Schedule_Form extends Page {
 				'class'             => 'daily-times',
 				'label'             => __( 'Hour', 'nevamiss' ),
 				'choices'           => $this->hours(),
-				'has_multiple'      => true,
+				'has_multiple'      => $last_field,
+				'can_be_removed'      => !$last_field,
 				'complement_fields' => array(
 					array(
 						'name'    => 'daily_times[minutes][]',
@@ -698,6 +708,7 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->weekly_times() as $index => $week_time ) {
+			$last_field = $index === (count($this->schedule->weekly_times()) -1) ;
 			$fields[] = array(
 				'name'              => 'weekly_times[days][]',
 				'value'             => $week_time['day'],
@@ -705,7 +716,8 @@ class Schedule_Form extends Page {
 				'class'             => 'weekly-times',
 				'id'                => "weekly-times-$index",
 				'label'             => __( 'Weekly Times', 'nevamiss' ),
-				'has_multiple'      => true,
+				'has_multiple'      => $last_field,
+				'can_be_removed'      => !$last_field,
 				'choices'           => array(
 					'monday'    => __( 'Monday', 'nevamiss' ),
 					'tuesday'   => __( 'Tuesday', 'nevamiss' ),
@@ -780,6 +792,7 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->monthly_times() as $index => $monthly_time ) {
+			$last_field = $index === (count($this->schedule->monthly_times()) -1) ;
 			$fields[] = array(
 				'name'              => 'monthly_times[days][]',
 				'value'             => $monthly_time['day'],
@@ -788,7 +801,8 @@ class Schedule_Form extends Page {
 				'id'                => "monthly-times-$index",
 				'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
 				'label'             => __( 'On day', 'nevamiss' ),
-				'has_multiple'      => true,
+				'has_multiple'      => $last_field,
+				'can_be_removed'    => !$last_field,
 				'complement_fields' => array(
 					array(
 						'name'    => 'monthly_times[hours][]',
