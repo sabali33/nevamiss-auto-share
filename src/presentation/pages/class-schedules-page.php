@@ -2,12 +2,17 @@
 
 namespace Nevamiss\Presentation\Pages;
 
+use Nevamiss\Domain\Repositories\Schedule_Repository;
+
 class Schedules_Page extends Page {
 
 	public const TEMPLE_PATH = 'templates/schedules';
 	const SLUG               = 'schedules';
 
-	public function __construct( public Schedules_Table_List $table_list ) {
+	public function __construct(
+		public Schedules_Table_List $table_list,
+		private Schedule_Repository $schedule_repository,
+	) {
 		parent::__construct(
 			$table_list,
 			'Schedules',
@@ -47,5 +52,31 @@ class Schedules_Page extends Page {
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)
 		);
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function bulk_delete(): void
+	{
+		if(!isset($_REQUEST['action']) && !isset($_REQUEST['action2'])){
+			return;
+		}
+		if($_REQUEST['action'] !== 'delete_all' || !isset($_REQUEST['schedules'])){
+			return;
+		}
+
+		['schedules' => $schedules] = filter_input_array(
+			INPUT_GET,
+			[
+				'schedules' => [
+					'filter' => FILTER_VALIDATE_INT,
+					'flags'  => FILTER_REQUIRE_ARRAY,
+				]
+			] );
+
+		foreach ($schedules as $schedule){
+			$this->schedule_repository->delete($schedule);
+		}
 	}
 }

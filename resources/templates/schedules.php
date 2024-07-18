@@ -13,6 +13,8 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
 <div class="wrap">
     <?php $this->notices(); ?>
 
+    <?php $this->bulk_delete(); ?>
+
     <p>
         <h1 class="wp-heading-inline">
             <?php echo esc_html($this->title); ?>

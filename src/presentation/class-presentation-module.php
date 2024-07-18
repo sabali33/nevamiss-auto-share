@@ -27,7 +27,10 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 
 			Schedules_Page::class       => static function ( ContainerInterface $container ) {
 
-				return new Schedules_Page( $container->get( Schedules_Table_List::class ) );
+				return new Schedules_Page(
+					$container->get( Schedules_Table_List::class ),
+					$container->get(Schedule_Repository::class)
+				);
 			},
 
 			Settings_Page::class        => static function ( ContainerInterface $container ) {
