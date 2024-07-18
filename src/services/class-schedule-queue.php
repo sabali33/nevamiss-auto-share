@@ -361,6 +361,10 @@ class Schedule_Queue {
 			$this->monthly_last_date_update($end_date, $last_day);
 			return $end_date;
 		}
+		if($schedule->repeat_frequency() === 'daily'){
+			$this->update_time($end_date, $last_day);
+			return $end_date;
+		}
 
 		for( $day= 1; $day <=7; $day++){
 
@@ -368,7 +372,8 @@ class Schedule_Queue {
 				$end_date->modify('+1 day');
 				continue;
 			}
-			$end_date->set_time($last_day['hour'], $last_day['minute']);
+
+			$this->update_time($end_date, $last_day);
 			return $end_date;
 		}
 		return false;
@@ -419,12 +424,32 @@ class Schedule_Queue {
 
 	private function estimate_daily_schedule(Schedule $schedule, int $posts_count): array
 	{
-		return [
-			'month' => 0,
-			'day' => 0,
-			'hour' => 0,
-			'minute' => 0,
-		];
+		$time_units = [];
+		$date = Date::create_from_format($schedule->start_date());
+
+		//Ensure that date remains current
+		$this->ensure_that_date_remains_current($date);
+		$per_page = (int)$schedule->query_args()['posts_per_page'];
+		$posting_times = $schedule->daily_times();
+		$sharing_count_a_day = count($posting_times);
+
+		$number_of_posting_per_day = $sharing_count_a_day * $per_page;
+
+		if( $posts_count <= $per_page || ($posts_count <= $number_of_posting_per_day)){
+			$end_date = $this->last_cycle_date($date, $posts_count, $schedule);
+			return $this->hour_minute($date, $end_date);
+		}
+
+		$time_units['months'] = floor($posts_count / $number_of_posting_per_day);
+		$remaining_posts = $posts_count % $number_of_posting_per_day;
+
+		if( $remaining_posts === 0){
+			return array_merge($time_units, $this->no_lower_time_units($time_units));
+		}
+
+		$end_date = $this->last_cycle_date($date, $remaining_posts, $schedule);
+
+		return array_merge($time_units, $this->hour_minute($date, $end_date));
 	}
 
 	/**
@@ -496,11 +521,17 @@ class Schedule_Queue {
 	 * @param mixed $last_day
 	 * @return void
 	 */
-	private function monthly_last_date_update(Date &$end_date, mixed $last_day): void
+	private function monthly_last_date_update(Date &$end_date, array $last_day): void
 	{
 		$end_date->modify("+{$last_day['day']} day");
 		$end_date->set_day($last_day['day']);
 		$end_date->set_day($last_day['day']);
+
+		$this->update_time($end_date, $last_day);
+	}
+
+	private function update_time(Date &$end_date, array $last_day): void
+	{
 		$end_date->set_time($last_day['hour'], $last_day['minute']);
 	}
 }
