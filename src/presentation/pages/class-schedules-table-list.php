@@ -111,8 +111,7 @@ class Schedules_Table_List extends \WP_List_Table {
 	protected function get_bulk_actions(): array
 	{
 		return [
-			'edit' => 'Edit',
-			'trash' => 'Trash'
+			'delete_all' => __('Delete', 'nevamiss')
 		];
 	}
 	protected function handle_row_actions( $item, $column_name, $primary )

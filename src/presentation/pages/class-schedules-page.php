@@ -62,7 +62,12 @@ class Schedules_Page extends Page {
 		if(!isset($_REQUEST['action']) && !isset($_REQUEST['action2'])){
 			return;
 		}
+
 		if($_REQUEST['action'] !== 'delete_all' || !isset($_REQUEST['schedules'])){
+			return;
+		}
+
+		if(! wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-schedules')){
 			return;
 		}
 
