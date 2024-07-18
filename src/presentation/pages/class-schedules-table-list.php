@@ -184,6 +184,11 @@ class Schedules_Table_List extends \WP_List_Table {
 
 	public function column_start_time(Schedule $schedule): void
 	{
+        if(!$schedule->start_date()) {
+            echo join(',', $schedule->one_time_schedule());
+            return;
+        }
+
         $date = Date::create_from_format($schedule->start_date());
         $date_formatted = $date->format('dS F Y ');
         $class_name = $date->is_late() ? 'started' : 'not-started';

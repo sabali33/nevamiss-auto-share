@@ -70,7 +70,7 @@ class Schedule {
 	public function name(): string {
 		return $this->schedule_name;
 	}
-	public function start_date(): string {
+	public function start_date(): ?string {
 		return $this->start_date;
 	}
 	public function repeat_frequency(): string {
