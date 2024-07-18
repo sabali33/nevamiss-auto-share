@@ -5,3 +5,15 @@
 .sub-field-wrapper.active{
     display: block;
 }
+.wrap .schedules .started{
+    background: #1f9681;
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 3px;
+}
+.wrap .schedules .not-started{
+    background: #d5a476;
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 3px;
+}

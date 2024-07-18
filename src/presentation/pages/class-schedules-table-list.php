@@ -9,6 +9,7 @@ use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Entities\Stats;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Services\Date;
 use Nevamiss\Services\Schedule_Queue as Schedule_Queue_Service;
 
 class Schedules_Table_List extends \WP_List_Table {
@@ -179,6 +180,15 @@ class Schedules_Table_List extends \WP_List_Table {
 			$actions
 		);
 	}
+
+	public function column_start_time(Schedule $schedule): void
+	{
+        $date = Date::create_from_format($schedule->start_date());
+        $date_formatted = $date->format('dS F Y ');
+        $class_name = $date->is_late() ? 'started' : 'not-started';
+
+        echo "<span class='$class_name'> $date_formatted </span>";
+    }
 
 	public function column_repeat_frequency( Schedule $schedule ): void {
 		echo $schedule->repeat_frequency();
