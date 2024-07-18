@@ -295,7 +295,7 @@ class Schedule_Queue {
 		$number_of_posting_per_monthly = $shared_per_cycle * $per_page;
 		$months = floor($posts_count / $number_of_posting_per_monthly);
 
-		if( $posts_count <= $per_page || ($posts_count < $number_of_posting_per_monthly)){
+		if( $posts_count <= $per_page || ($posts_count <= $number_of_posting_per_monthly)){
 			$end_date = $this->last_cycle_date($date, $posts_count, $schedule);
 			return $this->hour_minute($date, $end_date);
 		}
@@ -387,7 +387,7 @@ class Schedule_Queue {
 
 		$number_of_posting_per_week = $sharing_count_a_week * $per_page;
 
-		if( $posts_count <= $per_page || ($posts_count < $number_of_posting_per_week)){
+		if( $posts_count <= $per_page || ($posts_count <= $number_of_posting_per_week)){
 			$end_date = $this->last_cycle_date($date, $posts_count, $schedule);
 			return $this->hour_minute($date, $end_date);
 		}
