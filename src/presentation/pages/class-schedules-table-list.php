@@ -106,6 +106,8 @@ class Schedules_Table_List extends \WP_List_Table {
 	protected function get_default_primary_column_name(): string {
 		return 'schedule_name';
 	}
+
+
 	protected function get_bulk_actions(): array
 	{
 		return [
@@ -135,7 +137,7 @@ class Schedules_Table_List extends \WP_List_Table {
 	 */
 	public function column_cb( $item): void
 	{
-		$show = current_user_can( 'edit_post', $item->id() );
+		$show = current_user_can( 'manage_options', $item->id() );
 
 		if(!$show){
 			return;
