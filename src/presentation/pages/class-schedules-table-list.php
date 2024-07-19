@@ -45,10 +45,6 @@ class Schedules_Table_List extends \WP_List_Table {
 			'search'   => $search,
 		);
 
-		if ( '' !== $args['search'] ) {
-			$args['search'] = $args['search'] ;
-		}
-
 		if ( isset( $_REQUEST['orderby'] ) ) {
 			$args['orderby'] = $_REQUEST['orderby'];
 		}
@@ -255,6 +251,9 @@ class Schedules_Table_List extends \WP_List_Table {
 	 */
 	public function column_estimate_completion(Schedule $schedule): void
 	{
+        if($schedule->repeat_frequency() === 'none'){
+            return;
+        }
 		$time_units = $this->queue_service->estimate_schedule_cycle_completion($schedule);
 
 		$message = __('Will complete a cycle in ', 'nevamiss');
