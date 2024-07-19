@@ -10,10 +10,14 @@ use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Presentation\Components\Component;
+use Nevamiss\Presentation\Components\Component_Runner;
 use Nevamiss\Presentation\Components\Input_Fields\Input;
 use Nevamiss\Presentation\Components\Input_Fields\Select_Field;
 use Nevamiss\Presentation\Components\Input_Fields\Select_Group_Field;
 use Nevamiss\Presentation\Components\Input_Fields\TextArea;
+use Nevamiss\Presentation\Components\Renderable;
+use Nevamiss\Presentation\Components\Wrapper;
 use Nevamiss\Presentation\Utils;
 use Nevamiss\Services\Form_Validator;
 
@@ -60,7 +64,7 @@ class Schedule_Form extends Page {
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	public function render_field( array $field ): void {
+	public function render_field( array $field ): Component {
 
 		$field_class = match ( $field['type'] ) {
 			'select' => Select_Field::class,
@@ -69,9 +73,9 @@ class Schedule_Form extends Page {
 			default => Input::class,
 		};
 
-		echo $this->factory()->component( $field_class, $field )->render();
-
+		$sub_fields_components = [];
 		if ( isset( $field['sub_fields'] ) ) {
+
 			foreach ( $field['sub_fields'] as $key => $sub_fields ) {
 
 				foreach ( $sub_fields as $sub_field ) {
@@ -89,21 +93,53 @@ class Schedule_Form extends Page {
 					$has_multiple = isset( $sub_field['has_multiple'] ) && $sub_field['has_multiple'];
 					$can_be_removed = isset( $sub_field['can_be_removed'] ) && $sub_field['can_be_removed'];
 					$parent_value = esc_attr( $key );
-					echo "<div class='sub-field-wrapper{$selected_class} $key' data-repeat-frequency='{$parent_value}'>";
-						if($can_be_removed){
-							echo '<button class="remove"> X </button>';
-						}
-						$this->render_field( $sub_field );
 
-						if($has_multiple){
-							printf('<button class="add-field-group button"> %s </button>', __( 'Add', 'nevamiss' ));
-						}
 
-					echo '</div>';
+					$sub_field_elements = [];
+					if($can_be_removed){
+						$sub_field_elements[] = $this->factory()->component(Wrapper::class, [
+							'tag' => 'button',
+							'attributes' => [
+								'class' => 'remove'
+							],
+							'text' => __('X', 'nevamiss')
+						]);
+					}
+					$sub_field_elements[] = $this->render_field($sub_field);
 
+					if($has_multiple){
+						$sub_field_elements[] = $this->factory()->component(Wrapper::class, [
+							'tag' => 'button',
+							'attributes' => [
+								'class' => 'add-field-group button'
+							],
+							'text' => __('Add', 'nevamiss')
+						]);
+					}
+
+					$sub_fields_components[] = $this->factory()->component(
+						Wrapper::class,
+						[
+							'attributes' => [
+								'class' => "sub-field-wrapper{$selected_class} $key",
+								'data-repeat-frequency' => $parent_value
+							],
+
+						],
+						$sub_field_elements
+					);
 				}
 			}
 		}
+
+		if(empty($sub_fields_components)){
+			return $this->factory()->component( $field_class, $field );
+		}
+		return $this->factory()->component(Component_Runner::class, [], [
+			$this->factory()->component( $field_class, $field ),
+			... $sub_fields_components
+		]);
+
 	}
 
 	public function fields(): array {

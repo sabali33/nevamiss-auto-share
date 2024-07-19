@@ -28,7 +28,7 @@ if($this->schedule()){
     <form method="post">
         <?php wp_nonce_field('nevamiss_create_schedule'); ?>
         <?php foreach ($this->fields() as $field): ?>
-            <?php $this->render_field($field); ?>
+            <?php echo $this->render_field($field)->render(); ?>
         <?php endforeach; ?>
         <input type="submit" value="<?php esc_attr_e($button_label); ?>">
     </form>
