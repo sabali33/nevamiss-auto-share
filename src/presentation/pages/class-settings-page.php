@@ -2,7 +2,12 @@
 
 namespace Nevamiss\Presentation\Pages;
 
+use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Presentation\Components\Component;
+use Nevamiss\Presentation\Tabs\Tab_Collection;
+use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Services\Settings;
 
 class Settings_Page extends Page {
@@ -11,7 +16,11 @@ class Settings_Page extends Page {
 	const SLUG               = 'nevamiss-settings';
 	private Media_Network_Collection $network_collection;
 
-	public function __construct( Settings $settings, Media_Network_Collection $collection ) {
+	public function __construct(
+		private Settings $settings,
+		private Media_Network_Collection $collection,
+		private Tab_Collection $tab_collection,
+	) {
 
 		$this->network_collection = $collection;
 
@@ -48,5 +57,18 @@ class Settings_Page extends Page {
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)
 		);
+	}
+
+	/**
+	 * @return Array<Tab_Interface>
+	 */
+	public function tabs(): array
+	{
+		return $this->tab_collection->get_all();
+	}
+
+	public function tab(string $tab): Tab_Interface
+	{
+		return $this->tab_collection->get($tab);
 	}
 }

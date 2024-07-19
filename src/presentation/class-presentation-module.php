@@ -12,6 +12,13 @@ use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Networks\Media_Network_Collection;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
+use Nevamiss\Presentation\Tabs\General_Tab;
+use Nevamiss\Presentation\Tabs\Logs_Tab;
+use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
+use Nevamiss\Presentation\Tabs\Stats_Tab;
+use Nevamiss\Presentation\Tabs\Tab_Collection;
+use Nevamiss\Presentation\Tabs\Tab_Collection_Interface;
+use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Services\Form_Validator;
 use Nevamiss\Services\Schedule_Queue;
 use Nevamiss\Services\Settings;
@@ -36,7 +43,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			Settings_Page::class        => static function ( ContainerInterface $container ) {
 				return new Settings_Page(
 					$container->get( Settings::class ),
-					$container->get( Media_Network_Collection::class )
+					$container->get( Media_Network_Collection::class ),
+					$container->get(Tab_Collection::class),
 				);
 			},
 
@@ -71,6 +79,25 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$container->get( Posts_Stats_Repository::class ),
 				$container->get( Schedule_Queue::class ),
 			),
+			Tab_Collection_Interface::class => function(ContainerInterface $container) {
+				$factory = $container->get(Factory::class);
+				return [
+					new General_Tab($factory),
+					new Network_Accounts_Tab($factory),
+					new Stats_Tab($factory),
+					new Logs_Tab($factory),
+				];
+			},
+			Tab_Collection::class => function (ContainerInterface $container) {
+				$collection = new Tab_Collection();
+				/**
+				 * @var Tab_Interface $tab
+				 */
+				foreach ($container->get(Tab_Collection_Interface::class) as $tab){
+					$collection->register($tab->slug(), $tab);
+				}
+				return $collection;
+			}
 		);
 	}
 
