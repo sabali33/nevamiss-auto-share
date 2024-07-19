@@ -42,14 +42,14 @@ trait Get_All_Trait {
 
 	private function where_clause( array $options ): array {
 
-		if ( ! isset( $options['where'] ) && ! isset( $options['search'] ) ) {
+		if ( ! isset( $options['where'] ) && ! $options['search'] ) {
 			return array( null, null );
 		}
 		$where_string = array();
 
-		if(isset($options['search'])){
+		if(isset($options['search']) && $options['search']){
 			$search_text = "%{$options['search']}%";
-			return [$this->wpdb->prepare("schedule_name LIKE %s", $search_text), null];
+			return ["schedule_name LIKE {$this->wpdb->esc_like($search_text)}", null];
 		}
 
 		$data         = array();
@@ -72,7 +72,8 @@ trait Get_All_Trait {
 		if ( ! isset( $options['per_page'] ) ) {
 			return null;
 		}
-		return " LIMIT {$options['per_page']}";
+		$offset = isset($options['offset']) ? "OFFSET {$options['offset']}" : '';
+		return " LIMIT {$options['per_page']} $offset";
 	}
 
 	public function order_clause(array $args): ?string
