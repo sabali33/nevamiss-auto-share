@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nevamiss\Services\Row_Action_Handlers;
 
 use Nevamiss\Application\Not_Found_Exception;
@@ -9,14 +11,17 @@ use Nevamiss\Services\WP_Cron_Service;
 
 class Schedule_Row_Action_Handler {
 
-	private ?string $schedules_home;
+	use Row_Action_Trail;
+	private ?string $page_home;
+	private string $nonce_action;
 
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
 		private WP_Cron_Service $cron_service,
 		private Schedule_Post_Manager $post_manager
 	) {
-		$this->schedules_home = admin_url( 'admin.php?page=schedules' );
+		$this->page_home = admin_url( 'admin.php?page=schedules' );
+		$this->nonce_action = 'nevamiss_schedules';
 	}
 
 	/**
@@ -59,9 +64,8 @@ class Schedule_Row_Action_Handler {
 	 * @throws \Exception
 	 */
 	public function delete_schedule_callback(): void {
-		$authorized = $this->authorize();
 
-		if ( ! $authorized ) {
+		if ( ! $this->authorize() ) {
 			wp_die( 'Unauthorized' );
 		}
 		$schedule_id = (int) sanitize_text_field( $_GET['schedule_id'] );
@@ -108,17 +112,5 @@ class Schedule_Row_Action_Handler {
 			)
 		);
 		exit;
-	}
-
-	/**
-	 * @return bool
-	 */
-	private function authorize(): bool {
-		return isset( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'nevamiss_schedules' );
-	}
-
-	private function redirect( array $args ): void {
-		$url = add_query_arg( $args, $this->schedules_home );
-		wp_redirect( $url );
 	}
 }
