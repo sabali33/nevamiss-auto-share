@@ -5,12 +5,13 @@ namespace Nevamiss\Presentation\Pages;
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
-use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
+use Nevamiss\Presentation\Pages\Tables\Schedules_Table_List;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Presentation\Tabs\General_Tab;
 use Nevamiss\Presentation\Tabs\Logs_Tab;
@@ -83,7 +84,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$factory = $container->get(Factory::class);
 				return [
 					new General_Tab($factory),
-					new Network_Accounts_Tab($factory),
+					new Network_Accounts_Tab($factory, $container->get(Network_Accounts_Table_List::class)),
 					new Stats_Tab($factory),
 					new Logs_Tab($factory),
 				];
@@ -97,7 +98,9 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 					$collection->register($tab->slug(), $tab);
 				}
 				return $collection;
-			}
+			},
+			Network_Accounts_Table_List::class => fn(ContainerInterface $container) =>
+			new Network_Accounts_Table_List($container->get(Network_Account_Repository::class))
 		);
 	}
 

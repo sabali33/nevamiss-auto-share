@@ -25,6 +25,7 @@ class Network_Account_Repository implements
 	use Get_One_Trait;
 	use Delete_Trait;
 	use Get_All_Trait;
+	use Count_Model_Trait;
 
 	private const ENTITY_NAME  = 'Network Account';
 	private const ENTITY_CLASS = Network_Account::class;

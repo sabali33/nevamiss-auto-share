@@ -39,4 +39,9 @@ class Network_Account {
 	public function parent_remote_id() {
 		return $this->account['parent_remote_id'];
 	}
+
+	public function created_at()
+	{
+		return $this->account['created_at'];
+	}
 }

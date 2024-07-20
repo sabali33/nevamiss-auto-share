@@ -8,17 +8,26 @@ use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
+use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 
 class Network_Accounts_Tab implements Tab_Interface {
 
-	public function __construct(private Factory $factory)
+	const TEMPLATE_PATH = 'resources/templates/network-accounts';
+	private string $title;
+
+	public function __construct(private Factory $factory, private Network_Accounts_Table_List $table_list)
 	{
+		$this->title = __('Network Accounts', 'nevamiss');
 	}
 	public const SLUG = 'network-accounts';
 
 	public function render($attributes = array()): string
 	{
-		return 'Network contents';
+		ob_start();
+
+		include NEVAMISS_PATH . self::TEMPLATE_PATH .'.php';
+
+		return ob_get_clean();
 	}
 
 	public function label(): ?string
@@ -44,5 +53,23 @@ class Network_Accounts_Tab implements Tab_Interface {
 				'active_tab' => $active_tab
 			]
 		);
+	}
+
+	public function table_list(): Network_Accounts_Table_List
+	{
+		return $this->table_list;
+	}
+
+	public function notices()
+	{
+	}
+
+	public function bulk_delete()
+	{
+	}
+
+	public function title(): string
+	{
+		return $this->title;
 	}
 }

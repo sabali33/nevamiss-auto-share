@@ -48,8 +48,9 @@ trait Get_All_Trait {
 		$where_string = array();
 
 		if(isset($options['search']) && $options['search']){
-			$search_text = "%{$options['search']}%";
-			return ["schedule_name LIKE {$this->wpdb->esc_like($search_text)}", null];
+			[$field, $value] = $options['search'];
+
+			return ["$field LIKE '%{$this->wpdb->esc_like($value)}%'", null];
 		}
 
 		$data         = array();
