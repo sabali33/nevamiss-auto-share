@@ -73,8 +73,8 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 			'name'       => __( 'Name', 'nevamiss' ),
 			'network'          => __( 'Network', 'nevamiss' ),
 			'remote_account_id'    => __( 'Remote Account ID', 'nevamiss' ),
-			'parent_remote_id'    => __( 'Parent remote ID', 'nevamiss' ),
-			'created_at'           => __( 'Login at', 'nevamiss' ),
+			'parent_remote_id'    => __( 'Parent Remote ID', 'nevamiss' ),
+			'created_at'           => __( 'Login At', 'nevamiss' ),
 
 		);
 	}
