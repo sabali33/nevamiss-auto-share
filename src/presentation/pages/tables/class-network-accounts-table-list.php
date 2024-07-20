@@ -58,7 +58,7 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 		);
 	}
 	public function no_items(): void {
-		_e( 'No Schedules found.', 'nevamiss' );
+		_e( 'No Accounts found, login above', 'nevamiss' );
 	}
 	/**
 	 * Gets a list of columns for the list table.
