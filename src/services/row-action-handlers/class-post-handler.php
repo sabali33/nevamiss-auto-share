@@ -1,11 +1,13 @@
 <?php
 
-namespace Nevamiss\Services;
+namespace Nevamiss\Services\Row_Action_Handlers;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Services\Schedule_Post_Manager;
+use Nevamiss\Services\WP_Cron_Service;
 
-class Post_Handler {
+class Schedule_Row_Action_Handler {
 
 	private ?string $schedules_home;
 
@@ -18,7 +20,6 @@ class Post_Handler {
 	}
 
 	/**
-	 * @throws Not_Found_Exception
 	 * @throws \Exception
 	 */
 	public function share_schedule_posts_callback(): void {
@@ -110,7 +111,7 @@ class Post_Handler {
 	}
 
 	/**
-	 * @return void
+	 * @return bool
 	 */
 	private function authorize(): bool {
 		return isset( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'nevamiss_schedules' );

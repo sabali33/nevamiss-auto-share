@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Presentation\Pages;
+namespace Nevamiss\Presentation\Pages\Tables;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Entities\Schedule;
@@ -13,6 +13,7 @@ use Nevamiss\Services\Date;
 use Nevamiss\Services\Schedule_Queue as Schedule_Queue_Service;
 
 class Schedules_Table_List extends \WP_List_Table {
+    use Table_List_Trait;
 
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
@@ -35,14 +36,14 @@ class Schedules_Table_List extends \WP_List_Table {
 		);
 	}
 	public function prepare_items(): void {
-		$search             = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		$search             = $this->search_text();
 		$schedules_per_page = 10;
 		$paged              = $this->get_pagenum();
 
 		$args = array(
 			'per_page' => $schedules_per_page,
 			'offset'   => ( $paged - 1 ) * $schedules_per_page,
-			'search'   => $search,
+			'search'   => ['schedule_name', $search],
 		);
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
@@ -106,15 +107,7 @@ class Schedules_Table_List extends \WP_List_Table {
 
 	protected function get_bulk_actions(): array
 	{
-		return [
-			'delete_all' => __('Delete', 'nevamiss')
-		];
-	}
-	protected function handle_row_actions( $item, $column_name, $primary )
-	{
-		if ($primary !== $column_name) {
-			return '';
-		}
+		return $this->_bulk_actions();
 	}
 
 	public function current_action(): bool|string
@@ -132,50 +125,12 @@ class Schedules_Table_List extends \WP_List_Table {
 	 */
 	public function column_cb( $item): void
 	{
-		$show = current_user_can( 'manage_options', $item->id() );
-
-		if(!$show){
-			return;
-		}
-		?>
-		<input id="cb-select-<?php esc_attr_e($item->id()); ?>" type="checkbox" name="schedules[]" value="<?php esc_attr_e($item->id()); ?>" />
-		<label for="cb-select-<?php esc_attr_e($item->id()); ?>">
-			<span class="screen-reader-text">
-			<?php
-			/* translators: %s: Post title. */
-			printf( __( 'Select %s' ), $item->name() );
-			?>
-			</span>
-		</label>
-		<div class="locked-indicator">
-			<span class="locked-indicator-icon" aria-hidden="true"></span>
-			<span class="screen-reader-text">
-			<?php
-			printf(
-			/* translators: Hidden accessibility text. %s: Post title. */
-				__( '&#8220;%s&#8221; is locked' ),
-				$item->name()
-			);
-			?>
-			</span>
-		</div>
-		<?php
+		$this->_column_cb($item, 'schedules');
 
 	}
 
 	public function column_schedule_name( Schedule $item ): void {
 		echo $item->name();
-
-		$actions = array_map(
-			function ( $action ) {
-				return $this->link( $action );
-			},
-			$this->action_list( (int) $item->id() )
-		);
-
-		echo $this->row_actions(
-			$actions
-		);
 	}
 
 	public function column_start_time(Schedule $schedule): void
@@ -292,8 +247,11 @@ class Schedules_Table_List extends \WP_List_Table {
 		return join(', ', $parts);
 
 	}
-	private function action_list( int $schedule_id ): array {
+	private function action_list( Schedule $schedule ): array {
+
 		$nonce = wp_create_nonce( 'nevamiss_schedules' );
+		$schedule_id = $schedule->id();
+
 		return array(
 			array(
 				'name'  => 'edit',
@@ -319,14 +277,5 @@ class Schedules_Table_List extends \WP_List_Table {
 			),
 
 		);
-	}
-
-	private function link( array $action ): string {
-		if ( ! isset( $action['url'] ) ) {
-			return '';
-		}
-		$title = $action['label'] ?? __( 'no label', 'nevamiss' );
-		$class = $action['class'] ?? '';
-		return "<span class='$class'><a href='{$action['url']}' title='$title' class='$class'> $title</a></span>";
 	}
 }

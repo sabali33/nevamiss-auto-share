@@ -3,6 +3,7 @@
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Presentation\Pages\Tables\Schedules_Table_List;
 
 class Schedules_Page extends Page {
 

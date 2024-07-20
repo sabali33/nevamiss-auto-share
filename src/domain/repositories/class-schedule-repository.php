@@ -20,6 +20,7 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 	use Get_One_Trait;
 	use Delete_Trait;
 	use Get_All_Trait;
+	use Count_Model_Trait;
 
 	private const ENTITY_NAME         = 'Schedule';
 	private const ENTITY_SLUG         = 'schedule';
@@ -36,12 +37,6 @@ class Schedule_Repository implements Create_Interface, Get_One_Interface, Get_Al
 		'social_media_tags',
 		'one_time_schedule',
 	);
-
-	public function get_total(): int {
-		$sql = "SELECT COUNT(*) FROM {$this->table_name()}";
-		[$count] = $this->wpdb->get_results($sql, ARRAY_N);
-		return intval($count[0]);
-	}
 
 	private function table_name(): string {
 		return "{$this->wpdb->prefix}nevamiss_schedules";
