@@ -21,7 +21,9 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
 	</h1>
 
 	</p>
-
+    <p>
+        <?php echo $this->login_links(); ?>
+    </p>
 	<hr class="wp-header-end">
 	<?php $this->table_list->prepare_items(); ?>
 

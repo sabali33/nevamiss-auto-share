@@ -81,7 +81,7 @@ class Network_Authenticator {
 	private function redirect( array $data ): void {
 		$redirect_url = add_query_arg(
 			$data,
-			admin_url( 'admin.php?page=nevamiss-settings' )
+			admin_url( 'admin.php?page=nevamiss-settings&tab=network-accounts' )
 		);
 
 		wp_redirect( $redirect_url );

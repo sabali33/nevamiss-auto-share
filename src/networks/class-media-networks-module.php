@@ -66,7 +66,14 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 			},
 			Media_Network_Collection::class => function ( ContainerInterface $container ) {
 				$collection = new Media_Network_Collection();
+				/**
+				 * @var Settings $settings
+				 */
+				$settings = $container->get(Settings::class);
 				foreach ( $container->get( Network_Clients::class ) as $network_slug => $client ) {
+					if(!in_array($network_slug, $settings->enabled_networks())){
+						continue;
+					}
 					$collection->register( $network_slug, $client );
 				}
 				return $collection;

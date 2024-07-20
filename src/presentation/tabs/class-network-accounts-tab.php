@@ -6,6 +6,7 @@ namespace Nevamiss\presentation\Tabs;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Networks\Media_Network_Collection;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
@@ -13,9 +14,14 @@ use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 class Network_Accounts_Tab implements Tab_Interface {
 
 	const TEMPLATE_PATH = 'resources/templates/network-accounts';
+	const LOGIN_PATH = 'resources/templates/network-login';
 	private string $title;
 
-	public function __construct(private Factory $factory, private Network_Accounts_Table_List $table_list)
+	public function __construct(
+		private Factory $factory,
+		private Network_Accounts_Table_List $table_list,
+		private Media_Network_Collection $network_collection
+	)
 	{
 		$this->title = __('Network Accounts', 'nevamiss');
 	}
@@ -71,5 +77,17 @@ class Network_Accounts_Tab implements Tab_Interface {
 	public function title(): string
 	{
 		return $this->title;
+	}
+	public function networks(): array
+	{
+		return $this->network_collection->get_all();
+	}
+	public function login_links(): bool|string
+	{
+		ob_start();
+
+		include NEVAMISS_PATH . self::LOGIN_PATH .'.php';
+
+		return ob_get_clean();
 	}
 }

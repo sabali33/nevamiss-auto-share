@@ -84,7 +84,11 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$factory = $container->get(Factory::class);
 				return [
 					new General_Tab($factory),
-					new Network_Accounts_Tab($factory, $container->get(Network_Accounts_Table_List::class)),
+					new Network_Accounts_Tab(
+						$factory,
+						$container->get(Network_Accounts_Table_List::class),
+						$container->get(Media_Network_Collection::class)
+					),
 					new Stats_Tab($factory),
 					new Logs_Tab($factory),
 				];
