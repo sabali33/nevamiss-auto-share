@@ -15,6 +15,7 @@ use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Networks\Network_Clients;
+use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
 use Nevamiss\Services\Row_Action_Handlers\Schedule_Row_Action_Handler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -79,7 +80,13 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'admin_post_nevamiss_schedule_unschedule', array( $post_handler, 'unschedule_callback' ) );
 		add_action( 'admin_post_nevamiss_schedule_share', array( $post_handler, 'share_schedule_posts_callback' ) );
 
-		add_action( 'admin_post_nevamiss_network_accounts_delete', array( $post_handler, 'delete_schedule_callback' ) );
+		add_action(
+			'admin_post_nevamiss_network_accounts_delete',
+			array(
+				$container->get(Accounts_Row_Action_Handler::class),
+				'logout_accounts_callback'
+			)
+		);
 
 		return true;
 	}
@@ -126,6 +133,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get( WP_Cron_Service::class ),
 					$container->get( Schedule_Post_Manager::class )
 				);
+			},
+			Accounts_Row_Action_Handler::class => function (ContainerInterface $container) {
+				return new Accounts_Row_Action_Handler($container->get(Network_Account_Repository::class));
 			},
 			Schedule_Queue::class        => function ( ContainerInterface $container ) {
 				return new Schedule_Queue(
