@@ -51,6 +51,15 @@ class Network_Authenticator {
 			exit;
 		}
 
+		if(isset($_GET['error'])){
+			$this->redirect(
+				array(
+					'status'  => 'error',
+					'message' => $_GET['error_description'],
+				)
+			);
+			exit;
+		}
 		$code = $_GET['code'];
 		/**
 		 * @var Linkedin_Client $linkedin_client
