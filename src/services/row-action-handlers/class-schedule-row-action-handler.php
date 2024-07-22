@@ -28,9 +28,8 @@ class Schedule_Row_Action_Handler {
 	 * @throws \Exception
 	 */
 	public function share_schedule_posts_callback(): void {
-		$authorized = $this->authorize();
 
-		if ( ! $authorized ) {
+		if ( ! $this->authorize() ) {
 			wp_die( 'Unauthorized' );
 		}
 
