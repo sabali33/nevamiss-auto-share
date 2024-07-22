@@ -65,10 +65,6 @@ class Network_Accounts_Tab implements Tab_Interface {
 		return $this->table_list;
 	}
 
-	public function notices()
-	{
-	}
-
 	/**
 	 * @throws \Exception
 	 */
@@ -94,10 +90,11 @@ class Network_Accounts_Tab implements Tab_Interface {
 					'flags'  => FILTER_REQUIRE_ARRAY,
 				]
 			] );
+
 		if(!$network_accounts){
 			return false;
 		}
-		remove_query_arg('network_accounts');
+
 		foreach ($network_accounts as $network_account){
 			$this->table_list->repository()->delete($network_account);
 		}
@@ -114,5 +111,16 @@ class Network_Accounts_Tab implements Tab_Interface {
 		include NEVAMISS_PATH . self::LOGIN_PATH .'.php';
 
 		return ob_get_clean();
+	}
+
+	public function redirect(array $data): void
+	{
+		$redirect_url = add_query_arg(
+			$data,
+			admin_url( 'admin.php?page=nevamiss-settings&tab=network-accounts' )
+		);
+
+		wp_redirect( $redirect_url );
+		exit;
 	}
 }
