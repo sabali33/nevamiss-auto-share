@@ -17,7 +17,8 @@ trait Delete_Trait {
 		$entity = $this->wpdb->query( $sql );
 
 		if ( ! $entity ) {
-			throw new Exception( 'Unable to delete self::ENTITY_NAME with the ID' );
+			$entity_name = self::ENTITY_NAME;
+			throw new Exception( "Unable to delete $entity_name with the ID $id" );
 		}
 		return true;
 	}
