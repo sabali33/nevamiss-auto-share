@@ -17,6 +17,7 @@ use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Networks\Network_Clients;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
 use Nevamiss\Services\Row_Action_Handlers\Schedule_Row_Action_Handler;
+use Nevamiss\Services\Row_Action_Handlers\Stats_Row_Action_Handler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -88,6 +89,17 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			)
 		);
 
+		add_action('admin_post_nevamiss_stats_delete', array(
+			$container->get(Stats_Row_Action_Handler::class),
+			'delete_stat_row_callback'
+		));
+//		$stats_manager->record_stats_callback(32,
+//			[
+//				'remote_post_id' => 3,
+//				'post_id' => 3,
+//				'schedule_id' => 3,
+//			]
+//		);
 		return true;
 	}
 
@@ -136,6 +148,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			},
 			Accounts_Row_Action_Handler::class => function (ContainerInterface $container) {
 				return new Accounts_Row_Action_Handler($container->get(Network_Account_Repository::class));
+			},
+			Stats_Row_Action_Handler::class => function (ContainerInterface $container) {
+				return new Stats_Row_Action_Handler($container->get(Posts_Stats_Repository::class));
 			},
 			Schedule_Queue::class        => function ( ContainerInterface $container ) {
 				return new Schedule_Queue(
