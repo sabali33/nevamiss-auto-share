@@ -12,6 +12,7 @@ use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Networks\Media_Network_Collection;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 use Nevamiss\Presentation\Pages\Tables\Schedules_Table_List;
+use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Presentation\Tabs\General_Tab;
 use Nevamiss\Presentation\Tabs\Logs_Tab;
@@ -89,7 +90,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 						$container->get(Network_Accounts_Table_List::class),
 						$container->get(Media_Network_Collection::class)
 					),
-					new Stats_Tab($factory),
+					new Stats_Tab($factory, $container->get(Stats_Table_List::class)),
 					new Logs_Tab($factory),
 				];
 			},
@@ -104,7 +105,10 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				return $collection;
 			},
 			Network_Accounts_Table_List::class => fn(ContainerInterface $container) =>
-			new Network_Accounts_Table_List($container->get(Network_Account_Repository::class))
+			new Network_Accounts_Table_List($container->get(Network_Account_Repository::class)),
+			Stats_Table_List::class => function (ContainerInterface $container) {
+				return new Stats_Table_List($container->get(Posts_Stats_Repository::class));
+			}
 		);
 	}
 

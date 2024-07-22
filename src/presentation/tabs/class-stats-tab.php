@@ -8,10 +8,16 @@ use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
+use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
 
 class Stats_Tab implements Tab_Interface {
 
-	public function __construct(private Factory $factory)
+	const TEMPLATE_PATH = 'resources/templates/stats';
+
+	public function __construct(
+		private Factory $factory,
+		private Stats_Table_List $stats_table_list
+	)
 	{
 	}
 
@@ -19,12 +25,16 @@ class Stats_Tab implements Tab_Interface {
 
 	public function render($attributes = array()): string
 	{
-		return "Stats Tab";
+		ob_start();
+
+		include NEVAMISS_PATH . self::TEMPLATE_PATH .'.php';
+
+		return ob_get_clean();
 	}
 
 	public function label(): ?string
 	{
-		return __('Statistics', 'nevamiss');
+		return __("Stats", 'nevamiss');
 	}
 
 	public function slug(): string
@@ -45,5 +55,14 @@ class Stats_Tab implements Tab_Interface {
 				'active_tab' => $active_tab
 			]
 		);
+	}
+
+	public function table_list(): Stats_Table_List
+	{
+		return $this->stats_table_list;
+	}
+
+	public function bulk_delete()
+	{
 	}
 }

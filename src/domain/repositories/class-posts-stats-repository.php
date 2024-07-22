@@ -19,6 +19,7 @@ class Posts_Stats_Repository implements Create_Interface, Delete_Interface, Get_
 	use Delete_Trait;
 	use Delete_All_Trait;
 	use Get_All_Trait;
+	use Count_Model_Trait;
 
 	private const ALLOWED_TABLE_COLUMNS = array(
 		'schedule_id',
