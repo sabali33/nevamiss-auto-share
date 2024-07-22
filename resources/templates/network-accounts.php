@@ -13,7 +13,32 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
 <div class="network-accounts">
 	<?php $this->notices(); ?>
 
-	<?php $this->bulk_delete(); ?>
+	<?php
+	try {
+		$deleted = $this->bulk_delete();
+        if($deleted){
+	        wp_admin_notice(
+		        __("Account deleted"),
+		        array(
+			        'type'               => 'success',
+			        'dismissible'        => false,
+			        'additional_classes' => array( 'inline', 'notice-alt' ),
+		        )
+	        );
+        }
+
+	}catch (Exception $exception){
+		wp_admin_notice(
+			$exception->getMessage(),
+			array(
+				'type'               => 'error',
+				'dismissible'        => false,
+				'additional_classes' => array( 'inline', 'notice-alt' ),
+			)
+		);
+    }
+
+    ?>
 
 	<p>
 	<h1 class="wp-heading-inline">

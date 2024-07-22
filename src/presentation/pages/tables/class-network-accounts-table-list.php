@@ -9,15 +9,17 @@ use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Services\Date;
 
 class Network_Accounts_Table_List extends \WP_List_Table {
+
     use Table_List_Trait;
+
 	public function __construct(
 		private Network_Account_Repository $account_repository,
 		$args = array()
 	) {
 		parent::__construct(
 			array(
-				'singular' => 'Network Account',
-				'plural'   => 'Network Accounts',
+				'singular' => 'network-account',
+				'plural'   => 'network-accounts',
 				'screen'   => $args['screen'] ?? null,
 			)
 		);
@@ -127,5 +129,10 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	protected function get_bulk_actions(): array
 	{
 		return array_merge($this->_bulk_actions(), ['delete_all' => __('Logout', 'nevamiss')]);
+	}
+
+	public function repository(): Network_Account_Repository
+	{
+		return $this->account_repository;
 	}
 }

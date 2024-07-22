@@ -69,8 +69,39 @@ class Network_Accounts_Tab implements Tab_Interface {
 	{
 	}
 
-	public function bulk_delete()
+	/**
+	 * @throws \Exception
+	 */
+	public function bulk_delete(): bool
 	{
+		if(!isset($_REQUEST['action']) && !isset($_REQUEST['action2'])){
+			return false;
+		}
+
+		if($_REQUEST['action'] !== 'delete_all' || !isset($_REQUEST['network_accounts'])){
+			return false;
+		}
+
+		if(! wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-network-accounts')){
+			return false;
+		}
+
+		['network_accounts' => $network_accounts] = filter_input_array(
+			INPUT_GET,
+			[
+				'network_accounts' => [
+					'filter' => FILTER_VALIDATE_INT,
+					'flags'  => FILTER_REQUIRE_ARRAY,
+				]
+			] );
+		if(!$network_accounts){
+			return false;
+		}
+		remove_query_arg('network_accounts');
+		foreach ($network_accounts as $network_account){
+			$this->table_list->repository()->delete($network_account);
+		}
+		return true;
 	}
 	public function networks(): array
 	{
