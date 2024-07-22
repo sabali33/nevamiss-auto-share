@@ -80,4 +80,29 @@ trait Table_List_Trait
 	{
 		return isset($_REQUEST['s']) ? wp_unslash(trim($_REQUEST['s'])) : '';
 	}
+	/**
+	 * @return array
+	 */
+	private function query_args(array $parameters): array
+	{
+		$search = $this->search_text();
+		$per_page = 10;
+		$paged = $this->get_pagenum();
+
+        $search_field = $parameters['search_field'] ?? 'name';
+		$args = array(
+			'per_page' => $per_page,
+			'offset' => ($paged - 1) * $per_page,
+			'search' => [$search_field, $search],
+		);
+
+		if (isset($_REQUEST['orderby'])) {
+			$args['orderby'] = $_REQUEST['orderby'];
+		}
+
+		if (isset($_REQUEST['order'])) {
+			$args['order'] = $_REQUEST['order'];
+		}
+		return array($per_page, $args);
+	}
 }

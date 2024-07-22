@@ -30,23 +30,7 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	}
 	public function prepare_items(): void {
 
-		$search = $this->search_text();
-		$per_page = 10;
-		$paged              = $this->get_pagenum();
-
-		$args = array(
-			'per_page' => $per_page,
-			'offset'   => ( $paged - 1 ) * $per_page,
-			'search'   => ['name', $search],
-		);
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$args['orderby'] = $_REQUEST['orderby'];
-		}
-
-		if ( isset( $_REQUEST['order'] ) ) {
-			$args['order'] = $_REQUEST['order'];
-		}
+		[$per_page, $args] = $this->query_args(['search_field' => 'name']);
 
 		$this->items = $this->account_repository->get_all( $args );
 

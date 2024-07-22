@@ -23,7 +23,6 @@ class Network_Accounts_Tab implements Tab_Interface {
 		private Media_Network_Collection $network_collection
 	)
 	{
-		$this->title = __('Network Accounts', 'nevamiss');
 	}
 	public const SLUG = 'network-accounts';
 
@@ -72,11 +71,6 @@ class Network_Accounts_Tab implements Tab_Interface {
 
 	public function bulk_delete()
 	{
-	}
-
-	public function title(): string
-	{
-		return $this->title;
 	}
 	public function networks(): array
 	{

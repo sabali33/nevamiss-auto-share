@@ -36,30 +36,15 @@ class Schedules_Table_List extends \WP_List_Table {
 		);
 	}
 	public function prepare_items(): void {
-		$search             = $this->search_text();
-		$schedules_per_page = 10;
-		$paged              = $this->get_pagenum();
 
-		$args = array(
-			'per_page' => $schedules_per_page,
-			'offset'   => ( $paged - 1 ) * $schedules_per_page,
-			'search'   => ['schedule_name', $search],
-		);
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$args['orderby'] = $_REQUEST['orderby'];
-		}
-
-		if ( isset( $_REQUEST['order'] ) ) {
-			$args['order'] = $_REQUEST['order'];
-		}
+		[$per_page, $args] = $this->query_args(['search_field' => 'schedule_name']);
 
 		$this->items = $this->schedule_repository->get_all( $args );
 
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->schedule_repository->get_total(),
-				'per_page'    => $schedules_per_page,
+				'per_page'    => $per_page,
 			)
 		);
 	}
