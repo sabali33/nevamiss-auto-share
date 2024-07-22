@@ -18,8 +18,8 @@ class Stats_Table_List extends \WP_List_Table {
 	{
 		parent::__construct(
 			array(
-				'singular' => 'Stats',
-				'plural'   => 'Stats',
+				'singular' => 'stats',
+				'plural'   => 'stats',
 				'screen'   => $args['screen'] ?? null,
 			)
 		);
@@ -102,6 +102,11 @@ class Stats_Table_List extends \WP_List_Table {
 	public function column_remote_post_id(Stats $stats): void
 	{
 		echo $stats->remote_post_id();
+	}
+
+	public function repository(): Posts_Stats_Repository
+	{
+		return $this->stats_repository;
 	}
 
 }

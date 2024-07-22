@@ -10,7 +10,7 @@ use Nevamiss\Presentation\Tabs\Stats_Tab;
 
 ?>
 <div class="stats">
-	<?php $this->bulk_delete(); ?>
+	<?php $this->bulk_delete('stats'); ?>
 
 	<p>
 	<h1 class="wp-heading-inline">

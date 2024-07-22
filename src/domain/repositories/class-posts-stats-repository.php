@@ -31,6 +31,7 @@ class Posts_Stats_Repository implements Create_Interface, Delete_Interface, Get_
 	);
 	private const ENTITY_CLASS          = Stats::class;
 
+	private const ENTITY_NAME  = 'Stats';
 	private const ENTITY_SLUG = 'posts_stats';
 
 	public function clear() {

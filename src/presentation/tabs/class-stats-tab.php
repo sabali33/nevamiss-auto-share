@@ -11,12 +11,12 @@ use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
 
 class Stats_Tab implements Tab_Interface {
-
+	use Bulk_Delete_Trait;
 	const TEMPLATE_PATH = 'resources/templates/stats';
 
 	public function __construct(
 		private Factory $factory,
-		private Stats_Table_List $stats_table_list
+		private Stats_Table_List $table_list
 	)
 	{
 	}
@@ -59,10 +59,16 @@ class Stats_Tab implements Tab_Interface {
 
 	public function table_list(): Stats_Table_List
 	{
-		return $this->stats_table_list;
+		return $this->table_list;
 	}
-
-	public function bulk_delete()
+	public function redirect(array $data): void
 	{
+		$redirect_url = add_query_arg(
+			$data,
+			admin_url( 'admin.php?page=nevamiss-settings&tab=stats' )
+		);
+
+		wp_redirect( $redirect_url );
+		exit;
 	}
 }
