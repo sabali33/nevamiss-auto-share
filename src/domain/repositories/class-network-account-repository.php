@@ -40,7 +40,7 @@ class Network_Account_Repository implements
 		'network',
 	);
 
-	public function get_by_remote_id( string|int $remote_account_id ): array|false {
+	public function get_by_remote_id( string|int $remote_account_id ): Network_Account|false {
 		$account = $this->get_all( array( 'where' => array( 'remote_account_id' => $remote_account_id ) ) );
 
 		return empty( $account ) ? false : $account[0];

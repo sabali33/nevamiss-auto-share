@@ -52,8 +52,9 @@ trait Table_List_Trait
 		<label for="cb-select-<?php esc_attr_e($item->id()); ?>">
 			<span class="screen-reader-text">
 			<?php
-			/* translators: %s: Post title. */
-			printf( __( 'Select %s' ), $item->name() );
+                if(method_exists($item, 'name')){
+                    printf( __( 'Select %s' ), $item->name() );
+                }
 			?>
 			</span>
 		</label>
@@ -61,11 +62,14 @@ trait Table_List_Trait
 			<span class="locked-indicator-icon" aria-hidden="true"></span>
 			<span class="screen-reader-text">
 			<?php
-			printf(
-			/* translators: Hidden accessibility text. %s: Post title. */
-				__( '&#8220;%s&#8221; is locked' ),
-				$item->name()
-			);
+			if(method_exists($item, 'name')){
+				printf(
+				/* translators: Hidden accessibility text. %s: Post title. */
+					__( '&#8220;%s&#8221; is locked' ),
+					$item->name()
+				);
+			}
+
 			?>
 			</span>
 		</div>

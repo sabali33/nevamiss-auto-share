@@ -30,9 +30,7 @@ class X_Client implements Network_Clients_Interface {
 		$this->upload_root_api = 'https://upload.twitter.com/1.1';
 	}
 
-	/**
-	 * @throws RandomException
-	 */
+
 	public function auth_link(): string {
 		$code_challenge = $this->challenge_code();
 		set_transient( 'nevamiss-x-code-challenge', $code_challenge, 60 * 60 );
@@ -126,6 +124,7 @@ class X_Client implements Network_Clients_Interface {
 			'name'         => "{$response['data']['name']}({$response['data']['username']})",
 			'id'           => $response['data']['id'],
 			'access_token' => $access_token,
+			'network_label' => 'X'
 		);
 	}
 

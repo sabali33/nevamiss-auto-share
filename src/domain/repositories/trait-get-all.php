@@ -42,15 +42,17 @@ trait Get_All_Trait {
 
 	private function where_clause( array $options ): array {
 
-		if ( ! isset( $options['where'] ) && ! $options['search'] ) {
+		if ( ! isset( $options['where'] ) && ! isset($options['search']) ) {
 			return array( null, null );
 		}
+
 		$where_string = array();
-
-		if(isset($options['search']) && $options['search']){
-			[$field, $value] = $options['search'];
-
+		[$field, $value] = $options['search'];
+		if( $value ){
 			return ["$field LIKE '%{$this->wpdb->esc_like($value)}%'", null];
+		}
+		if(!isset($options['where'])){
+			return [null, null];
 		}
 
 		$data         = array();
