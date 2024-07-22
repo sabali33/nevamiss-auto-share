@@ -13,8 +13,8 @@ use Nevamiss\Domain\Repositories\Schedule_Repository;
 
 class Schedule_Queue {
 
-	private CONST HOUR_DIVISOR_IN_SECONDS = 60 * 60;
-	private CONST DAY_DIVISOR_IN_SECONDS = self::HOUR_DIVISOR_IN_SECONDS * 24;
+	private const HOUR_DIVISOR_IN_SECONDS = 60 * 60;
+	private const DAY_DIVISOR_IN_SECONDS  = self::HOUR_DIVISOR_IN_SECONDS * 24;
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
 		private Schedule_Queue_Repository $queue_repository,
@@ -243,76 +243,71 @@ class Schedule_Queue {
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	public function estimate_schedule_cycle_completion(Schedule $schedule): array
-	{
+	public function estimate_schedule_cycle_completion( Schedule $schedule ): array {
 		/**
 		 * @var \Nevamiss\Domain\Entities\Schedule_Queue|false $queue
 		 */
-		$queue = $this->queue_repository->get_schedule_queue_by_schedule_id($schedule->id());
+		$queue = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule->id() );
 
-		if(!$queue){
-			return [
-				'month' => 0,
-				'day' => 0,
-				'hour' => 0,
+		if ( ! $queue ) {
+			return array(
+				'month'  => 0,
+				'day'    => 0,
+				'hour'   => 0,
 				'minute' => 0,
-			];
+			);
 		}
 
-		$all_posts = $queue->all_posts_ids();
+		$all_posts    = $queue->all_posts_ids();
 		$shared_posts = $queue->shared_posts_ids();
 
-		$remaining_posts_count =  count($all_posts) - count($shared_posts);
+		$remaining_posts_count = count( $all_posts ) - count( $shared_posts );
 
-		return $this->schedule_estimated_completion_time($schedule, $remaining_posts_count);
-
+		return $this->schedule_estimated_completion_time( $schedule, $remaining_posts_count );
 	}
 
-	private function schedule_estimated_completion_time(Schedule $schedule, int $posts_count): array
-	{
-		return match ($schedule->repeat_frequency()){
-			'monthly' => $this->estimate_monthly_schedule($schedule, $posts_count),
-			'weekly' => $this->estimate_weekly_schedule($schedule, $posts_count),
-			'daily' => $this->estimate_daily_schedule($schedule, $posts_count),
+	private function schedule_estimated_completion_time( Schedule $schedule, int $posts_count ): array {
+		return match ( $schedule->repeat_frequency() ) {
+			'monthly' => $this->estimate_monthly_schedule( $schedule, $posts_count ),
+			'weekly' => $this->estimate_weekly_schedule( $schedule, $posts_count ),
+			'daily' => $this->estimate_daily_schedule( $schedule, $posts_count ),
 		};
-
 	}
 
-	private function estimate_monthly_schedule(Schedule $schedule, int $posts_count): array
-	{
-		$time_units = [];
+	private function estimate_monthly_schedule( Schedule $schedule, int $posts_count ): array {
+		$time_units = array();
 
 		$posts_count = 2;
 
-		$date = Date::create_from_format($schedule->start_date());
-		$per_page = (int)$schedule->query_args()['posts_per_page'];
+		$date     = Date::create_from_format( $schedule->start_date() );
+		$per_page = (int) $schedule->query_args()['posts_per_page'];
 
-		//Ensure that date remains current
-		$this->ensure_that_date_remains_current($date);
+		// Ensure that date remains current
+		$this->ensure_that_date_remains_current( $date );
 
-		$shared_per_cycle = count($schedule->monthly_times());
+		$shared_per_cycle = count( $schedule->monthly_times() );
 
 		$number_of_posting_per_monthly = $shared_per_cycle * $per_page;
-		$months = floor($posts_count / $number_of_posting_per_monthly);
+		$months                        = floor( $posts_count / $number_of_posting_per_monthly );
 
-		if( $posts_count <= $per_page || ($posts_count <= $number_of_posting_per_monthly)){
-			$end_date = $this->last_cycle_date($date, $posts_count, $schedule);
-			return $this->hour_minute($date, $end_date);
+		if ( $posts_count <= $per_page || ( $posts_count <= $number_of_posting_per_monthly ) ) {
+			$end_date = $this->last_cycle_date( $date, $posts_count, $schedule );
+			return $this->hour_minute( $date, $end_date );
 		}
 		$remaining_posts = $posts_count % $number_of_posting_per_monthly;
 
-		$date->modify("+$months month");
+		$date->modify( "+$months month" );
 
 		$time_units['month'] = $months;
 
-		if($remaining_posts === 0){
+		if ( $remaining_posts === 0 ) {
 
-			return array_merge($time_units, $this->no_lower_time_units($time_units));
+			return array_merge( $time_units, $this->no_lower_time_units( $time_units ) );
 		}
 
-		$end_date = $this->last_cycle_date($date, $remaining_posts, $schedule);
+		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
 
-		return array_merge($time_units, $this->hour_minute($date, $end_date));
+		return array_merge( $time_units, $this->hour_minute( $date, $end_date ) );
 	}
 
 	/**
@@ -320,186 +315,178 @@ class Schedule_Queue {
 	 * @param Date $end_date
 	 * @return array
 	 */
-	private function hour_minute(Date $date, Date $end_date): array
-	{
-		$time_units = [];
-		$time_difference_in_seconds =  $end_date->timestamp() - $date->timestamp();
+	private function hour_minute( Date $date, Date $end_date ): array {
+		$time_units                 = array();
+		$time_difference_in_seconds = $end_date->timestamp() - $date->timestamp();
 
-		$time_difference_in_seconds = $time_difference_in_seconds % (self::DAY_DIVISOR_IN_SECONDS * 30);
+		$time_difference_in_seconds = $time_difference_in_seconds % ( self::DAY_DIVISOR_IN_SECONDS * 30 );
 
-		$time_units['day'] = floor($time_difference_in_seconds / self::DAY_DIVISOR_IN_SECONDS);
+		$time_units['day'] = floor( $time_difference_in_seconds / self::DAY_DIVISOR_IN_SECONDS );
 		$remaining_seconds = $time_difference_in_seconds % self::DAY_DIVISOR_IN_SECONDS;
 
-		$time_units['hour'] = floor($remaining_seconds / self::HOUR_DIVISOR_IN_SECONDS);
-		$remaining_seconds = $remaining_seconds % self::HOUR_DIVISOR_IN_SECONDS;
+		$time_units['hour'] = floor( $remaining_seconds / self::HOUR_DIVISOR_IN_SECONDS );
+		$remaining_seconds  = $remaining_seconds % self::HOUR_DIVISOR_IN_SECONDS;
 
-		$time_units['minute'] = ceil($remaining_seconds / 60);
+		$time_units['minute'] = ceil( $remaining_seconds / 60 );
 
-		$time_units['finish_date'] = $end_date->format('Y-m-d @ H:i:s');
+		$time_units['finish_date'] = $end_date->format( 'Y-m-d @ H:i:s' );
 
 		return $time_units;
 	}
 
 	/**
-	 * @param Date $date
-	 * @param int $remaining_posts
+	 * @param Date     $date
+	 * @param int      $remaining_posts
 	 * @param Schedule $schedule
 	 * @return Date|false
 	 */
-	private function last_cycle_date(Date $date, int $remaining_posts, Schedule $schedule): Date|false
-	{
-		$end_date = Date::create_from_format($date->format('Y-m-d'));
+	private function last_cycle_date( Date $date, int $remaining_posts, Schedule $schedule ): Date|false {
+		$end_date = Date::create_from_format( $date->format( 'Y-m-d' ) );
 
-		$number_of_days_to_post = ceil($remaining_posts / (int) $schedule->query_args()['posts_per_page']);
+		$number_of_days_to_post = ceil( $remaining_posts / (int) $schedule->query_args()['posts_per_page'] );
 
 		$method_name = "{$schedule->repeat_frequency()}_times";
-		$post_times = call_user_func([$schedule, $method_name]);
+		$post_times  = call_user_func( array( $schedule, $method_name ) );
 
-		$last_day = $post_times[$number_of_days_to_post - 1];
+		$last_day = $post_times[ $number_of_days_to_post - 1 ];
 
-		if($schedule->repeat_frequency() === 'monthly'){
-			$this->monthly_last_date_update($end_date, $last_day);
+		if ( $schedule->repeat_frequency() === 'monthly' ) {
+			$this->monthly_last_date_update( $end_date, $last_day );
 			return $end_date;
 		}
-		if($schedule->repeat_frequency() === 'daily'){
-			$this->update_time($end_date, $last_day);
+		if ( $schedule->repeat_frequency() === 'daily' ) {
+			$this->update_time( $end_date, $last_day );
 			return $end_date;
 		}
 
-		for( $day= 1; $day <=7; $day++){
+		for ( $day = 1; $day <= 7; $day++ ) {
 
-			if($end_date->day() !== $last_day['day']){
-				$end_date->modify('+1 day');
+			if ( $end_date->day() !== $last_day['day'] ) {
+				$end_date->modify( '+1 day' );
 				continue;
 			}
 
-			$this->update_time($end_date, $last_day);
+			$this->update_time( $end_date, $last_day );
 			return $end_date;
 		}
 		return false;
 	}
 
-	private function estimate_weekly_schedule(Schedule $schedule, int $posts_count): array
-	{
-		$time_units = [];
-		$date = Date::create_from_format($schedule->start_date());
+	private function estimate_weekly_schedule( Schedule $schedule, int $posts_count ): array {
+		$time_units = array();
+		$date       = Date::create_from_format( $schedule->start_date() );
 
-		//Ensure that date remains current
-		$this->ensure_that_date_remains_current($date);
-		$per_page = (int)$schedule->query_args()['posts_per_page'];
-		$posting_times = $schedule->weekly_times();
-		$sharing_count_a_week = count($posting_times);
+		// Ensure that date remains current
+		$this->ensure_that_date_remains_current( $date );
+		$per_page             = (int) $schedule->query_args()['posts_per_page'];
+		$posting_times        = $schedule->weekly_times();
+		$sharing_count_a_week = count( $posting_times );
 
 		$number_of_posting_per_week = $sharing_count_a_week * $per_page;
 
-		if( $posts_count <= $per_page || ($posts_count <= $number_of_posting_per_week)){
-			$end_date = $this->last_cycle_date($date, $posts_count, $schedule);
-			return $this->hour_minute($date, $end_date);
+		if ( $posts_count <= $per_page || ( $posts_count <= $number_of_posting_per_week ) ) {
+			$end_date = $this->last_cycle_date( $date, $posts_count, $schedule );
+			return $this->hour_minute( $date, $end_date );
 		}
 
-		$weeks = floor($posts_count / $number_of_posting_per_week);
+		$weeks = floor( $posts_count / $number_of_posting_per_week );
 
 		$days_from_week = $weeks * 7;
 
-		$remaining_posts =  $posts_count % $number_of_posting_per_week;
+		$remaining_posts = $posts_count % $number_of_posting_per_week;
 
-		$date->modify("+$days_from_week day");
+		$date->modify( "+$days_from_week day" );
 
-		$month_from_weeks = floor($days_from_week / 30);
+		$month_from_weeks    = floor( $days_from_week / 30 );
 		$time_units['month'] = $month_from_weeks;
 
-		if($days_from_week && !$time_units['month']){
+		if ( $days_from_week && ! $time_units['month'] ) {
 			$time_units['day'] = $days_from_week;
 		}
-		if($remaining_posts === 0 ){
+		if ( $remaining_posts === 0 ) {
 
-			return  $this->no_lower_time_units($time_units);
+			return $this->no_lower_time_units( $time_units );
 		}
 
-		$end_date = $this->last_cycle_date($date, $remaining_posts, $schedule);
+		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
 
-		return array_merge($time_units, $this->hour_minute($date, $end_date));
-
+		return array_merge( $time_units, $this->hour_minute( $date, $end_date ) );
 	}
 
-	private function estimate_daily_schedule(Schedule $schedule, int $posts_count): array
-	{
-		$time_units = [];
-		$date = Date::create_from_format($schedule->start_date());
+	private function estimate_daily_schedule( Schedule $schedule, int $posts_count ): array {
+		$time_units = array();
+		$date       = Date::create_from_format( $schedule->start_date() );
 
-		//Ensure that date remains current
-		$this->ensure_that_date_remains_current($date);
-		$per_page = (int)$schedule->query_args()['posts_per_page'];
-		$posting_times = $schedule->daily_times();
-		$sharing_count_a_day = count($posting_times);
+		// Ensure that date remains current
+		$this->ensure_that_date_remains_current( $date );
+		$per_page            = (int) $schedule->query_args()['posts_per_page'];
+		$posting_times       = $schedule->daily_times();
+		$sharing_count_a_day = count( $posting_times );
 
 		$number_of_posting_per_day = $sharing_count_a_day * $per_page;
 
-		if( $posts_count <= $per_page || ($posts_count <= $number_of_posting_per_day)){
-			$end_date = $this->last_cycle_date($date, $posts_count, $schedule);
-			return $this->hour_minute($date, $end_date);
+		if ( $posts_count <= $per_page || ( $posts_count <= $number_of_posting_per_day ) ) {
+			$end_date = $this->last_cycle_date( $date, $posts_count, $schedule );
+			return $this->hour_minute( $date, $end_date );
 		}
 
-		$time_units['months'] = floor($posts_count / $number_of_posting_per_day);
-		$remaining_posts = $posts_count % $number_of_posting_per_day;
+		$time_units['months'] = floor( $posts_count / $number_of_posting_per_day );
+		$remaining_posts      = $posts_count % $number_of_posting_per_day;
 
-		if( $remaining_posts === 0){
-			return array_merge($time_units, $this->no_lower_time_units($time_units));
+		if ( $remaining_posts === 0 ) {
+			return array_merge( $time_units, $this->no_lower_time_units( $time_units ) );
 		}
 
-		$end_date = $this->last_cycle_date($date, $remaining_posts, $schedule);
+		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
 
-		return array_merge($time_units, $this->hour_minute($date, $end_date));
+		return array_merge( $time_units, $this->hour_minute( $date, $end_date ) );
 	}
 
 	/**
 	 * @param Date $date
 	 * @return void
 	 */
-	private function ensure_that_date_remains_current(Date $date): void
-	{
-		if (!$date->is_late()) {
+	private function ensure_that_date_remains_current( Date $date ): void {
+		if ( ! $date->is_late() ) {
 			return;
 		}
 
-		$modifiers = $this->modifiers($date);
+		$modifiers = $this->modifiers( $date );
 
-		foreach ($modifiers as $modifier){
-			$date->next_active_date($modifier);
+		foreach ( $modifiers as $modifier ) {
+			$date->next_active_date( $modifier );
 		}
-
 	}
 
 	/**
 	 * @param Date $date
 	 * @return array
 	 */
-	private function modifiers(Date $date): array
-	{
+	private function modifiers( Date $date ): array {
 		$time_difference = Date::now()->timestamp() - $date->timestamp();
 
-		$difference_in_months = floor($time_difference / (self::DAY_DIVISOR_IN_SECONDS * 30));
-		$remaining_difference = $time_difference % (self::DAY_DIVISOR_IN_SECONDS * 30);
+		$difference_in_months = floor( $time_difference / ( self::DAY_DIVISOR_IN_SECONDS * 30 ) );
+		$remaining_difference = $time_difference % ( self::DAY_DIVISOR_IN_SECONDS * 30 );
 
-		$difference_in_days = floor($remaining_difference / self::DAY_DIVISOR_IN_SECONDS);
+		$difference_in_days   = floor( $remaining_difference / self::DAY_DIVISOR_IN_SECONDS );
 		$remaining_difference = $remaining_difference % self::DAY_DIVISOR_IN_SECONDS;
 
-		$difference_in_hours = $remaining_difference / self::HOUR_DIVISOR_IN_SECONDS;
+		$difference_in_hours  = $remaining_difference / self::HOUR_DIVISOR_IN_SECONDS;
 		$remaining_difference = $remaining_difference % self::HOUR_DIVISOR_IN_SECONDS;
 
-		$modifiers = [];
+		$modifiers = array();
 
-		if ($difference_in_months > 0) {
+		if ( $difference_in_months > 0 ) {
 			$modifiers[] = "+$difference_in_months month";
 		}
-		if ($difference_in_days) {
+		if ( $difference_in_days ) {
 			$modifiers[] = "+$difference_in_days day";
 		}
-		if ($difference_in_hours) {
+		if ( $difference_in_hours ) {
 			$modifiers[] = "+$difference_in_hours day";
 		}
-		$difference_in_minutes = floor($remaining_difference / 60);
-		$modifiers[] = "+$difference_in_minutes minute";
+		$difference_in_minutes = floor( $remaining_difference / 60 );
+		$modifiers[]           = "+$difference_in_minutes minute";
 
 		return $modifiers;
 	}
@@ -508,30 +495,27 @@ class Schedule_Queue {
 	 * @param array $time_units
 	 * @return array
 	 */
-	private function no_lower_time_units(array $time_units): array
-	{
-		$time_units['day'] = $time_units['day'] ?? 0;
-		$time_units['hour'] = 0;
+	private function no_lower_time_units( array $time_units ): array {
+		$time_units['day']    = $time_units['day'] ?? 0;
+		$time_units['hour']   = 0;
 		$time_units['minute'] = 0;
 		return $time_units;
 	}
 
 	/**
-	 * @param Date $end_date
+	 * @param Date  $end_date
 	 * @param mixed $last_day
 	 * @return void
 	 */
-	private function monthly_last_date_update(Date &$end_date, array $last_day): void
-	{
-		$end_date->modify("+{$last_day['day']} day");
-		$end_date->set_day($last_day['day']);
-		$end_date->set_day($last_day['day']);
+	private function monthly_last_date_update( Date &$end_date, array $last_day ): void {
+		$end_date->modify( "+{$last_day['day']} day" );
+		$end_date->set_day( $last_day['day'] );
+		$end_date->set_day( $last_day['day'] );
 
-		$this->update_time($end_date, $last_day);
+		$this->update_time( $end_date, $last_day );
 	}
 
-	private function update_time(Date &$end_date, array $last_day): void
-	{
-		$end_date->set_time($last_day['hour'], $last_day['minute']);
+	private function update_time( Date &$end_date, array $last_day ): void {
+		$end_date->set_time( $last_day['hour'], $last_day['minute'] );
 	}
 }

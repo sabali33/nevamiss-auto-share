@@ -58,31 +58,31 @@ class Schedules_Page extends Page {
 	/**
 	 * @throws \Exception
 	 */
-	public function bulk_delete(): void
-	{
-		if(!isset($_REQUEST['action']) && !isset($_REQUEST['action2'])){
+	public function bulk_delete(): void {
+		if ( ! isset( $_REQUEST['action'] ) && ! isset( $_REQUEST['action2'] ) ) {
 			return;
 		}
 
-		if($_REQUEST['action'] !== 'delete_all' || !isset($_REQUEST['schedules'])){
+		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST['schedules'] ) ) {
 			return;
 		}
 
-		if(! wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-schedules')){
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-schedules' ) ) {
 			return;
 		}
 
 		['schedules' => $schedules] = filter_input_array(
 			INPUT_GET,
-			[
-				'schedules' => [
+			array(
+				'schedules' => array(
 					'filter' => FILTER_VALIDATE_INT,
 					'flags'  => FILTER_REQUIRE_ARRAY,
-				]
-			] );
+				),
+			)
+		);
 
-		foreach ($schedules as $schedule){
-			$this->schedule_repository->delete($schedule);
+		foreach ( $schedules as $schedule ) {
+			$this->schedule_repository->delete( $schedule );
 		}
 	}
 }

@@ -12,6 +12,7 @@ use Nevamiss\Services\WP_Cron_Service;
 class Schedule_Row_Action_Handler {
 
 	use Row_Action_Trail;
+
 	private ?string $page_home;
 	private string $nonce_action;
 
@@ -20,7 +21,7 @@ class Schedule_Row_Action_Handler {
 		private WP_Cron_Service $cron_service,
 		private Schedule_Post_Manager $post_manager
 	) {
-		$this->page_home = admin_url( 'admin.php?page=schedules' );
+		$this->page_home    = admin_url( 'admin.php?page=schedules' );
 		$this->nonce_action = 'nevamiss_schedules';
 	}
 

@@ -10,8 +10,7 @@ class Tab_Collection {
 		$this->tabs[ $slug ] = $tab;
 	}
 
-	public function get_all(): array
-	{
+	public function get_all(): array {
 		return $this->tabs;
 	}
 
@@ -19,8 +18,7 @@ class Tab_Collection {
 	 * @param string $tab
 	 * @return Tab_Interface
 	 */
-	public function get(string $tab): Tab_Interface
-	{
-		return $this->tabs[$tab];
+	public function get( string $tab ): Tab_Interface {
+		return $this->tabs[ $tab ];
 	}
 }

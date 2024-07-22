@@ -13,37 +13,32 @@ class Logs_Tab implements Tab_Interface {
 
 	public const SLUG = 'logs';
 
-	public function __construct(private Factory $factory)
-	{
+	public function __construct( private Factory $factory ) {
 	}
 
-	public function render($attributes = array()): string
-	{
-		return "Logs";
+	public function render( $attributes = array() ): string {
+		return 'Logs';
 	}
 
-	public function label(): ?string
-	{
-		return __('Logs', 'nevamiss');
+	public function label(): ?string {
+		return __( 'Logs', 'nevamiss' );
 	}
 
-	public function slug(): string
-	{
+	public function slug(): string {
 		return self::SLUG;
 	}
 
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	public function link(string $active_tab): Component
-	{
+	public function link( string $active_tab ): Component {
 		return $this->factory->component(
 			Tab::class,
-			[
-				'slug' => $this->slug(),
-				'label' => $this->label(),
-				'active_tab' => $active_tab
-			]
+			array(
+				'slug'       => $this->slug(),
+				'label'      => $this->label(),
+				'active_tab' => $active_tab,
+			)
 		);
 	}
 }

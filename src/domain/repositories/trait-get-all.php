@@ -19,14 +19,14 @@ trait Get_All_Trait {
 		if ( $where_clause ) {
 			$sql .= ' WHERE ' . $where_clause;
 
-			if($data){
-				$sql  = $this->wpdb->prepare(
+			if ( $data ) {
+				$sql = $this->wpdb->prepare(
 					$sql,
 					...$data
 				);
 			}
 		}
-		if($order){
+		if ( $order ) {
 			$sql .= $order;
 		}
 		if ( $limit ) {
@@ -42,20 +42,20 @@ trait Get_All_Trait {
 
 	private function where_clause( array $options ): array {
 
-		if ( ! isset( $options['where'] ) && ! isset($options['search']) ) {
+		if ( ! isset( $options['where'] ) && ! isset( $options['search'] ) ) {
 			return array( null, null );
 		}
 
-		$where_string = array();
+		$where_string    = array();
 		[$field, $value] = $options['search'];
-		if( $value ){
-			return ["$field LIKE '%{$this->wpdb->esc_like($value)}%'", null];
+		if ( $value ) {
+			return array( "$field LIKE '%{$this->wpdb->esc_like($value)}%'", null );
 		}
-		if(!isset($options['where'])){
-			return [null, null];
+		if ( ! isset( $options['where'] ) ) {
+			return array( null, null );
 		}
 
-		$data         = array();
+		$data = array();
 
 		foreach ( $options['where'] as $key => $option ) {
 			if ( ! $option ) {
@@ -75,13 +75,12 @@ trait Get_All_Trait {
 		if ( ! isset( $options['per_page'] ) ) {
 			return null;
 		}
-		$offset = isset($options['offset']) ? "OFFSET {$options['offset']}" : '';
+		$offset = isset( $options['offset'] ) ? "OFFSET {$options['offset']}" : '';
 		return " LIMIT {$options['per_page']} $offset";
 	}
 
-	public function order_clause(array $args): ?string
-	{
-		if(!isset($args['order']) && !isset($args['orderby'])){
+	public function order_clause( array $args ): ?string {
+		if ( ! isset( $args['order'] ) && ! isset( $args['orderby'] ) ) {
 			return null;
 		}
 

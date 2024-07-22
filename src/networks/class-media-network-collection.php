@@ -16,8 +16,7 @@ class Media_Network_Collection {
 	public function get( string $network_slug ) {
 		return $this->networks[ $network_slug ];
 	}
-	public function get_all(): array
-	{
+	public function get_all(): array {
 		return $this->networks;
 	}
 }

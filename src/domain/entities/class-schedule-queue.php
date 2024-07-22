@@ -49,8 +49,7 @@ class Schedule_Queue {
 		);
 	}
 
-	public function cycles(): int
-	{
+	public function cycles(): int {
 		return $this->cycles;
 	}
 }

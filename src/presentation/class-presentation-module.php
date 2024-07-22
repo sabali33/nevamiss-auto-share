@@ -34,31 +34,31 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 	public function services(): array {
 		return array(
 
-			Schedules_Page::class       => static function ( ContainerInterface $container ) {
+			Schedules_Page::class              => static function ( ContainerInterface $container ) {
 
 				return new Schedules_Page(
 					$container->get( Schedules_Table_List::class ),
-					$container->get(Schedule_Repository::class)
+					$container->get( Schedule_Repository::class )
 				);
 			},
 
-			Settings_Page::class        => static function ( ContainerInterface $container ) {
+			Settings_Page::class               => static function ( ContainerInterface $container ) {
 				return new Settings_Page(
 					$container->get( Settings::class ),
 					$container->get( Media_Network_Collection::class ),
-					$container->get(Tab_Collection::class),
+					$container->get( Tab_Collection::class ),
 				);
 			},
 
-			Stats_Page::class           => static fn ( ContainerInterface $container ) => new Stats_Page(
+			Stats_Page::class                  => static fn ( ContainerInterface $container ) => new Stats_Page(
 				$container->get( Posts_Stats_Repository::class )
 			),
 
-			Schedule_View_Page::class   => function ( ContainerInterface $container ): Schedule_View_Page {
+			Schedule_View_Page::class          => function ( ContainerInterface $container ): Schedule_View_Page {
 
 				return new Schedule_View_Page( $container->get( Schedule_Repository::class ) );
 			},
-			Schedule_Form::class        => function ( ContainerInterface $container ): Schedule_Form {
+			Schedule_Form::class               => function ( ContainerInterface $container ): Schedule_Form {
 
 				return new Schedule_Form(
 					$container->get( Schedule_Repository::class ),
@@ -68,47 +68,47 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 
-			Auto_Share_Page::class      => fn (): Auto_Share_Page => new Auto_Share_Page( array() ),
+			Auto_Share_Page::class             => fn (): Auto_Share_Page => new Auto_Share_Page( array() ),
 
-			Post_Meta::class            => function ( ContainerInterface $container ) {
+			Post_Meta::class                   => function ( ContainerInterface $container ) {
 				return new Post_Meta(
 					$container->get( Factory::class ),
 					$container->get( Network_Post_Provider::class ),
 				);
 			},
-			Schedules_Table_List::class => fn( ContainerInterface $container ) => new Schedules_Table_List(
+			Schedules_Table_List::class        => fn( ContainerInterface $container ) => new Schedules_Table_List(
 				$container->get( Schedule_Repository::class ),
 				$container->get( Posts_Stats_Repository::class ),
 				$container->get( Schedule_Queue::class ),
 			),
-			Tab_Collection_Interface::class => function(ContainerInterface $container) {
-				$factory = $container->get(Factory::class);
-				return [
-					new General_Tab($factory),
+			Tab_Collection_Interface::class    => function ( ContainerInterface $container ) {
+				$factory = $container->get( Factory::class );
+				return array(
+					new General_Tab( $factory ),
 					new Network_Accounts_Tab(
 						$factory,
-						$container->get(Network_Accounts_Table_List::class),
-						$container->get(Media_Network_Collection::class)
+						$container->get( Network_Accounts_Table_List::class ),
+						$container->get( Media_Network_Collection::class )
 					),
-					new Stats_Tab($factory, $container->get(Stats_Table_List::class)),
-					new Logs_Tab($factory),
-				];
+					new Stats_Tab( $factory, $container->get( Stats_Table_List::class ) ),
+					new Logs_Tab( $factory ),
+				);
 			},
-			Tab_Collection::class => function (ContainerInterface $container) {
+			Tab_Collection::class              => function ( ContainerInterface $container ) {
 				$collection = new Tab_Collection();
 				/**
 				 * @var Tab_Interface $tab
 				 */
-				foreach ($container->get(Tab_Collection_Interface::class) as $tab){
-					$collection->register($tab->slug(), $tab);
+				foreach ( $container->get( Tab_Collection_Interface::class ) as $tab ) {
+					$collection->register( $tab->slug(), $tab );
 				}
 				return $collection;
 			},
-			Network_Accounts_Table_List::class => fn(ContainerInterface $container) =>
-			new Network_Accounts_Table_List($container->get(Network_Account_Repository::class)),
-			Stats_Table_List::class => function (ContainerInterface $container) {
-				return new Stats_Table_List($container->get(Posts_Stats_Repository::class));
-			}
+			Network_Accounts_Table_List::class => fn( ContainerInterface $container ) =>
+			new Network_Accounts_Table_List( $container->get( Network_Account_Repository::class ) ),
+			Stats_Table_List::class            => function ( ContainerInterface $container ) {
+				return new Stats_Table_List( $container->get( Posts_Stats_Repository::class ) );
+			},
 		);
 	}
 

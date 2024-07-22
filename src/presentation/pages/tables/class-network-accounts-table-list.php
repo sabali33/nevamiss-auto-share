@@ -10,7 +10,7 @@ use Nevamiss\Services\Date;
 
 class Network_Accounts_Table_List extends \WP_List_Table {
 
-    use Table_List_Trait;
+	use Table_List_Trait;
 
 	public function __construct(
 		private Network_Account_Repository $account_repository,
@@ -32,7 +32,7 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	}
 	public function prepare_items(): void {
 
-		[$per_page, $args] = $this->query_args(['search_field' => 'name']);
+		[$per_page, $args] = $this->query_args( array( 'search_field' => 'name' ) );
 
 		$this->items = $this->account_repository->get_all( $args );
 
@@ -55,20 +55,20 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	 */
 	public function get_columns(): array {
 		return array(
-			'cb'                  => '<input type="checkbox" />',
-			'name'       => __( 'Name', 'nevamiss' ),
-			'network'          => __( 'Network', 'nevamiss' ),
-			'remote_account_id'    => __( 'Remote Account ID', 'nevamiss' ),
-			'parent_remote_id'    => __( 'Parent Remote ID', 'nevamiss' ),
-			'created_at'           => __( 'Login At', 'nevamiss' ),
+			'cb'                => '<input type="checkbox" />',
+			'name'              => __( 'Name', 'nevamiss' ),
+			'network'           => __( 'Network', 'nevamiss' ),
+			'remote_account_id' => __( 'Remote Account ID', 'nevamiss' ),
+			'parent_remote_id'  => __( 'Parent Remote ID', 'nevamiss' ),
+			'created_at'        => __( 'Login At', 'nevamiss' ),
 
 		);
 	}
 
 	protected function get_sortable_columns(): array {
 		return array(
-			'name' => array( 'name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
-			'created_at'    => array( 'created_at', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
+			'name'       => array( 'name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
+			'created_at' => array( 'created_at', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
 		);
 	}
 
@@ -80,59 +80,49 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	 * @param Network_Account $item
 	 * @return void
 	 */
-	public function column_cb( $item): void
-	{
-        $this->_column_cb($item, 'network_accounts');
+	public function column_cb( $item ): void {
+		$this->_column_cb( $item, 'network_accounts' );
 	}
 
-	public function column_name(Network_Account $account): void
-	{
+	public function column_name( Network_Account $account ): void {
 		echo $account->name();
 	}
-	public function column_network(Network_Account $account): void
-	{
+	public function column_network( Network_Account $account ): void {
 		echo $account->network();
 	}
-	public function column_remote_account_id(Network_Account $account): void
-	{
+	public function column_remote_account_id( Network_Account $account ): void {
 		echo $account->remote_account_id();
 	}
-	public function column_parent_remote_id(Network_Account $account): void
-	{
+	public function column_parent_remote_id( Network_Account $account ): void {
 		echo $account->parent_remote_id();
 	}
-	public function column_created_at(Network_Account $account): void
-	{
-        $date = Date::create_from_format($account->created_at(), 'Y-m-d H:i:s');
-        echo $date->format('dS M Y @ H:i');
+	public function column_created_at( Network_Account $account ): void {
+		$date = Date::create_from_format( $account->created_at(), 'Y-m-d H:i:s' );
+		echo $date->format( 'dS M Y @ H:i' );
 	}
 
 	/**
 	 * @param Network_Account $item
 	 * @return array[]
 	 */
-	private function action_list(Network_Account $item): array
-	{
+	private function action_list( Network_Account $item ): array {
 		$nonce = wp_create_nonce( 'nevamiss_network_accounts' );
 		return array(
 			array(
-				'name' => 'delete',
-				'label' => __('Logout', 'nevamiss'),
-				'url' => admin_url("admin-post.php?account_id={$item->id()}&action=nevamiss_network_accounts_delete&nonce=$nonce"),
+				'name'  => 'delete',
+				'label' => __( 'Logout', 'nevamiss' ),
+				'url'   => admin_url( "admin-post.php?account_id={$item->id()}&action=nevamiss_network_accounts_delete&nonce=$nonce" ),
 				'class' => 'trash',
 			),
-
 
 		);
 	}
 
-	protected function get_bulk_actions(): array
-	{
-		return array_merge($this->_bulk_actions(), ['delete_all' => __('Logout', 'nevamiss')]);
+	protected function get_bulk_actions(): array {
+		return array_merge( $this->_bulk_actions(), array( 'delete_all' => __( 'Logout', 'nevamiss' ) ) );
 	}
 
-	public function repository(): Network_Account_Repository
-	{
+	public function repository(): Network_Account_Repository {
 		return $this->account_repository;
 	}
 }

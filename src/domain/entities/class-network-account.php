@@ -40,8 +40,7 @@ class Network_Account {
 		return $this->account['parent_remote_id'];
 	}
 
-	public function created_at()
-	{
+	public function created_at() {
 		return $this->account['created_at'];
 	}
 }

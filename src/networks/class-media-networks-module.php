@@ -69,9 +69,9 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 				/**
 				 * @var Settings $settings
 				 */
-				$settings = $container->get(Settings::class);
+				$settings = $container->get( Settings::class );
 				foreach ( $container->get( Network_Clients::class ) as $network_slug => $client ) {
-					if(!in_array($network_slug, $settings->enabled_networks())){
+					if ( ! in_array( $network_slug, $settings->enabled_networks() ) ) {
 						continue;
 					}
 					$collection->register( $network_slug, $client );

@@ -14,11 +14,11 @@ class Stats {
 
 	public function __construct( array $stat ) {
 		$this->schedule_id    = (int) $stat['schedule_id'];
-		$this->id    = (int) $stat['id'];
+		$this->id             = (int) $stat['id'];
 		$this->post_id        = (int) $stat['post_id'];
 		$this->remote_post_id = $stat['remote_post_id'];
 		$this->remote_posted  = (bool) $stat['remote_posted'];
-		$this->posted_on  = $stat['posted_on'];
+		$this->posted_on      = $stat['posted_on'];
 	}
 
 	public function schedule_id(): int {
@@ -34,13 +34,11 @@ class Stats {
 		return $this->remote_posted;
 	}
 
-	public function id(): int
-	{
+	public function id(): int {
 		return $this->id;
 	}
 
-	public function posted_on(): string
-	{
+	public function posted_on(): string {
 		return $this->posted_on;
 	}
 }

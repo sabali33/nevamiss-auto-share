@@ -42,12 +42,10 @@ class Wrapper implements Renderable {
 		$attributes      = array_merge( $this->attributes, $attributes );
 		$html_attributes = $this->parse_attributes( $attributes['attributes'] );
 
-        $text = $attributes['text'] ?? '';
-
-
+		$text = $attributes['text'] ?? '';
 
 		$inner_components_arr = array_map(
-			function( $component ) {
+			function ( $component ) {
 				return $component->render();
 			},
 			$attributes['inner_components']

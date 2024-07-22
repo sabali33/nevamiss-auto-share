@@ -73,7 +73,7 @@ class Schedule_Form extends Page {
 			default => Input::class,
 		};
 
-		$sub_fields_components = [];
+		$sub_fields_components = array();
 		if ( isset( $field['sub_fields'] ) ) {
 
 			foreach ( $field['sub_fields'] as $key => $sub_fields ) {
@@ -90,56 +90,64 @@ class Schedule_Form extends Page {
 							$selected_class = ' active';
 						}
 					}
-					$has_multiple = isset( $sub_field['has_multiple'] ) && $sub_field['has_multiple'];
+					$has_multiple   = isset( $sub_field['has_multiple'] ) && $sub_field['has_multiple'];
 					$can_be_removed = isset( $sub_field['can_be_removed'] ) && $sub_field['can_be_removed'];
-					$parent_value = esc_attr( $key );
+					$parent_value   = esc_attr( $key );
 
-
-					$sub_field_elements = [];
-					if($can_be_removed){
-						$sub_field_elements[] = $this->factory()->component(Wrapper::class, [
-							'tag' => 'button',
-							'attributes' => [
-								'class' => 'remove'
-							],
-							'text' => __('X', 'nevamiss')
-						]);
+					$sub_field_elements = array();
+					if ( $can_be_removed ) {
+						$sub_field_elements[] = $this->factory()->component(
+							Wrapper::class,
+							array(
+								'tag'        => 'button',
+								'attributes' => array(
+									'class' => 'remove',
+								),
+								'text'       => __( 'X', 'nevamiss' ),
+							)
+						);
 					}
-					$sub_field_elements[] = $this->render_field($sub_field);
+					$sub_field_elements[] = $this->render_field( $sub_field );
 
-					if($has_multiple){
-						$sub_field_elements[] = $this->factory()->component(Wrapper::class, [
-							'tag' => 'button',
-							'attributes' => [
-								'class' => 'add-field-group button'
-							],
-							'text' => __('Add', 'nevamiss')
-						]);
+					if ( $has_multiple ) {
+						$sub_field_elements[] = $this->factory()->component(
+							Wrapper::class,
+							array(
+								'tag'        => 'button',
+								'attributes' => array(
+									'class' => 'add-field-group button',
+								),
+								'text'       => __( 'Add', 'nevamiss' ),
+							)
+						);
 					}
 
 					$sub_fields_components[] = $this->factory()->component(
 						Wrapper::class,
-						[
-							'attributes' => [
-								'class' => "sub-field-wrapper{$selected_class} $key",
-								'data-repeat-frequency' => $parent_value
-							],
+						array(
+							'attributes' => array(
+								'class'                 => "sub-field-wrapper{$selected_class} $key",
+								'data-repeat-frequency' => $parent_value,
+							),
 
-						],
+						),
 						$sub_field_elements
 					);
 				}
 			}
 		}
 
-		if(empty($sub_fields_components)){
+		if ( empty( $sub_fields_components ) ) {
 			return $this->factory()->component( $field_class, $field );
 		}
-		return $this->factory()->component(Component_Runner::class, [], [
-			$this->factory()->component( $field_class, $field ),
-			... $sub_fields_components
-		]);
-
+		return $this->factory()->component(
+			Component_Runner::class,
+			array(),
+			array(
+				$this->factory()->component( $field_class, $field ),
+				...$sub_fields_components,
+			)
+		);
 	}
 
 	public function fields(): array {
@@ -672,8 +680,8 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->daily_times() as $index => $time ) {
-			$last_field = $index === (count($this->schedule->daily_times()) -1) ;
-			$fields[] = array(
+			$last_field = $index === ( count( $this->schedule->daily_times() ) - 1 );
+			$fields[]   = array(
 				'name'              => 'daily_times[hours][]',
 				'value'             => $time['hour'],
 				'type'              => 'select-group',
@@ -681,7 +689,7 @@ class Schedule_Form extends Page {
 				'label'             => __( 'Hour', 'nevamiss' ),
 				'choices'           => $this->hours(),
 				'has_multiple'      => $last_field,
-				'can_be_removed'      => !$last_field,
+				'can_be_removed'    => ! $last_field,
 				'complement_fields' => array(
 					array(
 						'name'    => 'daily_times[minutes][]',
@@ -744,8 +752,8 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->weekly_times() as $index => $week_time ) {
-			$last_field = $index === (count($this->schedule->weekly_times()) -1) ;
-			$fields[] = array(
+			$last_field = $index === ( count( $this->schedule->weekly_times() ) - 1 );
+			$fields[]   = array(
 				'name'              => 'weekly_times[days][]',
 				'value'             => $week_time['day'],
 				'type'              => 'select-group',
@@ -753,7 +761,7 @@ class Schedule_Form extends Page {
 				'id'                => "weekly-times-$index",
 				'label'             => __( 'Weekly Times', 'nevamiss' ),
 				'has_multiple'      => $last_field,
-				'can_be_removed'      => !$last_field,
+				'can_be_removed'    => ! $last_field,
 				'choices'           => array(
 					'monday'    => __( 'Monday', 'nevamiss' ),
 					'tuesday'   => __( 'Tuesday', 'nevamiss' ),
@@ -789,8 +797,7 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function monthly_fields(): array
-	{
+	private function monthly_fields(): array {
 		if ( ! $this->schedule || ! $this->schedule->monthly_times() ) {
 			return array(
 				array(
@@ -828,8 +835,8 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->monthly_times() as $index => $monthly_time ) {
-			$last_field = $index === (count($this->schedule->monthly_times()) -1) ;
-			$fields[] = array(
+			$last_field = $index === ( count( $this->schedule->monthly_times() ) - 1 );
+			$fields[]   = array(
 				'name'              => 'monthly_times[days][]',
 				'value'             => $monthly_time['day'],
 				'type'              => 'select-group',
@@ -838,7 +845,7 @@ class Schedule_Form extends Page {
 				'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
 				'label'             => __( 'On day', 'nevamiss' ),
 				'has_multiple'      => $last_field,
-				'can_be_removed'    => !$last_field,
+				'can_be_removed'    => ! $last_field,
 				'complement_fields' => array(
 					array(
 						'name'    => 'monthly_times[hours][]',
@@ -864,8 +871,7 @@ class Schedule_Form extends Page {
 		return $fields;
 	}
 
-	private function sort_posts(): array
-	{
+	private function sort_posts(): array {
 		$criteria = array(
 			'newest'        => __( 'Newest', 'nevamiss' ),
 			'post_title'    => __( 'Title', 'nevamiss' ),
@@ -883,19 +889,21 @@ class Schedule_Form extends Page {
 	/**
 	 * @return array
 	 */
-	private function minutes(): array
-	{
-		return array_reduce(range(1, 60, 1), function($acc, $curr){
-			$acc[$curr] = $curr;
-			return $acc;
-		}, []);
+	private function minutes(): array {
+		return array_reduce(
+			range( 1, 60, 1 ),
+			function ( $acc, $curr ) {
+				$acc[ $curr ] = $curr;
+				return $acc;
+			},
+			array()
+		);
 	}
 
 	/**
 	 * @return array
 	 */
-	private function hours(): array
-	{
-		return range(0, 23);
+	private function hours(): array {
+		return range( 0, 23 );
 	}
 }

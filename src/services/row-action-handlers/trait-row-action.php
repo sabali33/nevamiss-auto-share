@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services\Row_Action_Handlers;
 
-trait Row_Action_Trail
-{
+trait Row_Action_Trail {
+
 	/**
 	 * @return bool
 	 */
@@ -17,5 +17,4 @@ trait Row_Action_Trail
 		$url = add_query_arg( $args, $this->page_home );
 		wp_redirect( $url );
 	}
-
 }

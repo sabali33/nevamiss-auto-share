@@ -13,7 +13,7 @@ use Nevamiss\Services\Date;
 use Nevamiss\Services\Schedule_Queue as Schedule_Queue_Service;
 
 class Schedules_Table_List extends \WP_List_Table {
-    use Table_List_Trait;
+	use Table_List_Trait;
 
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
@@ -37,7 +37,7 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 	public function prepare_items(): void {
 
-		[$per_page, $args] = $this->query_args(['search_field' => 'schedule_name']);
+		[$per_page, $args] = $this->query_args( array( 'search_field' => 'schedule_name' ) );
 
 		$this->items = $this->schedule_repository->get_all( $args );
 
@@ -90,13 +90,11 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 
 
-	protected function get_bulk_actions(): array
-	{
+	protected function get_bulk_actions(): array {
 		return $this->_bulk_actions();
 	}
 
-	public function current_action(): bool|string
-	{
+	public function current_action(): bool|string {
 		if ( isset( $_REQUEST['delete_all'] ) || isset( $_REQUEST['delete_all2'] ) ) {
 			return 'delete_all';
 		}
@@ -108,29 +106,26 @@ class Schedules_Table_List extends \WP_List_Table {
 	 * @param Schedule $item
 	 * @return void
 	 */
-	public function column_cb( $item): void
-	{
-		$this->_column_cb($item, 'schedules');
-
+	public function column_cb( $item ): void {
+		$this->_column_cb( $item, 'schedules' );
 	}
 
 	public function column_schedule_name( Schedule $item ): void {
 		echo $item->name();
 	}
 
-	public function column_start_time(Schedule $schedule): void
-	{
-        if(!$schedule->start_date()) {
-            echo join(',', $schedule->one_time_schedule());
-            return;
-        }
+	public function column_start_time( Schedule $schedule ): void {
+		if ( ! $schedule->start_date() ) {
+			echo join( ',', $schedule->one_time_schedule() );
+			return;
+		}
 
-        $date = Date::create_from_format($schedule->start_date());
-        $date_formatted = $date->format('dS F Y ');
-        $class_name = $date->is_late() ? 'started' : 'not-started';
+		$date           = Date::create_from_format( $schedule->start_date() );
+		$date_formatted = $date->format( 'dS F Y ' );
+		$class_name     = $date->is_late() ? 'started' : 'not-started';
 
-        echo "<span class='$class_name'> $date_formatted </span>";
-    }
+		echo "<span class='$class_name'> $date_formatted </span>";
+	}
 
 	public function column_repeat_frequency( Schedule $schedule ): void {
 		echo $schedule->repeat_frequency();
@@ -165,10 +160,10 @@ class Schedules_Table_List extends \WP_List_Table {
 			)
 		);
 
-		if(empty($schedule_stats)){
+		if ( empty( $schedule_stats ) ) {
 			return;
 		}
-		$post_ids       = array_map(
+		$post_ids = array_map(
 			function ( Stats $stat ) {
 				return $stat->post_id();
 			},
@@ -189,52 +184,49 @@ class Schedules_Table_List extends \WP_List_Table {
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	public function column_estimate_completion(Schedule $schedule): void
-	{
-        if($schedule->repeat_frequency() === 'none'){
-            return;
-        }
-		$time_units = $this->queue_service->estimate_schedule_cycle_completion($schedule);
+	public function column_estimate_completion( Schedule $schedule ): void {
+		if ( $schedule->repeat_frequency() === 'none' ) {
+			return;
+		}
+		$time_units = $this->queue_service->estimate_schedule_cycle_completion( $schedule );
 
-		$message = __('Will complete a cycle in ', 'nevamiss');
+		$message = __( 'Will complete a cycle in ', 'nevamiss' );
 
 		$finish_date = $time_units['finish_date'];
 
-		unset($time_units['finish_date']);
+		unset( $time_units['finish_date'] );
 
-		$parts = $this->format_estimate_message($time_units);
+		$parts    = $this->format_estimate_message( $time_units );
 		$message .= $parts;
 
-		if(empty($parts)){
-			$message = __('No time estimates, too close', 'nevamiss');
+		if ( empty( $parts ) ) {
+			$message = __( 'No time estimates, too close', 'nevamiss' );
 		}
 
-		$message .= sprintf(__(' ( on %s)', 'nevamiss'), $finish_date);
+		$message .= sprintf( __( ' ( on %s)', 'nevamiss' ), $finish_date );
 
 		echo $message;
 	}
 
-	private function format_estimate_message($time_units): string
-	{
-		$parts = [];
-		foreach ($time_units as $unit => $value) {
-			if ($value > 0) {
-				$parts[] = sprintf(_n("%s $unit", "%s ${unit}s", $value, 'nevamiss'), $value);
-			} elseif (!empty($parts)) {
-				$parts[] = sprintf(_n("%s $unit", "%s ${unit}s", 0, 'nevamiss'), 0);
+	private function format_estimate_message( $time_units ): string {
+		$parts = array();
+		foreach ( $time_units as $unit => $value ) {
+			if ( $value > 0 ) {
+				$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
+			} elseif ( ! empty( $parts ) ) {
+				$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
 			}
 		}
 
-		if(empty($parts)){
+		if ( empty( $parts ) ) {
 			return '';
 		}
 
-		return join(', ', $parts);
-
+		return join( ', ', $parts );
 	}
 	private function action_list( Schedule $schedule ): array {
 
-		$nonce = wp_create_nonce( 'nevamiss_schedules' );
+		$nonce       = wp_create_nonce( 'nevamiss_schedules' );
 		$schedule_id = $schedule->id();
 
 		return array(

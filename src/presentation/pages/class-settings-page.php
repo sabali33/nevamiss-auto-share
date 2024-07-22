@@ -62,13 +62,11 @@ class Settings_Page extends Page {
 	/**
 	 * @return Array<Tab_Interface>
 	 */
-	public function tabs(): array
-	{
+	public function tabs(): array {
 		return $this->tab_collection->get_all();
 	}
 
-	public function tab(string $tab): Tab_Interface
-	{
-		return $this->tab_collection->get($tab);
+	public function tab( string $tab ): Tab_Interface {
+		return $this->tab_collection->get( $tab );
 	}
 }

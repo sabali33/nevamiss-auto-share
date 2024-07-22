@@ -26,7 +26,7 @@ class Component_Runner implements Renderable {
 
 		return array_reduce(
 			$inner_components,
-			function( string $acc, Component $component ) {
+			function ( string $acc, Component $component ) {
 				$acc .= $component->render() . PHP_EOL;
 				return $acc;
 			},

@@ -84,39 +84,42 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action(
 			'admin_post_nevamiss_network_accounts_delete',
 			array(
-				$container->get(Accounts_Row_Action_Handler::class),
-				'logout_accounts_callback'
+				$container->get( Accounts_Row_Action_Handler::class ),
+				'logout_accounts_callback',
 			)
 		);
 
-		add_action('admin_post_nevamiss_stats_delete', array(
-			$container->get(Stats_Row_Action_Handler::class),
-			'delete_stat_row_callback'
-		));
+		add_action(
+			'admin_post_nevamiss_stats_delete',
+			array(
+				$container->get( Stats_Row_Action_Handler::class ),
+				'delete_stat_row_callback',
+			)
+		);
 
 		return true;
 	}
 
 	public function services(): array {
 		return array(
-			Logger::class                => fn(): Logger => new Logger(),
-			Schedule_Post_Manager::class => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
+			Logger::class                      => fn(): Logger => new Logger(),
+			Schedule_Post_Manager::class       => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
 				$container->get( Schedule_Repository::class ),
 				$container->get( Factory::class ),
 				$container->get( Task_Repository::class ),
 				$container->get( Network_Post_Provider::class ),
 				$container->get( Query::class )
 			),
-			Task_Runner::class           => fn( ContainerInterface $container ): Task_Runner => new Task_Runner(
+			Task_Runner::class                 => fn( ContainerInterface $container ): Task_Runner => new Task_Runner(
 				$container->get( Factory::class ),
 				$container->get( Task_Repository::class ),
 				$container->get( Network_Post_Provider::class ),
 			),
-			Settings::class              => fn(): Settings => new Settings(),
-			WP_Cron_Service::class       => fn( ContainerInterface $container ): WP_Cron_Service => new WP_Cron_Service(
+			Settings::class                    => fn(): Settings => new Settings(),
+			WP_Cron_Service::class             => fn( ContainerInterface $container ): WP_Cron_Service => new WP_Cron_Service(
 				$container->get( Schedule_Repository::class )
 			),
-			Network_Post_Provider::class => fn( ContainerInterface $container ): Network_Post_Provider => new Network_Post_Provider(
+			Network_Post_Provider::class       => fn( ContainerInterface $container ): Network_Post_Provider => new Network_Post_Provider(
 				$container->get( Settings::class ),
 				$container->get( Network_Account_Repository::class ),
 				$container->get( Query::class ),
@@ -124,7 +127,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				$container->get( Network_Clients::class ),
 				$container->get( Factory::class ),
 			),
-			Schedule_Tasks_Runner::class => function ( ContainerInterface $container ) {
+			Schedule_Tasks_Runner::class       => function ( ContainerInterface $container ) {
 
 				return new Schedule_Tasks_Runner(
 					$container->get( Task_Repository::class ),
@@ -132,34 +135,34 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get( Network_Post_Provider::class ),
 				);
 			},
-			Form_Validator::class        => fn() => new Form_Validator(),
-			Schedule_Row_Action_Handler::class          => function (ContainerInterface $container ) {
+			Form_Validator::class              => fn() => new Form_Validator(),
+			Schedule_Row_Action_Handler::class => function ( ContainerInterface $container ) {
 				return new Schedule_Row_Action_Handler(
 					$container->get( Schedule_Repository::class ),
 					$container->get( WP_Cron_Service::class ),
 					$container->get( Schedule_Post_Manager::class )
 				);
 			},
-			Accounts_Row_Action_Handler::class => function (ContainerInterface $container) {
-				return new Accounts_Row_Action_Handler($container->get(Network_Account_Repository::class));
+			Accounts_Row_Action_Handler::class => function ( ContainerInterface $container ) {
+				return new Accounts_Row_Action_Handler( $container->get( Network_Account_Repository::class ) );
 			},
-			Stats_Row_Action_Handler::class => function (ContainerInterface $container) {
-				return new Stats_Row_Action_Handler($container->get(Posts_Stats_Repository::class));
+			Stats_Row_Action_Handler::class    => function ( ContainerInterface $container ) {
+				return new Stats_Row_Action_Handler( $container->get( Posts_Stats_Repository::class ) );
 			},
-			Schedule_Queue::class        => function ( ContainerInterface $container ) {
+			Schedule_Queue::class              => function ( ContainerInterface $container ) {
 				return new Schedule_Queue(
 					$container->get( Schedule_Repository::class ),
 					$container->get( Schedule_Queue_Repository::class ),
 					$container->get( Query::class )
 				);
 			},
-			Http_Request::class          => function () {
+			Http_Request::class                => function () {
 				return new Http_Request();
 			},
-			Accounts_Manager::class      => function ( ContainerInterface $container ) {
+			Accounts_Manager::class            => function ( ContainerInterface $container ) {
 				return new Accounts_Manager( $container->get( Network_Account_Repository::class ) );
 			},
-			Stats_Manager::class         => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
+			Stats_Manager::class               => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
 		);
 	}
 }

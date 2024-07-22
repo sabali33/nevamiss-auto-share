@@ -16,14 +16,12 @@ class Accounts_Row_Action_Handler {
 	private ?string $page_home;
 	private string $nonce_action;
 
-	public function __construct(private Network_Account_Repository $account_repository)
-	{
-		$this->page_home = admin_url( 'admin.php?page=nevamiss-settings&tab=network-accounts' );
+	public function __construct( private Network_Account_Repository $account_repository ) {
+		$this->page_home    = admin_url( 'admin.php?page=nevamiss-settings&tab=network-accounts' );
 		$this->nonce_action = 'nevamiss_network_accounts';
 	}
 
-	public function logout_accounts_callback(): void
-	{
+	public function logout_accounts_callback(): void {
 		$authorized = $this->authorize();
 
 		if ( ! $authorized ) {
@@ -54,4 +52,3 @@ class Accounts_Row_Action_Handler {
 		}
 	}
 }
-

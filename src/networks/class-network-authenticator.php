@@ -51,7 +51,7 @@ class Network_Authenticator {
 			exit;
 		}
 
-		if(isset($_GET['error'])){
+		if ( isset( $_GET['error'] ) ) {
 			$this->redirect(
 				array(
 					'status'  => 'error',

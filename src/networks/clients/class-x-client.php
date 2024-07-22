@@ -121,10 +121,10 @@ class X_Client implements Network_Clients_Interface {
 			throw new \Exception( __( 'Unable to get user account', 'nevamiss' ) );
 		}
 		return array(
-			'name'         => "{$response['data']['name']}({$response['data']['username']})",
-			'id'           => $response['data']['id'],
-			'access_token' => $access_token,
-			'network_label' => 'X'
+			'name'          => "{$response['data']['name']}({$response['data']['username']})",
+			'id'            => $response['data']['id'],
+			'access_token'  => $access_token,
+			'network_label' => 'X',
 		);
 	}
 
