@@ -106,7 +106,7 @@ class DB {
             `$task_table_name`,
             `$network_account_table_name`";
 
-		$this->wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$this->wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	private function table_names(): array {
