@@ -17,3 +17,11 @@
     padding: 5px;
     border-radius: 3px;
 }
+.wrap .tab-content label{
+    display: flex;
+    width: 400px;
+    justify-content: space-between;
+}
+.subsubsub li{
+    margin: 0 10px;
+}

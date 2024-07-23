@@ -31,6 +31,9 @@ class Input implements Renderable {
 			$input_attributes['max']  = $attributes['max'];
 			$input_attributes['step'] = $attributes['step'] ?? 1;
 		}
+		if($attributes['type'] === 'checkbox'){
+			$input_attributes['checked'] = $attributes['checked'] ?? false;
+		}
 
 		if ( isset( $attributes['custom_inputs'] ) ) {
 			$input_attributes = array_merge( $input_attributes, $attributes['custom_inputs'] );
