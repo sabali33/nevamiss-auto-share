@@ -164,6 +164,48 @@ class ScheduleForms {
 
 /***/ }),
 
+/***/ "./resources/js/settings.ts":
+/*!**********************************!*\
+  !*** ./resources/js/settings.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Settings: () => (/* binding */ Settings)
+/* harmony export */ });
+class Settings {
+  static init() {
+    document.querySelectorAll('[name="networks_to_post[]"]').forEach(element => {
+      element.addEventListener('change', e => {
+        const target = e.target;
+        const subFieldElement = document.querySelector(`.sub-field-wrap.${target.value}`);
+        this.toggleSubFields(subFieldElement, target.checked);
+        console.log(target.checked);
+      });
+    });
+  }
+  static toggleSubFields(subFieldElement, checked) {
+    const inputsType = 'input[type],textarea,select';
+    const allInputsElements = subFieldElement.querySelectorAll(inputsType);
+    if (checked) {
+      subFieldElement.classList.add('active');
+      allInputsElements.forEach(inputElement => {
+        if (inputElement.hasAttribute('disabled')) {
+          inputElement.removeAttribute('disabled');
+        }
+      });
+      return;
+    }
+    subFieldElement.classList.remove('active');
+    allInputsElements.forEach(inputElement => {
+      inputElement.setAttribute('disabled', 'true');
+    });
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/flatpickr/dist/esm/index.js":
 /*!**************************************************!*\
   !*** ./node_modules/flatpickr/dist/esm/index.js ***!
@@ -2950,9 +2992,12 @@ var __webpack_exports__ = {};
   \*******************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _schedule_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schedule-forms */ "./resources/js/schedule-forms/index.ts");
+/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings */ "./resources/js/settings.ts");
+
 
 document.addEventListener('DOMContentLoaded', () => {
   _schedule_forms__WEBPACK_IMPORTED_MODULE_0__["default"].init();
+  _settings__WEBPACK_IMPORTED_MODULE_1__.Settings.init();
 });
 /******/ })()
 ;

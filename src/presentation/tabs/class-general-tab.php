@@ -6,7 +6,6 @@ namespace Nevamiss\Presentation\Tabs;
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Presentation\Components\Component;
-use Nevamiss\Presentation\Components\Component_Runner;
 use Nevamiss\Presentation\Components\Input_Fields\Checkbox_Group;
 use Nevamiss\Presentation\Components\Input_Fields\Input;
 use Nevamiss\Presentation\Components\Input_Fields\Select_Field;
@@ -114,23 +113,26 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'type'        => 'checkbox',
 						'value'        => 'facebook',
 						'checked' => in_array('facebook', $network_api_keys['networks_to_post']),
+
 						'sub_fields' => array(
 							array(
 								'name'        => 'facebook[client_id]',
 								'label'       => __( 'App ID', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['facebook']['client_id'],
+								'value'       => $network_api_keys['facebook']['client_id'] ?? '',
 								'placeholder' => __('Enter App ID', 'Nevamiss'),
 								'class'       => 'facebook-app-id',
+								'disabled' => !in_array('facebook', $network_api_keys['networks_to_post']),
 
 							),
 							array(
 								'name'        => 'facebook[client_secret]',
 								'label'       => __( 'App Secret', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['facebook']['client_secret'],
+								'value'       => $network_api_keys['facebook']['client_secret'] ?? '',
 								'placeholder' => __('Enter App Secret', 'nevamiss'),
 								'class'       => 'facebook-app-secret',
+								'disabled' => !in_array('facebook', $network_api_keys['networks_to_post']),
 							),
 						)
 					),
@@ -145,18 +147,20 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'name'        => 'x[client_id]',
 								'label'       => __( 'Client ID', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['x']['client_id'],
+								'value'       => $network_api_keys['x']['client_id'] ?? '',
 								'placeholder' => __('Enter Client ID', 'nevamiss'),
 								'class'       => 'x-client-id',
+								'disabled' => !in_array('x', $network_api_keys['networks_to_post']),
 
 							),
 							array(
 								'name'        => 'x[client_secret]',
 								'label'       => __( 'Client Secret', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['x']['client_secret'],
+								'value'       => $network_api_keys['x']['client_secret'] ?? '',
 								'placeholder' => __('Enter Client Secret', 'nevamiss'),
 								'class'       => 'x-client-secret',
+								'disabled' => !in_array('x', $network_api_keys['networks_to_post']),
 							),
 						)
 					),
@@ -171,18 +175,20 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'name'        => 'linkedin[client_id]',
 								'label'       => __( 'Client ID', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['linkedin']['client_id'],
+								'value'       => $network_api_keys['linkedin']['client_id'] ?? '',
 								'placeholder' => __('Enter Client ID', 'nevamiss'),
 								'class'       => 'linkedin-client-id',
+								'disabled' => !in_array('linkedin', $network_api_keys['networks_to_post']),
 
 							),
 							array(
 								'name'        => 'linkedin[client_secret]',
 								'label'       => __( 'Client Secret', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['linkedin']['client_secret'],
+								'value'       => $network_api_keys['linkedin']['client_secret'] ?? '',
 								'placeholder' => __('Enter Client Secret', 'nevamiss'),
 								'class'       => 'linkedin-client-secret',
+								'disabled' => !in_array('linkedin', $network_api_keys['networks_to_post']),
 							),
 						)
 					),
@@ -267,27 +273,32 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			$field_component = [];
 			foreach ($field['sub_fields'] as $parent_value => $sub_field){
 
-				$field_component[] = \Nevamiss\component(
-					Wrapper::class,
-					[
-						'attributes' => [
-							'class' => "sub-field-wrap {$field['value']}"
-						]
-					],
-
-					[$this->to_component($sub_field)]
-				);
+				$field_component[] = $this->to_component($sub_field);
 
 			}
-			$section_components[] = \Nevamiss\component(
-				Component_Runner::class,
-				[],
+			$sub_field_components_wrap = \Nevamiss\component(
+				Wrapper::class,
 				[
-					$this->to_component($field),
+					'attributes' => [
+						'class' => "sub-field-wrap {$field['value']}"
+					]
+				],
+				[
 					\Nevamiss\component(Wrapper::class, [], $field_component)
 				]
 			);
-
+			$section_components[] = \Nevamiss\component(
+				Wrapper::class,
+				[
+					'attributes' => [
+						'class' => "field-wrap"
+					]
+				],
+				[
+					$this->to_component($field),
+					$sub_field_components_wrap
+				]
+			);
 		}
 		return $section_components;
 	}
@@ -344,44 +355,66 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			wp_verify_nonce($_POST['_wpnonce'], 'nevamiss-general-settings-action');
 	}
 
-	private function extract_data(array $post_data)
+	private function extract_data(array $post_data): array
 	{
-		$fields = $this->post_keys($post_data['section']);
-		return array_reduce(
-			$fields,
-			function($acc, $field) use($post_data){
-				if(!isset($post_data[$field])){
-					$acc[$field] = null;
-					return $acc;
-				}
-				if($post_data[$field] === 'on'){
-					$acc[$field] = 1;
-					return $acc;
-				}
-				if(is_string($post_data[$field])){
-					$acc[$field] = sanitize_text_field($post_data[$field]);
-					return $acc;
-				}
-				$acc[$field] = filter_var_array($post_data[$field], FILTER_SANITIZE_ENCODED);
-				return $acc;
-			},
-			[]
-		);
+		$schema = $this->post_keys($post_data['section']);
+		$sanitize_data = [];
+
+		foreach( $schema as $key => $value){
+			['type' => $type ] = $value;
+
+			if(!isset($post_data[$key])){
+				$sanitize_data[$key] = $this->translate_data_type($type);
+				continue;
+			}
+			if($post_data[$key] === 'on'){
+				$sanitize_data[$key] = 1;
+				continue;
+			}
+			if(is_string($post_data[$key])){
+				$sanitize_data[$key] = sanitize_text_field($post_data[$key]);
+				continue;
+			}
+			$sanitize_data[$key] = filter_var_array(
+				$post_data[$key],
+				FILTER_SANITIZE_ENCODED
+			);
+
+		}
+
+		return $sanitize_data;
 	}
 
 	private function post_keys(mixed $section): array
 	{
+		$array_type = ['type' => 'array'];
+		$string_type = ['type' => 'string'];
+		$boolean_type = ['type' => 'boolean'];
+
 		return match($section){
-			'general' => array_column($this->sections()[$section]['fields'], 'name'),
-			'network_api_keys' => [
-				'networks_to_post',
-				'facebook',
-				'linkedin',
-				'x',
-				'oa_rebrandly_api',
-				'oa_rebrandly_shortlink',
+			'general' => [
+				'repeat_cycle' => $boolean_type,
+				'pause_all_schedules' => $boolean_type,
+				'keep_records' => $boolean_type,
 			],
-			'post' => ['share_on_publish']
+			'network_api_keys' => [
+				'networks_to_post' => $array_type,
+				'facebook' => $array_type,
+				'linkedin' => $array_type,
+				'x' => $array_type,
+				'oa_rebrandly_api' => $string_type,
+				'oa_rebrandly_shortlink' => $string_type,
+			],
+			'post' => ['share_on_publish' => $array_type]
+		};
+	}
+
+	private function translate_data_type(mixed $type): array|int|string
+	{
+		return match ($type){
+			'array' => [],
+			'string' => '',
+			'boolean' => 0,
 		};
 	}
 }

@@ -34,7 +34,9 @@ class Input implements Renderable {
 		if($attributes['type'] === 'checkbox'){
 			$input_attributes['checked'] = $attributes['checked'] ?? false;
 		}
-
+		if(isset($attributes['disabled'])){
+			$input_attributes['disabled'] = $attributes['disabled'];
+		}
 		if ( isset( $attributes['custom_inputs'] ) ) {
 			$input_attributes = array_merge( $input_attributes, $attributes['custom_inputs'] );
 		}
