@@ -95,7 +95,23 @@ class Network_Accounts_Tab implements Tab_Interface {
 		return true;
 	}
 	public function networks(): array {
-		return $this->network_collection->get_all();
+		$clients = $this->network_collection->get_all();
+
+		$links = [];
+		foreach($clients as $network => $client){
+			try {
+				$links[] = [
+					'label' => sprintf(__("Login to %s",'nevamiss'), ucfirst($network)),
+					'url' => $client->auth_link(),
+				];
+			}catch(\Exception $exception){
+				$links[] = [
+					'label' => sprintf(__('You need to setup %s account here', 'nevamiss'), $network),
+					'url' => admin_url("admin.php?page=nevamiss-settings&tab=general&section=network_api_keys")
+				];
+			}
+		}
+		return $links;
 	}
 	public function login_links(): bool|string {
 		ob_start();

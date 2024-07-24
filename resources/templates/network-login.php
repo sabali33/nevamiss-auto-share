@@ -10,7 +10,6 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
  * @var Network_Clients_Interface $network_client
  */
 
-foreach ($this->networks() as $network_slug => $network_client){
-	$network = ucfirst($network_slug);
-	printf("<a href='%s'> %s $network</a>", $network_client->auth_link(), __('Login to', 'nevamiss'));
+foreach ($this->networks() as $network_data){
+	printf("<a href='%s'> %s </a>", $network_data['url'], $network_data['label']);
 }

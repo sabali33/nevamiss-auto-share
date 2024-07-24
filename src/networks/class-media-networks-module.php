@@ -28,10 +28,11 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 				 * @var Settings $settings
 				 */
 				$settings = $container->get( Settings::class );
+				$credentials = $settings->network_credentials( 'facebook' );
 
 				return new Facebook_Client(
 					$container->get( Http_Request::class ),
-					$settings->network_credentials( 'facebook' )
+					$credentials
 				);
 			},
 			X_Client::class                 => function ( ContainerInterface $container ) {

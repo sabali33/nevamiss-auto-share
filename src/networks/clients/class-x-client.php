@@ -8,12 +8,12 @@ use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Http_Request;
 use Nevamiss\Services\Settings;
-use Random\RandomException;
+use function PHPUnit\Framework\assertIsBool;
 
 class X_Client implements Network_Clients_Interface {
-
-	private string $client_id;
-	private string $client_secret;
+	use Has_Credentials_Trait;
+	private ?string $client_id;
+	private ?string $client_secret;
 	private string $redirect_url;
 	private string $root_auth;
 	private string $root_api;
@@ -22,16 +22,20 @@ class X_Client implements Network_Clients_Interface {
 	use Request_Parameter_Trait;
 
 	public function __construct( private Http_Request $request, private Settings $settings, array $api_credentials ) {
-		$this->client_id       = $api_credentials['client_id'];
-		$this->client_secret   = $api_credentials['client_secret'];
-		$this->redirect_url    = $api_credentials['redirect_url'];
+		$this->client_id       = $api_credentials['client_id'] ?? null;
+		$this->client_secret   = $api_credentials['client_secret'] ?? null;
+		$this->redirect_url    = admin_url( "admin-post.php?action=x");
 		$this->root_auth       = 'https://twitter.com/i/oauth2/authorize';
 		$this->root_api        = 'https://api.twitter.com/2';
 		$this->upload_root_api = 'https://upload.twitter.com/1.1';
 	}
 
 
+	/**
+	 * @throws \Exception
+	 */
 	public function auth_link(): string {
+		$this->has_credentials($this->client_id, $this->client_secret);
 		$code_challenge = $this->challenge_code();
 		set_transient( 'nevamiss-x-code-challenge', $code_challenge, 60 * 60 );
 		return add_query_arg(

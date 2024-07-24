@@ -12,10 +12,10 @@ use Nevamiss\Services\Http_Request;
 use Nevamiss\Services\Settings;
 
 class Linkedin_Client implements Network_Clients_Interface {
-
-	private string $client_id;
+	use Has_Credentials_Trait;
+	private ?string $client_id;
 	private string $redirect_url;
-	private string $secret;
+	private ?string $secret;
 	private string $root;
 	private string $root_api;
 	private string $auth_root;
@@ -34,9 +34,9 @@ class Linkedin_Client implements Network_Clients_Interface {
 		array $api
 	) {
 
-		$this->client_id        = $api['client_id'];
-		$this->redirect_url     = $api['redirect_url'];
-		$this->secret           = $api['client_secret'];
+		$this->client_id        = $api['client_id'] ?? null;
+		$this->redirect_url     = admin_url( "admin-post.php?action=linkedin");
+		$this->secret           = $api['client_secret'] ?? null;
 		$this->root             = 'https://www.linkedin.com/';
 		$this->auth_root        = "{$this->root}oauth/v2/authorization";
 		$this->root_api         = 'https://api.linkedin.com/v2';
@@ -50,7 +50,13 @@ class Linkedin_Client implements Network_Clients_Interface {
 			'r_organization_admin',
 		);
 	}
-	public function auth_link( array $scope = array() ): string {
+
+	/**
+	 * @throws Exception
+	 */
+	public function auth_link(array $scope = array() ): string {
+
+		$this->has_credentials($this->client_id, $this->secret);
 
 		return add_query_arg(
 			array(

@@ -328,6 +328,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		if(!$this->authorized()){
 			wp_die('unathorized');
 		}
+		
 		$data = $this->extract_data($_POST);
 		$section = sanitize_text_field($_POST['section']);
 		$settings = get_option(self::GENERAL_SETTINGS);

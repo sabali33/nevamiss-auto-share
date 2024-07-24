@@ -10,6 +10,7 @@ use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Http_Request;
 
 class Facebook_Client implements Network_Clients_Interface {
+	use Has_Credentials_Trait;
 	private string $auth_dialog;
 	private string $root_url;
 	private string $auth_url;
@@ -19,6 +20,7 @@ class Facebook_Client implements Network_Clients_Interface {
 
 	/**
 	 * @param array{client_id: string, redirect_url: mixed, client_secret: string} $credentials
+	 * @throws Exception
 	 */
 	public function __construct( private Http_Request $request, private array $credentials ) {
 		$this->auth_dialog = 'https://www.facebook.com/v20.0/dialog/oauth';
@@ -26,14 +28,21 @@ class Facebook_Client implements Network_Clients_Interface {
 		$this->root_url_versioned = 'https://graph.facebook.com/v20.0/';
 		$this->auth_url           = "{$this->root_url_versioned}oauth/access_token";
 		$this->root_url           = 'https://graph.facebook.com/';
+
 	}
 
-	public function auth_link( array $scope = array() ): string {
+	/**
+	 * @throws Exception
+	 */
+	public function auth_link(array $scope = array() ): string {
+
+		$this->has_credentials($this->credentials['client_id'], $this->credentials['client_secret']);
+
 		return add_query_arg(
 			array(
 				'client_id'     => $this->credentials['client_id'],
 				'client_secret' => $this->credentials['client_secret'],
-				'redirect_uri'  => $this->credentials['redirect_url'],
+				'redirect_uri'  => admin_url( "admin-post.php?action=facebook"),
 				'auth_type'     => 'rerequest',
 				'config_id'     => '2143935749319824',
 				'state'         => wp_create_nonce( 'nevamiss-facebook-secret' ),
