@@ -276,6 +276,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				$field_component[] = $this->to_component($sub_field);
 
 			}
+
 			$sub_field_components_wrap = \Nevamiss\component(
 				Wrapper::class,
 				[
