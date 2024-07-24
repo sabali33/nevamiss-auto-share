@@ -66,7 +66,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		];
 		$network_api_keys = $settings['network_api_keys'] ?? [
 			'networks_to_post' => ['facebook', 'x'],
-			'facebook' => [ 'app_id' => '', 'app_secret' => ''],
+			'facebook' => [ 'client_id' => '', 'client_secret' => ''],
 			'x' => [ 'client_id' => '', 'client_secret' => ''],
 			'linkedin' => [ 'client_id' => '', 'client_secret' => ''],
 			'oa_rebrandly_api' => '',
@@ -91,7 +91,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 					),
 					array(
 						'name'  => 'pause_all_schedules',
-						'label' => __( 'Pause Posting all schedules', 'nevamiss' ),
+						'label' => __( 'Pause posting all schedules', 'nevamiss' ),
 						'type'  => 'checkbox',
 						'checked' => $general['pause_all_schedules'],
 						'class' => 'network-list',
@@ -116,19 +116,19 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'checked' => in_array('facebook', $network_api_keys['networks_to_post']),
 						'sub_fields' => array(
 							array(
-								'name'        => 'facebook[app_id]',
+								'name'        => 'facebook[client_id]',
 								'label'       => __( 'App ID', 'nevamiss' ),
 								'type'        => 'text',
-								'value'       => $network_api_keys['facebook']['app_id'],
-								'placeholder' => 'Enter App ID',
+								'value'       => $network_api_keys['facebook']['client_id'],
+								'placeholder' => __('Enter App ID', 'Nevamiss'),
 								'class'       => 'facebook-app-id',
 
 							),
 							array(
-								'name'        => 'facebook[app_secret]',
+								'name'        => 'facebook[client_secret]',
 								'label'       => __( 'App Secret', 'nevamiss' ),
-								'type'        => 'password',
-								'value'       => $network_api_keys['facebook']['app_secret'],
+								'type'        => 'text',
+								'value'       => $network_api_keys['facebook']['client_secret'],
 								'placeholder' => __('Enter App Secret', 'nevamiss'),
 								'class'       => 'facebook-app-secret',
 							),
@@ -153,7 +153,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 							array(
 								'name'        => 'x[client_secret]',
 								'label'       => __( 'Client Secret', 'nevamiss' ),
-								'type'        => 'password',
+								'type'        => 'text',
 								'value'       => $network_api_keys['x']['client_secret'],
 								'placeholder' => __('Enter Client Secret', 'nevamiss'),
 								'class'       => 'x-client-secret',
@@ -179,7 +179,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 							array(
 								'name'        => 'linkedin[client_secret]',
 								'label'       => __( 'Client Secret', 'nevamiss' ),
-								'type'        => 'password',
+								'type'        => 'text',
 								'value'       => $network_api_keys['linkedin']['client_secret'],
 								'placeholder' => __('Enter Client Secret', 'nevamiss'),
 								'class'       => 'linkedin-client-secret',
@@ -240,8 +240,10 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		return $tabs_components;
 	}
 
-	public function redirect(array $array)
+	public function redirect(array $data): void
 	{
+		$url = add_query_arg($data, admin_url('admin.php?page=nevamiss-settings&tab=general'));
+		wp_redirect($url);
 	}
 
 	/**
@@ -322,8 +324,18 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			update_option(self::GENERAL_SETTINGS, [$section => $data]);
 			return;
 		}
+
 		$settings[$section]  = $data;
+
 		update_option(self::GENERAL_SETTINGS, $settings);
+
+		$this->redirect([
+			'status' => 'success',
+			'message' => __('Settings saved!', 'nevamiss'),
+			'section' => $section
+		]);
+
+		exit;
 	}
 
 	private function authorized(): bool
