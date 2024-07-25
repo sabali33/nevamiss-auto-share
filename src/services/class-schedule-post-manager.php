@@ -6,7 +6,6 @@ namespace Nevamiss\Services;
 
 use Exception;
 use Nevamiss\Application\Not_Found_Exception;
-use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
@@ -21,7 +20,7 @@ class Schedule_Post_Manager {
 		private Factory $factory,
 		private Task_Repository $task_repository,
 		private Network_Post_Provider $schedule_provider,
-		private Query $query,
+		private Settings $settings,
 	) {
 	}
 
@@ -32,6 +31,10 @@ class Schedule_Post_Manager {
 	 * @throws Exception
 	 */
 	public function run( int $schedule_id ): void {
+
+		if($this->settings->pause_all_schedules()){
+			return;
+		}
 		/**
 		 * @var Schedule $schedule
 		 */

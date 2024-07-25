@@ -53,4 +53,9 @@ class Settings {
 	{
 		return $this->setting('repeat_cycle');
 	}
+
+	public function pause_all_schedules()
+	{
+		return $this->setting('pause_all_schedules');
+	}
 }
