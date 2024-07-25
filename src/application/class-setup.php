@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nevamiss\Application;
 
 use Exception;
+use Nevamiss\Services\Settings;
 use function Nevamiss\error_notice;
 
 class Setup {
@@ -13,7 +14,7 @@ class Setup {
 	private static DB $db;
 	private static ?Setup $instance = null;
 
-	public function __construct( string $db ) {
+	public function __construct( string $db, private Settings $settings ) {
 		global $wpdb;
 
 		static::$db = new $db( $wpdb );
@@ -43,6 +44,10 @@ class Setup {
 	}
 
 	public function deactivate(): void {
+
+		if($this->settings->keep_records()){
+			return;
+		}
 		self::$db->drop_tables();
 	}
 }

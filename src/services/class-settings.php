@@ -58,4 +58,9 @@ class Settings {
 	{
 		return $this->setting('pause_all_schedules');
 	}
+
+	public function keep_records()
+	{
+		return $this->setting('keep_records');
+	}
 }
