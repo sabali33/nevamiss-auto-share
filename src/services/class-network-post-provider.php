@@ -173,14 +173,19 @@ class Network_Post_Provider {
 			error_log( 'Error from Nevamiss: unable to retrieve Schedule Queue' );
 			return array();
 		}
+		$remaining_queue_posts_count = $schedule_queue->post_count_to_share();
+
 		$post_ids = array_slice( $schedule_queue->all_posts_ids(), 0, (int) $posts_count );
 
+		if(count($post_ids) > $remaining_queue_posts_count && !$this->settings->repeat_cycle()){
+			$post_ids = array_slice($post_ids, 0, $remaining_queue_posts_count);
+		}
 		return $this->query->query( array( 'post__in' => $post_ids ) );
 	}
 
 	/**
 	 * @param Network_Account $network_account
-	 * @return mixed
+	 * @return Network_Account
 	 * @throws \Exception
 	 */
 	private function new_network_account( Network_Account $network_account ): Network_Account {

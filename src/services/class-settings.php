@@ -48,4 +48,9 @@ class Settings {
 			$content_type :
 			'article';
 	}
+
+	public function repeat_cycle()
+	{
+		return $this->setting('repeat_cycle');
+	}
 }

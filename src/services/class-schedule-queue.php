@@ -18,7 +18,7 @@ class Schedule_Queue {
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
 		private Schedule_Queue_Repository $queue_repository,
-		private Query $query
+		private Query $query,
 	) {
 	}
 
@@ -111,8 +111,10 @@ class Schedule_Queue {
 
 		$shared_posts         = array( ...$shared_posts, $post_id );
 		$sorted_all_posts_ids = array( ...$all_posts_ids, $post_to_remove );
+		$has_cycle_ended = false;
 
 		if ( $shared_posts == $sorted_all_posts_ids ) {
+			$has_cycle_ended = true;
 			$shared_posts = null;
 			$cycles       = $schedule_queue->cycles() + 1;
 		}
@@ -125,6 +127,11 @@ class Schedule_Queue {
 				'cycles'           => $cycles,
 			),
 		);
+
+		if($has_cycle_ended){
+
+			do_action('nevamiss_schedule_cycle_completed', $schedule_id);
+		}
 	}
 
 	/**
