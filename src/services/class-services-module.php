@@ -108,7 +108,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				$container->get( Factory::class ),
 				$container->get( Task_Repository::class ),
 				$container->get( Network_Post_Provider::class ),
-				$container->get( Query::class )
+				$container->get( Settings::class ),
 			),
 			Task_Runner::class                 => fn( ContainerInterface $container ): Task_Runner => new Task_Runner(
 				$container->get( Factory::class ),
