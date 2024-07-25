@@ -6,6 +6,7 @@ use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
+use Nevamiss\Services\Settings;
 use Psr\Container\ContainerInterface;
 
 class Application_Module implements ServiceModule, ExecutableModule {
@@ -19,7 +20,8 @@ class Application_Module implements ServiceModule, ExecutableModule {
 				global $wpdb;
 				return new DB( $wpdb );
 			},
-			Setup::class  => static fn() => new Setup( DB::class ),
+			Setup::class  => static fn(ContainerInterface $container) => new Setup(
+				DB::class, $container->get(Settings::class) ),
 			Query::class  => fn() => new Query( new \WP_Query() ),
 			Assets::class => fn() => new Assets(),
 		);

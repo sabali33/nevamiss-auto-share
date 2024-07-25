@@ -14,7 +14,7 @@ class Setup {
 	private static DB $db;
 	private static ?Setup $instance = null;
 
-	public function __construct( string $db, private Settings $settings ) {
+	public function __construct( string $db, private ?Settings $settings ) {
 		global $wpdb;
 
 		static::$db = new $db( $wpdb );
@@ -24,7 +24,7 @@ class Setup {
 		if ( self::$instance ) {
 			return;
 		}
-		self::$instance = new self( $db );
+		self::$instance = new self( $db, null );
 
 		register_activation_hook(
 			NEVAMISS_ROOT,
