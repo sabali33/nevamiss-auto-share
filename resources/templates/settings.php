@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Nevamiss\Presentation\Tabs\General_Tab;
+use Nevamiss\Presentation\Tabs\Logs_Tab;
 use Nevamiss\Presentation\Tabs\Network_Accounts_Tab;
 use Nevamiss\Presentation\Tabs\Stats_Tab;
 use Nevamiss\Presentation\Pages\Settings_Page;
@@ -50,8 +51,8 @@ $tabs = $this->tabs();
     <div class="tab-content">
         <?php
         switch ($active_tab) {
-            case General_Tab::SLUG:
-                echo $this->tab(General_Tab::SLUG)->render();
+            case Logs_Tab::SLUG:
+	            echo "Logs";
                 break;
             case Network_Accounts_Tab::SLUG:
 	            echo $this->tab(Network_Accounts_Tab::SLUG)->render();
@@ -60,7 +61,8 @@ $tabs = $this->tabs();
 	            echo $this->tab(Stats_Tab::SLUG)->render();
                 break;
             default:
-                echo "Logs";
+	            echo $this->tab(General_Tab::SLUG)->render();
+
 
         }
         ?>

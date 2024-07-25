@@ -252,15 +252,13 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		wp_redirect($url);
 	}
 
-	/**
-	 * @throws Not_Found_Exception
-	 */
 	public function render_sections(string $current_section)
 	{
 		$sections = $this->sections();
 
 		if(!isset($sections[$current_section]['fields'])){
-			return;
+			$this->redirect([]);
+			exit;
 		}
 		$section_components = [];
 		foreach( $sections[$current_section]['fields'] as $field){
@@ -271,7 +269,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			}
 
 			$field_component = [];
-			foreach ($field['sub_fields'] as $parent_value => $sub_field){
+			foreach ($field['sub_fields'] as $sub_field){
 
 				$field_component[] = $this->to_component($sub_field);
 
@@ -328,7 +326,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		if(!$this->authorized()){
 			wp_die('unathorized');
 		}
-		
+
 		$data = $this->extract_data($_POST);
 		$section = sanitize_text_field($_POST['section']);
 		$settings = get_option(self::GENERAL_SETTINGS);
