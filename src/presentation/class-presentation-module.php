@@ -74,6 +74,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				return new Post_Meta(
 					$container->get( Factory::class ),
 					$container->get( Network_Post_Provider::class ),
+					$container->get(Settings::class),
+					$container->get(Network_Account_Repository::class)
 				);
 			},
 			Schedules_Table_List::class        => fn( ContainerInterface $container ) => new Schedules_Table_List(

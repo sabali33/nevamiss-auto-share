@@ -63,4 +63,14 @@ class Settings {
 	{
 		return $this->setting('keep_records');
 	}
+
+	public function share_on_publish()
+	{
+		return $this->setting('share_on_publish');
+	}
+
+	public function allowed_post_types()
+	{
+		return $this->share_on_publish();
+	}
 }

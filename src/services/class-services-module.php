@@ -15,6 +15,7 @@ use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Networks\Network_Clients;
+use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
 use Nevamiss\Services\Row_Action_Handlers\Schedule_Row_Action_Handler;
 use Nevamiss\Services\Row_Action_Handlers\Stats_Row_Action_Handler;
@@ -97,6 +98,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			)
 		);
 
+		add_action('wp_ajax_nevamiss_instant_share', array($container->get(Ajax::class), 'instant_posting_callback'));
+
 		return true;
 	}
 
@@ -163,6 +166,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				return new Accounts_Manager( $container->get( Network_Account_Repository::class ) );
 			},
 			Stats_Manager::class               => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
+			Ajax::class => fn(ContainerInterface $container) => new Ajax($container->get(Post_Meta::class))
 		);
 	}
 }

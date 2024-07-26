@@ -28,3 +28,12 @@
 .wrap .tab-content .field-wrap{
     margin: 2rem 0;
 }
+
+/**
+Post meta settings
+ */
+
+.nevamiss-instant-share-list .success-message,
+.nevamiss-instant-share-list .success-error{
+    margin-left: 2rem;
+}

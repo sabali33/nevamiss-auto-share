@@ -2,6 +2,46 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./resources/js/post-meta.ts":
+/*!***********************************!*\
+  !*** ./resources/js/post-meta.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PostMeta: () => (/* binding */ PostMeta)
+/* harmony export */ });
+const jQuery = window.jQuery;
+class PostMeta {
+  static init() {
+    const accountList = document.querySelector('.nevamiss-instant-share-list');
+    if (!accountList) {
+      return;
+    }
+    accountList.addEventListener('click', event => {
+      event.preventDefault();
+      const target = event.target;
+      if (!target || target.tagName.toLowerCase() !== 'a') {
+        return;
+      }
+      target.insertAdjacentHTML('afterend', '<span class="spinner is-active"></span>');
+      const url = target.getAttribute('href');
+      jQuery.get(url).done(res => {
+        console.log(res);
+        accountList.querySelector('.spinner').remove();
+        target.insertAdjacentHTML('afterend', '<span class="success-message">Successfully Shared </span>');
+      }).fail(err => {
+        console.log(err);
+        accountList.querySelector('.spinner').remove();
+        target.insertAdjacentHTML('afterend', '<span class="error-message"> Error Sharing </span>');
+      });
+    });
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/schedule-forms/index.ts":
 /*!**********************************************!*\
   !*** ./resources/js/schedule-forms/index.ts ***!
@@ -2994,11 +3034,14 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _schedule_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schedule-forms */ "./resources/js/schedule-forms/index.ts");
 /* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings */ "./resources/js/settings.ts");
+/* harmony import */ var _post_meta__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./post-meta */ "./resources/js/post-meta.ts");
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
   _schedule_forms__WEBPACK_IMPORTED_MODULE_0__["default"].init();
   _settings__WEBPACK_IMPORTED_MODULE_1__.Settings.init();
+  _post_meta__WEBPACK_IMPORTED_MODULE_2__.PostMeta.init();
 });
 /******/ })()
 ;
