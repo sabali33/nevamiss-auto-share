@@ -136,8 +136,8 @@ class X_Client implements Network_Clients_Interface {
 	 * @throws \Exception
 	 */
 	public function post( array $data, Network_Account $account ) {
-		$media = $this->upload_media( $data['image_url'], $account->token() );
-		return;
+//		$media = $this->upload_media( $data['image_url'], $account->token() );
+//		return;
 		$args = $this->auth_header( $account->token() );
 
 		$args['headers']['Accept'] = 'application/json';

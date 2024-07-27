@@ -189,13 +189,17 @@ class Network_Post_Provider {
 	 * @throws \Exception
 	 */
 	private function new_network_account( Network_Account $network_account ): Network_Account {
+
 		$parent = $this->account_repository->get_all( array( 'where' => array( 'remote_account_id' => $network_account->parent_remote_id() ) ) );
 		if ( empty( $parent ) ) {
 			throw new \Exception( 'Token is empty' );
 		}
+		/**
+		 * @var Network_Account $parent
+		 */
 		[$parent] = $parent;
 
-		$network_account_arr = array_merge( $network_account->to_array(), array( 'token' => $parent['token'] ) );
+		$network_account_arr = array_merge( $network_account->to_array(), array( 'token' => $parent->token() ) );
 
 		return $this->factory->new( Network_Account::class, $network_account_arr );
 	}

@@ -138,7 +138,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function post( array $data, Network_Account $account ): array {
+	public function post( array $data, Network_Account $account ): string {
 		$share_url = sprintf( '%srest/posts', $this->root_api_wov );
 		$urn       = $this->get_urn( $account );
 		$image_url = $data['image_url'];

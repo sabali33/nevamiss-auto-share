@@ -28,7 +28,7 @@ class Http_Request {
 	/**
 	 * @throws Exception
 	 */
-	public function post( string $url, array $args ): array {
+	public function post( string $url, array $args ): array|string {
 
 		$response = wp_remote_post(
 			$url,
@@ -44,8 +44,10 @@ class Http_Request {
 			throw new Exception( $response['response']['message'] );
 		}
 
-		if ( ! $body && isset( $args['headers']['Linkedin-Version'] ) ) {
-			return $response['headers']['data']['x-restli-id'];
+		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ) )  ) {
+			$headers = $response['headers']->getAll();
+
+			return $headers['x-restli-id'];
 		}
 
 		return json_decode( $body, true );

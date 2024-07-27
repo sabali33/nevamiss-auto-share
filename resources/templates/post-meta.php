@@ -11,10 +11,18 @@ use Nevamiss\Presentation\Post_Meta\Post_Meta;
  */
 
 ?>
+<?php
+$accounts = $this->accounts();
+if(empty($accounts)){
+	$logins_page = admin_url('admin.php?page=nevamiss-settings&tab=network-accounts');
+	printf(__('No Accounts created yet. <a href="%s">Login to create one</a>', 'nevamiss'), $logins_page);
+}
+
+?>
 <ul class="nevamiss-instant-share-list">
 <?php
 
-    foreach($this->accounts() as $account){
+    foreach($accounts as $account){
         $url = add_query_arg(
             [
                 'action' => 'nevamiss_instant_share',

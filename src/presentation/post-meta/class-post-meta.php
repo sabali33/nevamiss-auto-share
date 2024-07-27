@@ -25,7 +25,7 @@ class Post_Meta {
 	public function meta_boxes(): void {
 		$allowed_post_types = $this->settings->allowed_post_types();
 
-		add_meta_box( 'nevamiss-auto-share', __( 'Auto Share', 'nevamiss' ), array( $this, 'show_meta_box' ), array( $allowed_post_types ) );
+		add_meta_box( 'nevamiss-auto-share', __( 'Auto Share', 'nevamiss' ), array( $this, 'show_meta_box' ), array( $allowed_post_types ), 'side' );
 	}
 
 	public function show_meta_box(\WP_Post $post): void
