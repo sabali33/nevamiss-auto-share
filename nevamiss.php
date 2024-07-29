@@ -66,7 +66,9 @@ function error_notice( string $message ): void {
 
 try {
 	autoload();
-	Setup::instance( DB::class );
+	global $wpdb;
+
+	Setup::instance( $wpdb );
 } catch ( Exception $exception ) {
 	error_notice( $exception->getMessage() );
 }
