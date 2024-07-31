@@ -87,11 +87,21 @@ class Date implements Date_Interface {
 		return $date->format( 'Y-m-d H:i:s' );
 	}
 
-	public function format( string $date ): string {
-		return $this->date->format( $date );
+	public function format( string $date = null ): string {
+		$date_format = $date ?? "{$this->date_format()} {$this->time_format()}";
+		return $this->date->format( $date_format );
 	}
 
 	public function modify( string $modifier ): void {
 		$this->date->modify( $modifier );
+	}
+
+	public function date_format(): string
+	{
+		return get_option('date_format');
+	}
+	public function time_format(): string
+	{
+		return get_option('time_format');
 	}
 }

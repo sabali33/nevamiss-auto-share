@@ -121,7 +121,7 @@ class Schedules_Table_List extends \WP_List_Table {
 		}
 
 		$date           = Date::create_from_format( $schedule->start_date() );
-		$date_formatted = $date->format( 'dS F Y ' );
+		$date_formatted = $date->format();
 		$class_name     = $date->is_late() ? 'started' : 'not-started';
 
 		echo "<span class='$class_name'> $date_formatted </span>";

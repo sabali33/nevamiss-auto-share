@@ -334,7 +334,9 @@ class Schedule_Queue {
 
 		$time_units['minute'] = ceil( $remaining_seconds / 60 );
 
-		$time_units['finish_date'] = $end_date->format( 'Y-m-d @ H:i:s' );
+		$format = "{$end_date->date_format()} @ {$end_date->time_format()}";
+
+		$time_units['finish_date'] = $end_date->format( $format );
 
 		return $time_units;
 	}

@@ -83,7 +83,7 @@ class Stats_Table_List extends \WP_List_Table {
 	}
 	public function column_posted_on( Stats $account ): void {
 		$date = Date::create_from_format( $account->posted_on(), 'Y-m-d H:i:s' );
-		echo $date->format( 'dS M Y @ H:i' );
+		echo $date->format();
 	}
 
 	public function column_schedule_id( Stats $stats ): void {
