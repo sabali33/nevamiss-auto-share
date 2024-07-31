@@ -47,7 +47,7 @@ trait Get_All_Trait {
 		}
 
 		$where_string    = array();
-		[$field, $value] = $options['search'];
+		[$field, $value] = $options['search'] ?? [null, null];
 		if ( $value ) {
 			return array( "$field LIKE '%{$this->wpdb->esc_like($value)}%'", null );
 		}

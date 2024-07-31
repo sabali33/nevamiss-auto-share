@@ -428,6 +428,7 @@ class Schedule_Queue {
 		$this->ensure_that_date_remains_current( $date );
 		$per_page            = (int) $schedule->query_args()['posts_per_page'];
 		$posting_times       = $schedule->daily_times();
+
 		$sharing_count_a_day = count( $posting_times );
 
 		$number_of_posting_per_day = $sharing_count_a_day * $per_page;
@@ -437,11 +438,19 @@ class Schedule_Queue {
 			return $this->hour_minute( $date, $end_date );
 		}
 
-		$time_units['months'] = floor( $posts_count / $number_of_posting_per_day );
+		$days_required_to_finish_posting = floor( $posts_count / $number_of_posting_per_day );
+
+		if($days_required_to_finish_posting > 29){
+			$time_units['months'] = $days_required_to_finish_posting;
+		}
+		$time_units['day'] = $days_required_to_finish_posting;
 		$remaining_posts      = $posts_count % $number_of_posting_per_day;
 
 		if ( $remaining_posts === 0 ) {
-			return array_merge( $time_units, $this->no_lower_time_units( $time_units ) );
+			$end_date = Date::create_from_format($date->format('Y-m-d H:i'), 'Y-m-d H:i');
+			$end_date->modify("+{$time_units['day']} day");
+
+			return $this->hour_minute( $date, $end_date );
 		}
 
 		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
