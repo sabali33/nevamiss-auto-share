@@ -27,7 +27,7 @@ class Assets {
 				'auto-share_page_schedules',
 				'dashboard_page_edit-schedule',
 				'auto-share_page_nevamiss-settings',
-				'auto-share_page_nevamiss-stats',
+				'auto-share_page_nevamiss-suggestions',
 				'post.php',
 				'post-new.php',
 			)

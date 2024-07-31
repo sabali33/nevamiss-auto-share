@@ -50,7 +50,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 
-			Stats_Page::class                  => static fn ( ContainerInterface $container ) => new Stats_Page(
+			Suggestions_Page::class                  => static fn ( ContainerInterface $container ) => new Suggestions_Page(
 				$container->get( Posts_Stats_Repository::class )
 			),
 
@@ -122,7 +122,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$container->get( Schedules_Page::class )->register();
 				$container->get( Settings_Page::class )->register();
 				$container->get( Schedule_View_Page::class )->register();
-				$container->get( Stats_Page::class )->register();
+				$container->get( Suggestions_Page::class )->register();
 				$container->get( Schedule_Form::class )->register();
 			}
 		);
