@@ -37,3 +37,23 @@ Post meta settings
 .nevamiss-instant-share-list .success-error{
     margin-left: 2rem;
 }
+.wrap.schedule-form form, .wrap .suggestion-form{
+    background: #ffffff;
+    padding: 30px;
+    margin: 0 auto;
+    border: solid 1px #c3c4c7;
+    max-width: 1000px;
+}
+.wrap .suggestion-form {
+    margin-top: 3rem !important;
+}
+.suggestion-form p {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+}
+.suggestion-form form{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
