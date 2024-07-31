@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services;
 
+use Exception;
 use Nevamiss\Services\Contracts\Date_Interface;
 
 class Date implements Date_Interface {
@@ -12,25 +13,43 @@ class Date implements Date_Interface {
 	public function __construct( private \DateTime $date ) {
 	}
 
-	public function timestamp( string $date = '', string $format = 'Y-m-d' ): int {
+	/**
+	 * @return \DateTimeZone|null
+	 * @throws Exception
+	 */
+	private static function timezone(): ?\DateTimeZone
+	{
+		$timezone_string = get_option('timezone_string');
+		$timezone = null;
+
+		if ($timezone_string) {
+			$timezone = new \DateTimeZone($timezone_string);
+		}
+		return $timezone;
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function timestamp(string $date = '', string $format = 'Y-m-d' ): int {
 		if ( $date ) {
 			self::create_from_format( $date, $format );
 		}
 		return $this->date->getTimestamp();
 	}
 
-	public function posting_time_in_week( array $week_days_time ): array {
-	}
-
-	public function posting_time_in_month( array $dates ): array {
-	}
-
+	/**
+	 * @throws Exception
+	 */
 	public static function now(): Date {
-		return new self( new \DateTime( 'now' ) );
+		return new self( new \DateTime( 'now', self::timezone() ) );
 	}
 
-	public static function create_from_format( string $date, string $format = 'Y-m-d' ): self {
-		return new self( \DateTime::createFromFormat( $format, $date ) );
+	/**
+	 * @throws Exception
+	 */
+	public static function create_from_format(string $date, string $format = 'Y-m-d' ): self {
+		return new self( \DateTime::createFromFormat( $format, $date, self::timezone() ) );
 	}
 
 	public function set_day( int $day ): void {
