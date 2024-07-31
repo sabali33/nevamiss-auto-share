@@ -8,7 +8,7 @@ use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Http_Request;
 use Nevamiss\Services\Settings;
-use function PHPUnit\Framework\assertIsBool;
+use Random\RandomException;
 
 class X_Client implements Network_Clients_Interface {
 	use Has_Credentials_Trait;
@@ -17,7 +17,7 @@ class X_Client implements Network_Clients_Interface {
 	private string $redirect_url;
 	private string $root_auth;
 	private string $root_api;
-	private $root_api_v1;
+	private string $upload_root_api;
 
 	use Request_Parameter_Trait;
 

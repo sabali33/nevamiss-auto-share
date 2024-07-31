@@ -5,7 +5,7 @@ namespace Nevamiss\Presentation\Pages;
 use Nevamiss\Presentation\Contracts\Renderable;
 
 abstract class Page implements Renderable {
-
+	use Notices_Trait;
 	protected string $title;
 	protected int $priority;
 	protected mixed $data;
@@ -64,4 +64,5 @@ abstract class Page implements Renderable {
 	public function page_url(): string {
 		return $this->page_url;
 	}
+
 }

@@ -29,6 +29,7 @@ class Schedule_Form extends Page {
 
 	/**
 	 * @throws Not_Found_Exception
+	 * @throws \Exception
 	 */
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
@@ -51,6 +52,7 @@ class Schedule_Form extends Page {
 
 		$this->schedule = ( isset( $_REQUEST['schedule_id'] ) && $_REQUEST['schedule_id'] ) ?
 		$this->schedule_repository->get( (int) $_REQUEST['schedule_id'] ) : null;
+
 	}
 
 	public function factory(): Factory {
@@ -309,8 +311,14 @@ class Schedule_Form extends Page {
 		if ( ! isset( $_POST['schedule_name'] ) ) {
 			return;
 		}
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' ) ) {
-			return;
+		if (!$this->is_authorized()) {
+
+			$this->redirect([
+				'page' => 'edit-schedule',
+				'status' => 'error',
+				'message' => __('Unauthorized', 'nevamiss'),
+			]);
+			exit;
 		}
 
 		$data = $this->schedule_repository->allowed_data( $_POST );
@@ -319,15 +327,12 @@ class Schedule_Form extends Page {
 
 		if ( ! empty( $this->validator->errors() ) ) {
 
-			wp_admin_notice(
-				join( ', ', $this->validator->errors() ),
-				array(
-					'type'               => 'error',
-					'dismissible'        => false,
-					'additional_classes' => array( 'inline', 'notice-alt' ),
-				)
-			);
-			return;
+			$this->redirect([
+				'page' => 'edit-schedule',
+				'status' => 'error',
+				'message' => join( ', ', $this->validator->errors() ),
+			]);
+			exit;
 		}
 
 		$data = $this->format_dates( $validated_data );
@@ -337,23 +342,29 @@ class Schedule_Form extends Page {
 		$schedules_url = admin_url( 'admin.php?page=schedules' );
 
 		try {
-			$this->schedule_repository->create( $data );
+			$schedule_id = $this->schedule_repository->create( $data );
 
-			$message = sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) );
-			$type    = 'success';
+			$message = rawurlencode(sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ));
+
+			$this->redirect([
+				'page' => 'edit-schedule',
+				'status' => 'success',
+				'message' => $message,
+				'schedule_id' => $schedule_id
+			]);
+
+			exit;
 
 		} catch ( \Exception $exception ) {
-			$message = $exception->getMessage();
-			$type    = 'error';
+
+			$this->redirect([
+				'page' => 'edit-schedule',
+				'status' => 'error',
+				'message' => $exception->getMessage(),
+			]);
+			exit;
 		}
-		wp_admin_notice(
-			$message,
-			array(
-				'type'               => $type,
-				'dismissible'        => false,
-				'additional_classes' => array( 'inline', 'notice-alt' ),
-			)
-		);
+
 	}
 
 	/**
@@ -364,8 +375,14 @@ class Schedule_Form extends Page {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' ) ) {
-			return;
+		if (!$this->is_authorized()) {
+			$this->redirect([
+				'page' => 'edit-schedule',
+				'status' => 'error',
+				'message' => __('Unauthorized', 'nevamiss'),
+				'schedule_id' => $this->schedule->id()
+			]);
+			exit;
 		}
 
 		$data = $this->schedule_repository->allowed_data( $_POST );
@@ -374,15 +391,13 @@ class Schedule_Form extends Page {
 
 		if ( ! empty( $this->validator->errors() ) ) {
 
-			wp_admin_notice(
-				join( ', ', $this->validator->errors() ),
-				array(
-					'type'               => 'error',
-					'dismissible'        => false,
-					'additional_classes' => array( 'inline', 'notice-alt' ),
-				)
-			);
-			return;
+			$this->redirect([
+				'page' => 'edit-schedule',
+				'status' => 'error',
+				'message' => join( ', ', $this->validator->errors() ),
+				'schedule_id' => $this->schedule->id()
+			]);
+			exit;
 		}
 
 		$data = $this->format_dates( $validated_data );
@@ -393,7 +408,8 @@ class Schedule_Form extends Page {
 
 		try {
 			$this->schedule_repository->update( $this->schedule()->id(), $data );
-			$message = sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) );
+			$message = rawurlencode(sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ));
+
 			$type    = 'success';
 
 			do_action( 'nevamiss_after_schedule_updated', $this->schedule );
@@ -402,15 +418,19 @@ class Schedule_Form extends Page {
 			$message = $exception->getMessage();
 			$type    = 'error';
 		}
-		wp_admin_notice(
-			$message,
-			array(
-				'type'               => $type,
-				'dismissible'        => false,
-				'additional_classes' => array( 'inline', 'notice-alt' ),
-			)
-		);
-		$this->schedule = $this->schedule_repository->get( $this->schedule->id() );
+
+		$this->redirect([
+			'page' => 'edit-schedule',
+			'status' => $type,
+			'message' => $message,
+			'schedule_id' => $this->schedule->id()
+		]);
+		exit;
+	}
+	public function redirect(array $data): void
+	{
+		$url = add_query_arg($data, admin_url('admin.php'));
+		wp_redirect($url);
 	}
 
 	private function format_dates( array $data ): array {
@@ -905,5 +925,25 @@ class Schedule_Form extends Page {
 	 */
 	private function hours(): array {
 		return range( 0, 23 );
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_authorized(): bool
+	{
+		return isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'nevamiss_create_schedule');
+	}
+
+	/**
+	 * @return array
+	 */
+	private function error_message(): array
+	{
+		return array(
+			'type' => 'error',
+			'dismissible' => false,
+			'additional_classes' => array('inline', 'notice-alt'),
+		);
 	}
 }

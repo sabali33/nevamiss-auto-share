@@ -23,9 +23,9 @@ class Facebook_Client implements Network_Clients_Interface {
 	 * @throws Exception
 	 */
 	public function __construct( private Http_Request $request, private array $credentials ) {
-		$this->auth_dialog = 'https://www.facebook.com/v20.0/dialog/oauth';
-
 		$this->root_url_versioned = 'https://graph.facebook.com/v20.0/';
+		$this->auth_dialog = "{$this->root_url_versioned}dialog/oauth";
+
 		$this->auth_url           = "{$this->root_url_versioned}oauth/access_token";
 		$this->root_url           = 'https://graph.facebook.com/';
 
@@ -104,7 +104,7 @@ class Facebook_Client implements Network_Clients_Interface {
 	 */
 	private function user_data( $access_token ): array {
 		return $this->request->get(
-			"https://graph.facebook.com/debug_token?input_token=$access_token&access_token=$access_token"
+			"{$this->root_url}debug_token?input_token=$access_token&access_token=$access_token"
 		);
 	}
 
