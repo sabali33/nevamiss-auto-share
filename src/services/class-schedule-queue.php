@@ -284,8 +284,6 @@ class Schedule_Queue {
 	private function estimate_monthly_schedule( Schedule $schedule, int $posts_count ): array {
 		$time_units = array();
 
-		$posts_count = 2;
-
 		$date     = Date::create_from_format( $schedule->start_date() );
 		$per_page = (int) $schedule->query_args()['posts_per_page'];
 
@@ -411,8 +409,7 @@ class Schedule_Queue {
 			$time_units['day'] = $days_from_week;
 		}
 		if ( $remaining_posts === 0 ) {
-
-			return $this->no_lower_time_units( $time_units );
+			return $this->exact_end_date($date, $time_units['day'], $posting_times[0]);
 		}
 
 		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
@@ -442,15 +439,14 @@ class Schedule_Queue {
 
 		if($days_required_to_finish_posting > 29){
 			$time_units['months'] = $days_required_to_finish_posting;
+		}else{
+			$time_units['day'] = $days_required_to_finish_posting;
 		}
-		$time_units['day'] = $days_required_to_finish_posting;
+
 		$remaining_posts      = $posts_count % $number_of_posting_per_day;
 
 		if ( $remaining_posts === 0 ) {
-			$end_date = Date::create_from_format($date->format('Y-m-d H:i'), 'Y-m-d H:i');
-			$end_date->modify("+{$time_units['day']} day");
-
-			return $this->hour_minute( $date, $end_date );
+			return $this->exact_end_date($date, $time_units['day'], $posting_times[0]);
 		}
 
 		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
@@ -533,5 +529,20 @@ class Schedule_Queue {
 
 	private function update_time( Date &$end_date, array $last_day ): void {
 		$end_date->set_time( $last_day['hour'], $last_day['minute'] );
+	}
+
+	/**
+	 * @param Date $date
+	 * @param $day
+	 * @param $last_day
+	 * @return array
+	 */
+	private function exact_end_date(Date $date, $day, $last_day): array
+	{
+		$end_date = Date::create_from_format($date->format('Y-m-d H:i'), 'Y-m-d H:i');
+		$end_date->modify("+{$day} day");
+		$this->update_time($end_date, $last_day);
+
+		return $this->hour_minute($date, $end_date);
 	}
 }
