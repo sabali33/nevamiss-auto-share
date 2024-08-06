@@ -31,10 +31,10 @@ class Input implements Renderable {
 			$input_attributes['max']  = $attributes['max'];
 			$input_attributes['step'] = $attributes['step'] ?? 1;
 		}
-		if($attributes['type'] === 'checkbox'){
+		if ( $attributes['type'] === 'checkbox' ) {
 			$input_attributes['checked'] = $attributes['checked'] ?? false;
 		}
-		if(isset($attributes['disabled'])){
+		if ( isset( $attributes['disabled'] ) ) {
 			$input_attributes['disabled'] = $attributes['disabled'];
 		}
 		if ( isset( $attributes['custom_inputs'] ) ) {

@@ -45,7 +45,7 @@ class Schedule_Queue {
 		$id = $this->queue_repository->create(
 			array(
 				'schedule_id'   => $schedule_id,
-				'all_posts_ids' => json_encode( $post_ids ),
+				'all_posts_ids' => wp_json_encode( $post_ids ),
 			)
 		);
 
@@ -111,26 +111,26 @@ class Schedule_Queue {
 
 		$shared_posts         = array( ...$shared_posts, $post_id );
 		$sorted_all_posts_ids = array( ...$all_posts_ids, $post_to_remove );
-		$has_cycle_ended = false;
+		$has_cycle_ended      = false;
 
 		if ( $shared_posts == $sorted_all_posts_ids ) {
 			$has_cycle_ended = true;
-			$shared_posts = null;
-			$cycles       = $schedule_queue->cycles() + 1;
+			$shared_posts    = null;
+			$cycles          = $schedule_queue->cycles() + 1;
 		}
 
 		$this->queue_repository->update(
 			$schedule_queue->id(),
 			array(
-				'shared_posts_ids' => $shared_posts ? json_encode( $shared_posts ) : null,
-				'all_posts_ids'    => json_encode( $sorted_all_posts_ids ),
+				'shared_posts_ids' => $shared_posts ? wp_json_encode( $shared_posts ) : null,
+				'all_posts_ids'    => wp_json_encode( $sorted_all_posts_ids ),
 				'cycles'           => $cycles,
 			),
 		);
 
-		if($has_cycle_ended){
+		if ( $has_cycle_ended ) {
 
-			do_action('nevamiss_schedule_cycle_completed', $schedule_id);
+			do_action( 'nevamiss_schedule_cycle_completed', $schedule_id );
 		}
 	}
 
@@ -196,7 +196,7 @@ class Schedule_Queue {
 			$this->queue_repository->update(
 				$schedule_queue->id(),
 				array(
-					'all_posts_ids' => json_encode( $updated_posts ),
+					'all_posts_ids' => wp_json_encode( $updated_posts ),
 				)
 			);
 			return;
@@ -214,7 +214,7 @@ class Schedule_Queue {
 		$this->queue_repository->update(
 			$schedule_queue->id(),
 			array(
-				'all_posts_ids' => json_encode( $updated_posts ),
+				'all_posts_ids' => wp_json_encode( $updated_posts ),
 			)
 		);
 	}
@@ -411,7 +411,7 @@ class Schedule_Queue {
 			$time_units['day'] = $days_from_week;
 		}
 		if ( $remaining_posts === 0 ) {
-			return $this->exact_end_date($date, $time_units['day'], $posting_times[0]);
+			return $this->exact_end_date( $date, $time_units['day'], $posting_times[0] );
 		}
 
 		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
@@ -425,8 +425,8 @@ class Schedule_Queue {
 
 		// Ensure that date remains current
 		$this->ensure_that_date_remains_current( $date );
-		$per_page            = (int) $schedule->query_args()['posts_per_page'];
-		$posting_times       = $schedule->daily_times();
+		$per_page      = (int) $schedule->query_args()['posts_per_page'];
+		$posting_times = $schedule->daily_times();
 
 		$sharing_count_a_day = count( $posting_times );
 
@@ -439,16 +439,16 @@ class Schedule_Queue {
 
 		$days_required_to_finish_posting = floor( $posts_count / $number_of_posting_per_day );
 
-		if($days_required_to_finish_posting > 29){
+		if ( $days_required_to_finish_posting > 29 ) {
 			$time_units['months'] = $days_required_to_finish_posting;
-		}else{
+		} else {
 			$time_units['day'] = $days_required_to_finish_posting;
 		}
 
-		$remaining_posts      = $posts_count % $number_of_posting_per_day;
+		$remaining_posts = $posts_count % $number_of_posting_per_day;
 
 		if ( $remaining_posts === 0 ) {
-			return $this->exact_end_date($date, $time_units['day'], $posting_times[0]);
+			return $this->exact_end_date( $date, $time_units['day'], $posting_times[0] );
 		}
 
 		$end_date = $this->last_cycle_date( $date, $remaining_posts, $schedule );
@@ -534,17 +534,16 @@ class Schedule_Queue {
 	}
 
 	/**
-	 * @param Date $date
+	 * @param Date     $date
 	 * @param $day
 	 * @param $last_day
 	 * @return array
 	 */
-	private function exact_end_date(Date $date, $day, $last_day): array
-	{
-		$end_date = Date::create_from_format($date->format('Y-m-d H:i'), 'Y-m-d H:i');
-		$end_date->modify("+{$day} day");
-		$this->update_time($end_date, $last_day);
+	private function exact_end_date( Date $date, $day, $last_day ): array {
+		$end_date = Date::create_from_format( $date->format( 'Y-m-d H:i' ), 'Y-m-d H:i' );
+		$end_date->modify( "+{$day} day" );
+		$this->update_time( $end_date, $last_day );
 
-		return $this->hour_minute($date, $end_date);
+		return $this->hour_minute( $date, $end_date );
 	}
 }

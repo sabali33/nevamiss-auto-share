@@ -12,9 +12,10 @@ trait Delete_Trait {
 	 * @throws Exception
 	 */
 	public function delete( int $id ): bool {
-		$sql = $this->wpdb->prepare( "DELETE FROM {$this->table_name()} WHERE id='%s'", $id );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql = $this->wpdb->prepare( "DELETE FROM {$this->table_name()} WHERE id= %s", $id );
 
-		$entity = $this->wpdb->query( $sql );
+		$entity = $this->wpdb->query( $sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( ! $entity ) {
 			$entity_name = self::ENTITY_NAME;

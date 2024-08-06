@@ -44,7 +44,7 @@ class Http_Request {
 			throw new Exception( $response['response']['message'] );
 		}
 
-		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ) )  ) {
+		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ) ) ) {
 			$headers = $response['headers']->getAll();
 
 			return $headers['x-restli-id'];

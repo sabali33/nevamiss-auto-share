@@ -11,7 +11,7 @@ class Suggestions_Page extends Page {
 	public function __construct( Posts_Stats_Repository $stats ) {
 		parent::__construct(
 			$stats,
-			__('Suggestions', 'nevamiss'),
+			__( 'Suggestions', 'nevamiss' ),
 			self::SLUG,
 			10,
 			Auto_Share_Page::SLUG,
@@ -19,57 +19,57 @@ class Suggestions_Page extends Page {
 		);
 	}
 
-	public function maybe_process_form()
-	{
-		if(empty($_POST)){
+	public function maybe_process_form() {
+		if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return;
 		}
-		if(!$this->authorize()){
-			$this->redirect([
-				'message' => __('Unauthorized', 'nevamiss'),
-				'status' => 'error',
-			]);
+		if ( ! $this->authorize() ) {
+			$this->redirect(
+				array(
+					'message' => __( 'Unauthorized', 'nevamiss' ),
+					'status'  => 'error',
+				)
+			);
 			exit;
 		}
 
-		$suggestion_data = $this->extract_data($_POST);
+		$suggestion_data = $this->extract_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-		if(empty($suggestion_data)){
-			$this->redirect([
-				'message' => __('A suggestion is required', 'nevamiss'),
-				'status' => 'error',
-			]);
+		if ( empty( $suggestion_data ) ) {
+			$this->redirect(
+				array(
+					'message' => __( 'A suggestion is required', 'nevamiss' ),
+					'status'  => 'error',
+				)
+			);
 			exit;
 		}
 
-		$this->redirect([
-			'message' => __('Thanks for your suggestion', 'nevamiss'),
-			'status' => 'success',
-		]);
+		$this->redirect(
+			array(
+				'message' => __( 'Thanks for your suggestion', 'nevamiss' ),
+				'status'  => 'success',
+			)
+		);
 		exit;
-
 	}
 
-	private function authorize(): bool
-	{
-		return isset($_POST['_wpnonce']) &&
-			wp_verify_nonce($_POST['_wpnonce'], 'nevamiss-suggestion-form-action');
-
+	private function authorize(): bool {
+		return isset( $_POST['_wpnonce'] ) &&
+			wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss-suggestion-form-action' );
 	}
 
-	private function redirect(array $data): void
-	{
-		wp_redirect(add_query_arg($data, admin_url('admin.php?page=nevamiss-suggestions')));
+	private function redirect( array $data ): void {
+		wp_redirect( add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-suggestions' ) ) );
 	}
 
-	private function extract_data(array $post_data): array
-	{
-		if(!isset($post_data['suggestion']) || !trim($post_data['suggestion'])){
-			return [];
+	private function extract_data( array $post_data ): array {
+		if ( ! isset( $post_data['suggestion'] ) || ! trim( $post_data['suggestion'] ) ) {
+			return array();
 		}
-		$data = [];
-		foreach( ['fullname', 'email_address', 'suggestion'] as $key){
-			$data[$key] = isset($post_data[$key]) ? sanitize_text_field($post_data[$key]) : null;
+		$data = array();
+		foreach ( array( 'fullname', 'email_address', 'suggestion' ) as $key ) {
+			$data[ $key ] = isset( $post_data[ $key ] ) ? sanitize_text_field( $post_data[ $key ] ) : null;
 		}
 		return $data;
 	}

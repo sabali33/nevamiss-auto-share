@@ -32,7 +32,7 @@ class Schedule_Post_Manager {
 	 */
 	public function run( int $schedule_id ): void {
 
-		if($this->settings->pause_all_schedules()){
+		if ( $this->settings->pause_all_schedules() ) {
 			return;
 		}
 		/**

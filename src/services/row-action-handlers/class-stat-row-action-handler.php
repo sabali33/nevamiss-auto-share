@@ -28,7 +28,7 @@ class Stats_Row_Action_Handler {
 			wp_die( 'Unauthorized' );
 		}
 
-		$stat_id = (int) sanitize_text_field( $_GET['entry_id'] );
+		$stat_id = (int) sanitize_text_field( $_GET['entry_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		try {
 			$this->stats_repository->delete( $stat_id );

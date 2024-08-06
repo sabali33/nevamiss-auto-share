@@ -21,7 +21,7 @@ class Network_Authenticator {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
-		$code = $_GET['code'];
+		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		/**
 		 * @var Facebook_Client $facebook_client
 		 */
@@ -51,16 +51,16 @@ class Network_Authenticator {
 			exit;
 		}
 
-		if ( isset( $_GET['error'] ) ) {
+		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$this->redirect(
 				array(
 					'status'  => 'error',
-					'message' => $_GET['error_description'],
+					'message' => $_GET['error_description'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				)
 			);
 			exit;
 		}
-		$code = $_GET['code'];
+		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		/**
 		 * @var Linkedin_Client $linkedin_client
 		 */
@@ -130,11 +130,11 @@ class Network_Authenticator {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
-		if ( isset( $_GET['error'] ) ) {
-			$this->redirect( $this->error_message( $_GET['error'] ) );
+		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$this->redirect( $this->error_message( $_GET['error'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			exit;
 		}
-		$code = $_GET['code'];
+		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		/**
 		 * @var X_Client $x_client
 		 */

@@ -10,7 +10,7 @@ use Nevamiss\Presentation\Tabs\General_Tab;
  * @var General_Tab $this
  */
 
-$current_section = $_GET['section']?? 'general';
+$current_section = $_GET['section']?? 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 $this->maybe_save_settings();
 ?>

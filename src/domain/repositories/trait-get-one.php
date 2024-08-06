@@ -12,9 +12,10 @@ trait Get_One_Trait {
 	 * @throws Not_Found_Exception
 	 */
 	public function get( int $id ) {
-		$sql = $this->wpdb->prepare( "SELECT * FROM {$this->table_name()} WHERE id='%s'", $id );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql = $this->wpdb->prepare( "SELECT * FROM {$this->table_name()} WHERE id=%s", $id );
 
-		$results = $this->wpdb->get_results( $sql, ARRAY_A );
+		$results = $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( ! $results ) {
 			throw new Not_Found_Exception( self::ENTITY_NAME . ' with the ID not found' );

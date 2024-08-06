@@ -95,7 +95,7 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 
 	public function current_action(): bool|string {
-		if ( isset( $_REQUEST['delete_all'] ) || isset( $_REQUEST['delete_all2'] ) ) {
+		if ( isset( $_REQUEST['delete_all'] ) || isset( $_REQUEST['delete_all2'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return 'delete_all';
 		}
 

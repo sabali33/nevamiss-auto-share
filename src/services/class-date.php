@@ -17,13 +17,12 @@ class Date implements Date_Interface {
 	 * @return \DateTimeZone|null
 	 * @throws Exception
 	 */
-	private static function timezone(): ?\DateTimeZone
-	{
-		$timezone_string = get_option('timezone_string');
-		$timezone = null;
+	private static function timezone(): ?\DateTimeZone {
+		$timezone_string = get_option( 'timezone_string' );
+		$timezone        = null;
 
-		if ($timezone_string) {
-			$timezone = new \DateTimeZone($timezone_string);
+		if ( $timezone_string ) {
+			$timezone = new \DateTimeZone( $timezone_string );
 		}
 		return $timezone;
 	}
@@ -31,7 +30,7 @@ class Date implements Date_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function timestamp(string $date = '', string $format = 'Y-m-d' ): int {
+	public function timestamp( string $date = '', string $format = 'Y-m-d' ): int {
 		if ( $date ) {
 			self::create_from_format( $date, $format );
 		}
@@ -48,7 +47,7 @@ class Date implements Date_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public static function create_from_format(string $date, string $format = 'Y-m-d' ): self {
+	public static function create_from_format( string $date, string $format = 'Y-m-d' ): self {
 		return new self( \DateTime::createFromFormat( $format, $date, self::timezone() ) );
 	}
 
@@ -96,12 +95,10 @@ class Date implements Date_Interface {
 		$this->date->modify( $modifier );
 	}
 
-	public function date_format(): string
-	{
-		return get_option('date_format');
+	public function date_format(): string {
+		return get_option( 'date_format' );
 	}
-	public function time_format(): string
-	{
-		return get_option('time_format');
+	public function time_format(): string {
+		return get_option( 'time_format' );
 	}
 }

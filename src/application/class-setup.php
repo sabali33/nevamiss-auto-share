@@ -19,7 +19,8 @@ class Setup {
 	public function __construct(
 		DB $db,
 		private Versions_Dependency_Interface $versions_dependencies,
-		private ?Settings $settings ) {
+		private ?Settings $settings
+	) {
 
 		static::$db = $db;
 	}
@@ -28,9 +29,9 @@ class Setup {
 		if ( self::$instance ) {
 			return;
 		}
-		$db = new DB($wpdb);
+		$db                  = new DB( $wpdb );
 		$dependency_provider = new Version_Dependency_Provider();
-		self::$instance = new self( $db, $dependency_provider,null );
+		self::$instance      = new self( $db, $dependency_provider, null );
 
 		register_activation_hook(
 			NEVAMISS_ROOT,
@@ -50,7 +51,7 @@ class Setup {
 
 	public function deactivate(): void {
 
-		if($this->settings->keep_records()){
+		if ( $this->settings->keep_records() ) {
 			return;
 		}
 		self::$db->drop_tables();
@@ -60,17 +61,14 @@ class Setup {
 	 * @return void
 	 * @throws Exception
 	 */
-	private function check_php_versions_compatibility(): void
-	{
+	private function check_php_versions_compatibility(): void {
 
 		if ( version_compare(
 			$this->versions_dependencies->php_version(),
 			self::MINIMUM_PHP_VERSION,
 			'<'
-		)) {
-			throw new Exception('The server PHP version {PHP_VERSION} is not compatible',);
+		) ) {
+			throw new Exception( 'The server PHP version {PHP_VERSION} is not compatible', );
 		}
 	}
-
-
 }

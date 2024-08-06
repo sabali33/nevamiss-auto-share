@@ -17,7 +17,7 @@ class Section implements Renderable {
 			'label' => $label,
 			'section' => $section,
 			'current_section' => $active_section,
-		]                 = $attributes;
+		] = $attributes;
 
 		$active_section_class = $active_section === $section ? 'current' : '';
 		return <<<TAB

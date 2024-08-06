@@ -35,7 +35,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 	) {
 
 		$this->client_id        = $api['client_id'] ?? null;
-		$this->redirect_url     = admin_url( "admin-post.php?action=linkedin");
+		$this->redirect_url     = admin_url( 'admin-post.php?action=linkedin' );
 		$this->secret           = $api['client_secret'] ?? null;
 		$this->root             = 'https://www.linkedin.com/';
 		$this->auth_root        = "{$this->root}oauth/v2/authorization";
@@ -54,9 +54,9 @@ class Linkedin_Client implements Network_Clients_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function auth_link(array $scope = array() ): string {
+	public function auth_link( array $scope = array() ): string {
 
-		$this->has_credentials($this->client_id, $this->secret);
+		$this->has_credentials( $this->client_id, $this->secret );
 
 		return add_query_arg(
 			array(
@@ -155,7 +155,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			array(
 				'headers' => $headers,
 				'timeout' => 60,
-				'body'    => json_encode( $body ),
+				'body'    => wp_json_encode( $body ),
 			)
 		);
 
@@ -252,7 +252,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 					'Authorization'    => "Bearer {$token}",
 					'Linkedin-Version' => $this->linkedin_version,
 				),
-				'body'    => json_encode( $body ),
+				'body'    => wp_json_encode( $body ),
 			)
 		);
 

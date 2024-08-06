@@ -41,22 +41,22 @@ class Settings_Page extends Page {
 		return $this->data;
 	}
 
-//	public function notices(): void {
-//		if ( ! isset( $_GET['status'] ) ) {
-//			return;
-//		}
-//		if ( ! isset( $_GET['message'] ) ) {
-//			return;
-//		}
-//		wp_admin_notice(
-//			$_GET['message'],
-//			array(
-//				'type'               => $_GET['status'],
-//				'dismissible'        => false,
-//				'additional_classes' => array( 'inline', 'notice-alt' ),
-//			)
-//		);
-//	}
+	// public function notices(): void {
+	// if ( ! isset( $_GET['status'] ) ) {
+	// return;
+	// }
+	// if ( ! isset( $_GET['message'] ) ) {
+	// return;
+	// }
+	// wp_admin_notice(
+	// $_GET['message'],
+	// array(
+	// 'type'               => $_GET['status'],
+	// 'dismissible'        => false,
+	// 'additional_classes' => array( 'inline', 'notice-alt' ),
+	// )
+	// );
+	// }
 
 	/**
 	 * @return Array<Tab_Interface>

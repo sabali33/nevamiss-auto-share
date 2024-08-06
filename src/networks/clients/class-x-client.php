@@ -24,7 +24,7 @@ class X_Client implements Network_Clients_Interface {
 	public function __construct( private Http_Request $request, private Settings $settings, array $api_credentials ) {
 		$this->client_id       = $api_credentials['client_id'] ?? null;
 		$this->client_secret   = $api_credentials['client_secret'] ?? null;
-		$this->redirect_url    = admin_url( "admin-post.php?action=x");
+		$this->redirect_url    = admin_url( 'admin-post.php?action=x' );
 		$this->root_auth       = 'https://twitter.com/i/oauth2/authorize';
 		$this->root_api        = 'https://api.twitter.com/2';
 		$this->upload_root_api = 'https://upload.twitter.com/1.1';
@@ -35,7 +35,7 @@ class X_Client implements Network_Clients_Interface {
 	 * @throws \Exception
 	 */
 	public function auth_link(): string {
-		$this->has_credentials($this->client_id, $this->client_secret);
+		$this->has_credentials( $this->client_id, $this->client_secret );
 		$code_challenge = $this->challenge_code();
 		set_transient( 'nevamiss-x-code-challenge', $code_challenge, 60 * 60 );
 		return add_query_arg(
@@ -136,13 +136,13 @@ class X_Client implements Network_Clients_Interface {
 	 * @throws \Exception
 	 */
 	public function post( array $data, Network_Account $account ) {
-//		$media = $this->upload_media( $data['image_url'], $account->token() );
-//		return;
+		// $media = $this->upload_media( $data['image_url'], $account->token() );
+		// return;
 		$args = $this->auth_header( $account->token() );
 
 		$args['headers']['Accept'] = 'application/json';
 
-		$args['body'] = json_encode( array( 'text' => $data['status_text'] ) );
+		$args['body'] = wp_json_encode( array( 'text' => $data['status_text'] ) );
 		$url          = "$this->root_api/tweets";
 
 		$response = $this->request->post( $url, $args );

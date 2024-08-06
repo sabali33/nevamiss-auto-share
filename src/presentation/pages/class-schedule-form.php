@@ -37,7 +37,7 @@ class Schedule_Form extends Page {
 		private Form_Validator $validator,
 		private Factory $factory
 	) {
-		$title = isset( $_REQUEST['schedule_id'] ) ?
+		$title = isset( $_REQUEST['schedule_id'] ) ? // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			__( 'Edit Schedule', 'nevamiss' ) :
 			__( 'New Schedule', 'nevamiss' );
 
@@ -49,10 +49,9 @@ class Schedule_Form extends Page {
 			null,
 			true
 		);
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->schedule = ( isset( $_REQUEST['schedule_id'] ) && $_REQUEST['schedule_id'] ) ?
-		$this->schedule_repository->get( (int) $_REQUEST['schedule_id'] ) : null;
-
+		$this->schedule_repository->get( (int) $_REQUEST['schedule_id'] ) : null; // // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	public function factory(): Factory {
@@ -289,7 +288,7 @@ class Schedule_Form extends Page {
 
 	private function month_days( string $month ): int {
 		if ( 2 === (int) $month ) {
-			return Utils::is_leap_year( (int) date( 'Y' ) ) ? 29 : 28;
+			return Utils::is_leap_year( (int) gmdate( 'Y' ) ) ? 29 : 28;
 		}
 		$total_days_months = array(
 			31 => array( 1, 3, 5, 7, 8, 10, 12 ),
@@ -308,30 +307,34 @@ class Schedule_Form extends Page {
 	 * @throws \Exception
 	 */
 	public function maybe_save_form(): void {
-		if ( ! isset( $_POST['schedule_name'] ) ) {
+		if ( ! isset( $_POST['schedule_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return;
 		}
-		if (!$this->is_authorized()) {
+		if ( ! $this->is_authorized() ) {
 
-			$this->redirect([
-				'page' => 'edit-schedule',
-				'status' => 'error',
-				'message' => __('Unauthorized', 'nevamiss'),
-			]);
+			$this->redirect(
+				array(
+					'page'    => 'edit-schedule',
+					'status'  => 'error',
+					'message' => __( 'Unauthorized', 'nevamiss' ),
+				)
+			);
 			exit;
 		}
 
-		$data = $this->schedule_repository->allowed_data( $_POST );
+		$data = $this->schedule_repository->allowed_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$validated_data = $this->validate( $data );
 
 		if ( ! empty( $this->validator->errors() ) ) {
 
-			$this->redirect([
-				'page' => 'edit-schedule',
-				'status' => 'error',
-				'message' => join( ', ', $this->validator->errors() ),
-			]);
+			$this->redirect(
+				array(
+					'page'    => 'edit-schedule',
+					'status'  => 'error',
+					'message' => join( ', ', $this->validator->errors() ),
+				)
+			);
 			exit;
 		}
 
@@ -344,59 +347,66 @@ class Schedule_Form extends Page {
 		try {
 			$schedule_id = $this->schedule_repository->create( $data );
 
-			$message = rawurlencode(sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ));
+			$message = rawurlencode( sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
 
-			$this->redirect([
-				'page' => 'edit-schedule',
-				'status' => 'success',
-				'message' => $message,
-				'schedule_id' => $schedule_id
-			]);
+			$this->redirect(
+				array(
+					'page'        => 'edit-schedule',
+					'status'      => 'success',
+					'message'     => $message,
+					'schedule_id' => $schedule_id,
+				)
+			);
 
 			exit;
 
 		} catch ( \Exception $exception ) {
 
-			$this->redirect([
-				'page' => 'edit-schedule',
-				'status' => 'error',
-				'message' => $exception->getMessage(),
-			]);
+			$this->redirect(
+				array(
+					'page'    => 'edit-schedule',
+					'status'  => 'error',
+					'message' => $exception->getMessage(),
+				)
+			);
 			exit;
 		}
-
 	}
 
 	/**
 	 * @throws \Exception
 	 */
 	public function update_form(): void {
-		if ( ! isset( $_POST['schedule_name'] ) || ! $this->schedule() ) {
+		if ( ! isset( $_POST['schedule_name'] ) || ! $this->schedule() ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return;
 		}
 
-		if (!$this->is_authorized()) {
-			$this->redirect([
-				'page' => 'edit-schedule',
-				'status' => 'error',
-				'message' => __('Unauthorized', 'nevamiss'),
-				'schedule_id' => $this->schedule->id()
-			]);
+		if ( ! $this->is_authorized() ) {
+			$this->redirect(
+				array(
+					'page'        => 'edit-schedule',
+					'status'      => 'error',
+					'message'     => __( 'Unauthorized', 'nevamiss' ),
+					'schedule_id' => $this->schedule->id(),
+				)
+			);
 			exit;
 		}
 
-		$data = $this->schedule_repository->allowed_data( $_POST );
+		$data = $this->schedule_repository->allowed_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$validated_data = $this->validate( $data );
 
 		if ( ! empty( $this->validator->errors() ) ) {
 
-			$this->redirect([
-				'page' => 'edit-schedule',
-				'status' => 'error',
-				'message' => join( ', ', $this->validator->errors() ),
-				'schedule_id' => $this->schedule->id()
-			]);
+			$this->redirect(
+				array(
+					'page'        => 'edit-schedule',
+					'status'      => 'error',
+					'message'     => join( ', ', $this->validator->errors() ),
+					'schedule_id' => $this->schedule->id(),
+				)
+			);
 			exit;
 		}
 
@@ -408,9 +418,9 @@ class Schedule_Form extends Page {
 
 		try {
 			$this->schedule_repository->update( $this->schedule()->id(), $data );
-			$message = rawurlencode(sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ));
+			$message = rawurlencode( sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
 
-			$type    = 'success';
+			$type = 'success';
 
 			do_action( 'nevamiss_after_schedule_updated', $this->schedule );
 
@@ -419,18 +429,19 @@ class Schedule_Form extends Page {
 			$type    = 'error';
 		}
 
-		$this->redirect([
-			'page' => 'edit-schedule',
-			'status' => $type,
-			'message' => $message,
-			'schedule_id' => $this->schedule->id()
-		]);
+		$this->redirect(
+			array(
+				'page'        => 'edit-schedule',
+				'status'      => $type,
+				'message'     => $message,
+				'schedule_id' => $this->schedule->id(),
+			)
+		);
 		exit;
 	}
-	public function redirect(array $data): void
-	{
-		$url = add_query_arg($data, admin_url('admin.php'));
-		wp_redirect($url);
+	public function redirect( array $data ): void {
+		$url = add_query_arg( $data, admin_url( 'admin.php' ) );
+		wp_redirect( $url );
 	}
 
 	private function format_dates( array $data ): array {
@@ -494,7 +505,7 @@ class Schedule_Form extends Page {
 	private function array_to_json( array $data ): array {
 		foreach ( $data as $key => $datum ) {
 			if ( is_array( $datum ) ) {
-				$data[ $key ] = json_encode( $datum );
+				$data[ $key ] = wp_json_encode( $datum );
 			}
 		}
 		return $data;
@@ -826,7 +837,7 @@ class Schedule_Form extends Page {
 					'type'              => 'select-group',
 					'class'             => 'monthly-times',
 					'id'                => 'monthly-times',
-					'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
+					'choices'           => range( 1, $this->month_days( gmdate( 'm' ) ) ),
 					'label'             => __( 'On day', 'nevamiss' ),
 					'has_multiple'      => true,
 					'complement_fields' => array(
@@ -862,7 +873,7 @@ class Schedule_Form extends Page {
 				'type'              => 'select-group',
 				'class'             => 'monthly-times',
 				'id'                => "monthly-times-$index",
-				'choices'           => range( 1, $this->month_days( date( 'm' ) ) ),
+				'choices'           => range( 1, $this->month_days( gmdate( 'm' ) ) ),
 				'label'             => __( 'On day', 'nevamiss' ),
 				'has_multiple'      => $last_field,
 				'can_be_removed'    => ! $last_field,
@@ -930,20 +941,18 @@ class Schedule_Form extends Page {
 	/**
 	 * @return bool
 	 */
-	private function is_authorized(): bool
-	{
-		return isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'nevamiss_create_schedule');
+	private function is_authorized(): bool {
+		return isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' );
 	}
 
 	/**
 	 * @return array
 	 */
-	private function error_message(): array
-	{
+	private function error_message(): array {
 		return array(
-			'type' => 'error',
-			'dismissible' => false,
-			'additional_classes' => array('inline', 'notice-alt'),
+			'type'               => 'error',
+			'dismissible'        => false,
+			'additional_classes' => array( 'inline', 'notice-alt' ),
 		);
 	}
 }

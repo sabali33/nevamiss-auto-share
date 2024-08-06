@@ -11,35 +11,41 @@ class Settings {
 	public function update( string $key, mixed $value ) {
 	}
 
-	public function setting( string $key, string $section=null ): mixed {
+	public function setting( string $key, string $section = null ): mixed {
+
 		$settings = $this->settings();
 
-		if($section){
-			return $this->section_settings($section)[$key];
+		if ( ! $settings ) {
+			return false;
 		}
-		foreach ($settings as $setting_section){
-			if(isset($setting_section[$key])){
-				return $setting_section[$key];
+		if ( $section ) {
+			return $this->section_settings( $section )[ $key ];
+		}
+
+		foreach ( $settings as $setting_section ) {
+			if ( isset( $setting_section[ $key ] ) ) {
+				return $setting_section[ $key ];
 			}
 		}
 		return '';
 	}
 	public function settings() {
-		return get_option(General_Tab::GENERAL_SETTINGS);
+		return get_option( General_Tab::GENERAL_SETTINGS );
 	}
 
 	public function network_credentials( string $network_slug ): array {
 
-		return $this->setting($network_slug);
+		$network_settings = $this->setting( $network_slug );
+		return $network_settings ?: array();
 	}
 
 	public function enabled_networks(): array {
-		return $this->setting('networks_to_post');
+		$enabled_settings = $this->setting( 'networks_to_post' );
+		return $enabled_settings ?: array();
 	}
 
-	public function section_settings($section): array|null
-	{
-		return $this->settings()[$section] ?? null;
+	public function section_settings( $section ): array|null {
+		return $this->settings()[ $section ] ?? null;
 	}
 
 	public function linkedin_content_type(): string {
@@ -49,28 +55,23 @@ class Settings {
 			'article';
 	}
 
-	public function repeat_cycle()
-	{
-		return $this->setting('repeat_cycle');
+	public function repeat_cycle() {
+		return $this->setting( 'repeat_cycle' );
 	}
 
-	public function pause_all_schedules()
-	{
-		return $this->setting('pause_all_schedules');
+	public function pause_all_schedules() {
+		return $this->setting( 'pause_all_schedules' );
 	}
 
-	public function keep_records()
-	{
-		return $this->setting('keep_records');
+	public function keep_records() {
+		return $this->setting( 'keep_records' );
 	}
 
-	public function share_on_publish()
-	{
-		return $this->setting('share_on_publish');
+	public function share_on_publish() {
+		return $this->setting( 'share_on_publish' );
 	}
 
-	public function allowed_post_types()
-	{
+	public function allowed_post_types() {
 		return $this->share_on_publish();
 	}
 }

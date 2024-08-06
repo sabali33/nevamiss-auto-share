@@ -36,7 +36,7 @@ trait Repository_Common_Trait {
 	private function items_to_string( array $values ): array {
 		return array_map(
 			function ( $value ) {
-				return is_array( $value ) ? json_encode( $value ) : $value;
+				return is_array( $value ) ? wp_json_encode( $value ) : $value;
 			},
 			$values
 		);

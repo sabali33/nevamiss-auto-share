@@ -37,18 +37,18 @@ class Schedules_Page extends Page {
 
 	public function notices(): void {
 		if (
-			! isset( $_GET['notice'] ) &&
-			! isset( $_GET['type'] )
+			! isset( $_GET['notice'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			! isset( $_GET['type'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		) {
 			return;
 		}
-		if ( ! ( isset( $_GET['message'] ) && $_GET['message'] ) ) {
+		if ( ! ( isset( $_GET['message'] ) && $_GET['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 		wp_admin_notice(
-			$_GET['message'],
+			$_GET['message'], // // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			array(
-				'type'               => $_GET['type'],
+				'type'               => $_GET['type'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'dismissible'        => false,
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)

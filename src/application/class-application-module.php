@@ -17,17 +17,17 @@ class Application_Module implements ServiceModule, ExecutableModule {
 
 	public function services(): array {
 		return array(
-			DB::class     => static function () {
+			DB::class                          => static function () {
 				global $wpdb;
 				return new DB( $wpdb );
 			},
-			Setup::class  => static fn(ContainerInterface $container) => new Setup(
-				$container->get(DB::class),
-				$container->get(Version_Dependency_Provider::class),
-				$container->get(Settings::class)
+			Setup::class                       => static fn( ContainerInterface $container ) => new Setup(
+				$container->get( DB::class ),
+				$container->get( Version_Dependency_Provider::class ),
+				$container->get( Settings::class )
 			),
-			Query::class  => fn() => new Query( new \WP_Query() ),
-			Assets::class => fn() => new Assets(),
+			Query::class                       => fn() => new Query( new \WP_Query() ),
+			Assets::class                      => fn() => new Assets(),
 			Version_Dependency_Provider::class => fn() => new Version_Dependency_Provider(),
 		);
 	}

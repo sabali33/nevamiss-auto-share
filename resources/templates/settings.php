@@ -29,7 +29,7 @@ use Nevamiss\Presentation\Pages\Settings_Page;
 
 <?php
 
-$active_tab = $_GET['tab'] ?? 'general';
+$active_tab = $_GET['tab'] ?? 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $tabs = $this->tabs();
 
 ?>

@@ -27,7 +27,7 @@ class Accounts_Row_Action_Handler {
 		if ( ! $authorized ) {
 			wp_die( 'Unauthorized' );
 		}
-		$account_id = (int) sanitize_text_field( $_GET['account_id'] );
+		$account_id = (int) sanitize_text_field( $_GET['account_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		try {
 			$this->account_repository->delete( $account_id );

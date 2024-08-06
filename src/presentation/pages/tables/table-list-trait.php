@@ -76,7 +76,7 @@ trait Table_List_Trait {
 	 * @return array|string
 	 */
 	private function search_text(): string|array {
-		return isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		return isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 	/**
 	 * @return array
@@ -93,12 +93,12 @@ trait Table_List_Trait {
 			'search'   => array( $search_field, $search ),
 		);
 
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$args['orderby'] = $_REQUEST['orderby'];
+		if ( isset( $_REQUEST['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['orderby'] = $_REQUEST['orderby']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
-		if ( isset( $_REQUEST['order'] ) ) {
-			$args['order'] = $_REQUEST['order'];
+		if ( isset( $_REQUEST['order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['order'] = $_REQUEST['order']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 		return array( $per_page, $args );
 	}

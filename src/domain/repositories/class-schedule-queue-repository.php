@@ -37,9 +37,10 @@ class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, 
 	 * @throws Exception
 	 */
 	public function get_schedule_queue_by_schedule_id( int $schedule_id ): Schedule_Queue|false {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $this->wpdb->prepare( "SELECT * FROM {$this->table_name()} WHERE schedule_id= %s", $schedule_id );
 
-		$results = $this->wpdb->get_results( $sql, ARRAY_A );
+		$results = $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( $results === null ) {
 			throw new Exception( $this->wpdb->last_error );

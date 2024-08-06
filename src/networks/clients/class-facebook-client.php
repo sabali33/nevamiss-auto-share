@@ -24,25 +24,24 @@ class Facebook_Client implements Network_Clients_Interface {
 	 */
 	public function __construct( private Http_Request $request, private array $credentials ) {
 		$this->root_url_versioned = 'https://graph.facebook.com/v20.0/';
-		$this->auth_dialog = "{$this->root_url_versioned}dialog/oauth";
+		$this->auth_dialog        = "{$this->root_url_versioned}dialog/oauth";
 
-		$this->auth_url           = "{$this->root_url_versioned}oauth/access_token";
-		$this->root_url           = 'https://graph.facebook.com/';
-
+		$this->auth_url = "{$this->root_url_versioned}oauth/access_token";
+		$this->root_url = 'https://graph.facebook.com/';
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function auth_link(array $scope = array() ): string {
+	public function auth_link( array $scope = array() ): string {
 
-		$this->has_credentials($this->credentials['client_id'], $this->credentials['client_secret']);
+		$this->has_credentials( $this->credentials['client_id'], $this->credentials['client_secret'] );
 
 		return add_query_arg(
 			array(
 				'client_id'     => $this->credentials['client_id'],
 				'client_secret' => $this->credentials['client_secret'],
-				'redirect_uri'  => admin_url( "admin-post.php?action=facebook"),
+				'redirect_uri'  => admin_url( 'admin-post.php?action=facebook' ),
 				'auth_type'     => 'rerequest',
 				'config_id'     => '2143935749319824',
 				'state'         => wp_create_nonce( 'nevamiss-facebook-secret' ),

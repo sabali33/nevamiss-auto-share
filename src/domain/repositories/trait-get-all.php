@@ -21,7 +21,7 @@ trait Get_All_Trait {
 
 			if ( $data ) {
 				$sql = $this->wpdb->prepare(
-					$sql,
+					$sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					...$data
 				);
 			}
@@ -33,7 +33,7 @@ trait Get_All_Trait {
 			$sql .= $limit;
 		}
 
-		$entities = $this->wpdb->get_results( $sql, ARRAY_A );
+		$entities = $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		if ( ! $entities ) {
 			return array();
 		}
@@ -47,7 +47,7 @@ trait Get_All_Trait {
 		}
 
 		$where_string    = array();
-		[$field, $value] = $options['search'] ?? [null, null];
+		[$field, $value] = $options['search'] ?? array( null, null );
 		if ( $value ) {
 			return array( "$field LIKE '%{$this->wpdb->esc_like($value)}%'", null );
 		}

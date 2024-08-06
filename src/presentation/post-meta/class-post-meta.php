@@ -28,8 +28,7 @@ class Post_Meta {
 		add_meta_box( 'nevamiss-auto-share', __( 'Auto Share', 'nevamiss' ), array( $this, 'show_meta_box' ), array( $allowed_post_types ), 'side' );
 	}
 
-	public function show_meta_box(\WP_Post $post): void
-	{
+	public function show_meta_box( \WP_Post $post ): void {
 		include NEVAMISS_PATH . 'resources/templates/post-meta.php';
 	}
 
@@ -75,9 +74,7 @@ class Post_Meta {
 	/**
 	 * @return array<Network_Account>
 	 */
-	public function accounts(): array
-	{
+	public function accounts(): array {
 		return $this->account_repository->get_all();
 	}
-
 }

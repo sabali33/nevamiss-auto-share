@@ -177,8 +177,8 @@ class Network_Post_Provider {
 
 		$post_ids = array_slice( $schedule_queue->all_posts_ids(), 0, (int) $posts_count );
 
-		if(count($post_ids) > $remaining_queue_posts_count && !$this->settings->repeat_cycle()){
-			$post_ids = array_slice($post_ids, 0, $remaining_queue_posts_count);
+		if ( count( $post_ids ) > $remaining_queue_posts_count && ! $this->settings->repeat_cycle() ) {
+			$post_ids = array_slice( $post_ids, 0, $remaining_queue_posts_count );
 		}
 		return $this->query->query( array( 'post__in' => $post_ids ) );
 	}
