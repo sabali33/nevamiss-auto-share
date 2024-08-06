@@ -18,7 +18,7 @@ trait Get_One_Trait {
 		$results = $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( ! $results ) {
-			throw new Not_Found_Exception( self::ENTITY_NAME . ' with the ID not found' );
+			throw new Not_Found_Exception( esc_html( self::ENTITY_NAME . ' with the ID not found') );
 		}
 		[$entity] = $results;
 

@@ -1,7 +1,7 @@
 === Nevamiss Auto Share ===
 
 Contributors: sabali33
-Donate link: https://yoa.st/1up
+Donate link: https://wise.com/pay/me/eliasua
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: Social Share,Facebook Share, Post, X Share, Schedules

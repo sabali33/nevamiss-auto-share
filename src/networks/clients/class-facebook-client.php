@@ -74,7 +74,7 @@ class Facebook_Client implements Network_Clients_Interface {
 			$user_data['data']['app_id'] !== $this->credentials['client_id'] ||
 			! $user_data['data']['is_valid']
 		) {
-			throw new \Exception( "Facebook App ID,{$this->credentials['client_id']} could not be verified" );
+			throw new \Exception( esc_html("Facebook App ID,{$this->credentials['client_id']} could not be verified" ));
 		}
 		// Exchange short-live token for long-live token
 		['access_token' => $access_token] = $this->long_live_token( $token['access_token'] );

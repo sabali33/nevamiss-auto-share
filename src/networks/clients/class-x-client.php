@@ -106,7 +106,7 @@ class X_Client implements Network_Clients_Interface {
 		);
 
 		if ( isset( $response['error'] ) ) {
-			throw new \Exception( $response['error_description'] );
+			throw new \Exception( esc_html( $response['error_description'] ) );
 		}
 		return $this->get_account( $response['access_token'] );
 	}
@@ -122,7 +122,7 @@ class X_Client implements Network_Clients_Interface {
 		$response = $this->request->get( $url, $args );
 
 		if ( isset( $response['errors'] ) ) {
-			throw new \Exception( __( 'Unable to get user account', 'nevamiss' ) );
+			throw new \Exception( esc_html__( 'Unable to get user account', 'nevamiss' ) );
 		}
 		return array(
 			'name'          => "{$response['data']['name']}({$response['data']['username']})",
@@ -148,7 +148,7 @@ class X_Client implements Network_Clients_Interface {
 		$response = $this->request->post( $url, $args );
 
 		if ( ! isset( $response['data']['id'] ) ) {
-			throw new \Exception( "Unable to share to {$account->name()} on {$account->network()}" );
+			throw new \Exception( esc_html(  "Unable to share to {$account->name()} on {$account->network()}" ));
 		}
 		return $response['data']['id'];
 	}

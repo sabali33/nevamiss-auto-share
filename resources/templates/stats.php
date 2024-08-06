@@ -28,7 +28,7 @@ use Nevamiss\Presentation\Tabs\Stats_Tab;
 
 		<?php $this->table_list()->search_box( __( 'Search Accounts' ), 'stats' ); ?>
 		<input type="hidden" name="page" value="nevamiss-settings">
-		<input type="hidden" name="tab" value="<?php esc_attr_e($this->slug()) ?>">
+		<input type="hidden" name="tab" value="<?php echo esc_attr($this->slug()) ?>">
 
 		<?php $this->table_list()->display(); ?>
 

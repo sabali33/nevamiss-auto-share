@@ -24,13 +24,13 @@ if($this->schedule()){
     <?php $this->notices(); ?>
 
     <h1 class="wp-heading-inline">
-		<?php echo esc_html($this->title); ?>
+		<?php echo esc_html($this->title()); ?>
     </h1>
     <form method="post">
         <?php wp_nonce_field('nevamiss_create_schedule'); ?>
         <?php foreach ($this->fields() as $field): ?>
-            <?php echo $this->render_field($field)->render(); ?>
+            <?php echo $this->render_field($field)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         <?php endforeach; ?>
-        <input type="submit" class="button button-primary" value="<?php esc_attr_e($button_label); ?>">
+        <input type="submit" class="button button-primary" value="<?php echo esc_attr($button_label); ?>">
     </form>
 </div>

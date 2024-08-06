@@ -8,20 +8,20 @@
 ?>
 
 <p class="description description-wide">
-    <label for="<?php esc_attr_e($attributes['id']); ?>">
-        <?php esc_html_e($attributes['label']); ?>
+    <label for="<?php echo esc_attr($attributes['id']); ?>">
+        <?php echo esc_html($attributes['label']); ?>
     </label>
 
-    <select <?php echo $input_attr; ?> >
+    <select <?php echo esc_attr($input_attr);  ?> >
         <?php foreach( $attributes['choices'] as $key => $choice): ?>
             <?php $selected = $key === $attributes['value'] || (is_array($attributes['value']) && in_array($key, $attributes['value'])) ?
                 'selected': ''
             ?>
             <option
-                value="<?php esc_attr_e($key); ?>"
-                <?php esc_attr_e($selected); ?>
+                value="<?php echo esc_attr($key); ?>"
+                <?php echo esc_attr($selected); ?>
             >
-                <?php  esc_html_e($choice) ?>
+                <?php  echo esc_html($choice) ?>
             </option>
         <?php endforeach; ?>
     </select>

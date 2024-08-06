@@ -62,6 +62,11 @@ class Schedule_Form extends Page {
 		return $this->schedule;
 	}
 
+	public function title(): string
+	{
+		return $this->title;
+	}
+
 	/**
 	 * @throws Not_Found_Exception
 	 */
@@ -346,7 +351,7 @@ class Schedule_Form extends Page {
 
 		try {
 			$schedule_id = $this->schedule_repository->create( $data );
-
+			/* translators: %s: A link to schedules page */
 			$message = rawurlencode( sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
 
 			$this->redirect(
@@ -418,6 +423,7 @@ class Schedule_Form extends Page {
 
 		try {
 			$this->schedule_repository->update( $this->schedule()->id(), $data );
+			/* translators: %s: A link to schedules page */
 			$message = rawurlencode( sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
 
 			$type = 'success';

@@ -44,7 +44,7 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 		);
 	}
 	public function no_items(): void {
-		_e( 'No Accounts found, login above', 'nevamiss' );
+		esc_html_e( 'No Accounts found, login above', 'nevamiss' );
 	}
 	/**
 	 * Gets a list of columns for the list table.
@@ -85,20 +85,20 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	}
 
 	public function column_name( Network_Account $account ): void {
-		echo $account->name();
+		echo esc_html($account->name());
 	}
 	public function column_network( Network_Account $account ): void {
-		echo $account->network();
+		echo esc_html($account->network());
 	}
 	public function column_remote_account_id( Network_Account $account ): void {
-		echo $account->remote_account_id();
+		echo esc_html($account->remote_account_id());
 	}
 	public function column_parent_remote_id( Network_Account $account ): void {
-		echo $account->parent_remote_id();
+		echo esc_html($account->parent_remote_id());
 	}
 	public function column_created_at( Network_Account $account ): void {
 		$date = Date::create_from_format( $account->created_at(), 'Y-m-d H:i:s' );
-		echo $date->format( 'dS M Y @ H:i' );
+		echo esc_html($date->format( 'dS M Y @ H:i' ));
 	}
 
 	/**

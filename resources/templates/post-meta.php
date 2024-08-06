@@ -15,7 +15,8 @@ use Nevamiss\Presentation\Post_Meta\Post_Meta;
 $accounts = $this->accounts();
 if(empty($accounts)){
 	$logins_page = admin_url('admin.php?page=nevamiss-settings&tab=network-accounts');
-	printf(__('No Accounts created yet. <a href="%s">Login to create one</a>', 'nevamiss'), $logins_page);
+	/* translators: %s: A link to the login page */
+	printf(__('No Accounts created yet. <a href="%s">Login to create one</a>', 'nevamiss'), esc_url($logins_page)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 ?>
@@ -23,7 +24,7 @@ if(empty($accounts)){
 <?php
 
     foreach($accounts as $account){
-        $url = add_query_arg(
+        $url = esc_url(add_query_arg(
             [
                 'action' => 'nevamiss_instant_share',
                 'post_id' => $post->ID,
@@ -31,11 +32,11 @@ if(empty($accounts)){
                 'nonce' => wp_create_nonce('nevamiss-instant-share-action')
             ],
             admin_url('admin-ajax.php')
-        );
+        ));
+	    /* translators: %1$s: Account name %2$s: Network */
+        $title = sprintf(__('Share to this post %1$s(%2$s)', 'nevamiss'),  $account->name(), $account->network());
 
-        $title = sprintf(__('Share to this post %s(%s)', 'nevamiss'),  $account->name(), $account->network());
-
-        echo "<li> <a href='$url' title='$title' class='nevamiss-instant-share-link'>$title</a></li>";
+        echo "<li> <a href='$url' title='$title' class='nevamiss-instant-share-link'>$title</a></li>";  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
 ?>

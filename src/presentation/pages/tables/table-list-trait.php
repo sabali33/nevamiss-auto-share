@@ -28,9 +28,11 @@ trait Table_List_Trait {
 		if ( ! isset( $action['url'] ) ) {
 			return '';
 		}
-		$title = $action['label'] ?? __( 'no label', 'nevamiss' );
-		$class = $action['class'] ?? '';
-		return "<span class='$class'><a href='{$action['url']}' title='$title' class='$class'> $title</a></span>";
+		$title = isset($action['label']) ? esc_html($action['label']) :  __( 'no label', 'nevamiss' );
+		$class = isset($action['class']) ? esc_attr($action['class']) : '';
+        $title_attr = isset($action['label']) ? esc_attr($title) : '';
+        $url = esc_url($action['url']);
+		return "<span class='$class'><a href='{$url}' title='$title_attr' class='$class'> $title</a></span>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	protected function _bulk_actions(): array {
 		return array(
@@ -44,12 +46,13 @@ trait Table_List_Trait {
 			return;
 		}
 		?>
-		<input id="cb-select-<?php esc_attr_e( $item->id() ); ?>" type="checkbox" name="<?php echo esc_attr( $input_name ); ?>[]" value="<?php esc_attr_e( $item->id() ); ?>" />
-		<label for="cb-select-<?php esc_attr_e( $item->id() ); ?>">
+		<input id="cb-select-<?php echo esc_attr( $item->id() ); ?>" type="checkbox" name="<?php echo esc_attr( $input_name ); ?>[]" value="<?php echo esc_attr( $item->id() ); ?>" />
+		<label for="cb-select-<?php echo esc_attr( $item->id() ); ?>">
 			<span class="screen-reader-text">
 			<?php
 			if ( method_exists( $item, 'name' ) ) {
-				printf( __( 'Select %s' ), $item->name() );
+				/* translators: %s: An item name */
+				printf( esc_html__( 'Select %s' ), esc_html($item->name()) );
 			}
 			?>
 			</span>
@@ -61,8 +64,8 @@ trait Table_List_Trait {
 			if ( method_exists( $item, 'name' ) ) {
 				printf(
 				/* translators: Hidden accessibility text. %s: Post title. */
-					__( '&#8220;%s&#8221; is locked' ),
-					$item->name()
+					esc_html__( '&#8220;%s&#8221; is locked' ),
+					esc_html($item->name())
 				);
 			}
 

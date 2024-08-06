@@ -39,20 +39,20 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
 
 	</p>
     <p>
-        <?php echo $this->login_links(); ?>
+        <?php echo $this->login_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
     </p>
 	<hr class="wp-header-end">
-	<?php $this->table_list->prepare_items(); ?>
+	<?php $this->table_list()->prepare_items(); ?>
 
-	<?php $this->table_list->views();?>
+	<?php $this->table_list()->views();?>
 
 	<form action="">
 
-		<?php $this->table_list->search_box( __( 'Search Accounts' ), 'network-accounts' ); ?>
+		<?php $this->table_list()->search_box( __( 'Search Accounts' ), 'network-accounts' ); ?>
 		<input type="hidden" name="page" value="nevamiss-settings">
-		<input type="hidden" name="tab" value="<?php esc_attr_e($this->slug()) ?>">
+		<input type="hidden" name="tab" value="<?php echo esc_attr($this->slug()) ?>">
 
-		<?php $this->table_list->display(); ?>
+		<?php $this->table_list()->display(); ?>
 
 	</form>
 

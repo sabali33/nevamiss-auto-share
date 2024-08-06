@@ -14,7 +14,8 @@ class Factory {
 	 */
 	public function new( string $class_name, mixed ...$args ) {
 		if ( ! class_exists( $class_name ) ) {
-			throw new Not_Found_Exception( "class '$class_name' does not exist" );
+			/* translators: %s: The class name */
+			throw new Not_Found_Exception( sprintf(esc_html__("class '%s' does not exist", 'nevamiss'), esc_html($class_name) ));
 
 		}
 		return new $class_name( ...$args );

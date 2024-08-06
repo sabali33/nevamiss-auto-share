@@ -19,7 +19,7 @@ trait Delete_Trait {
 
 		if ( ! $entity ) {
 			$entity_name = self::ENTITY_NAME;
-			throw new Exception( "Unable to delete $entity_name with the ID $id" );
+			throw new Exception( esc_html("Unable to delete $entity_name with the ID $id" ));
 		}
 		return true;
 	}

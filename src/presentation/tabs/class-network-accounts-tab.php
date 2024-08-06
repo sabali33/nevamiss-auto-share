@@ -101,11 +101,13 @@ class Network_Accounts_Tab implements Tab_Interface {
 		foreach ( $clients as $network => $client ) {
 			try {
 				$links[] = array(
+					/* translators: %s: Social media network name */
 					'label' => sprintf( __( 'Login to %s', 'nevamiss' ), ucfirst( $network ) ),
 					'url'   => $client->auth_link(),
 				);
 			} catch ( \Exception $exception ) {
 				$links[] = array(
+					/* translators: %s: Social media network name */
 					'label' => sprintf( __( 'You need to setup %s account here', 'nevamiss' ), $network ),
 					'url'   => admin_url( 'admin.php?page=nevamiss-settings&tab=general&section=network_api_keys' ),
 				);

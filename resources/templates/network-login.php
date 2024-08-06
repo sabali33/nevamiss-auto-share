@@ -11,5 +11,6 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
  */
 
 foreach ($this->networks() as $network_data){
-	printf("<a href='%s'> %s </a>", $network_data['url'], $network_data['label']);
+	/* translators: %s: Login link to networks %s: Network name" */
+	printf("<a href='%s'> %s </a>", esc_url($network_data['url']), esc_html($network_data['label']));
 }

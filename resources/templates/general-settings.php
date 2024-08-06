@@ -22,7 +22,7 @@ $this->maybe_save_settings();
 	 */
 	try {
 		foreach ($this->section_tabs($current_section) as $section_tab) {
-			echo "<li>{$section_tab->render()}</li>";
+			echo "<li>{$section_tab->render()}</li>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	} catch (Not_Found_Exception $e) {
         $this->redirect([
@@ -37,14 +37,14 @@ $this->maybe_save_settings();
     <form action="" method="post">
         <input type="hidden" name="page" value="nevamiss-settings">
         <input type="hidden" name="tab" value="general">
-        <input type="hidden" name="section" value="<?php esc_attr_e($current_section); ?>">
+        <input type="hidden" name="section" value="<?php echo esc_attr($current_section); ?>">
         <?php wp_nonce_field('nevamiss-general-settings-action') ?>
     <?php
     /**
      * @var Component $field
      */
         foreach ($this->render_sections($current_section) as $field){
-            echo $field->render();
+            echo $field->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
     ?>
         <input type="submit" class="button button-primary" value="<?php esc_attr_e('Save', 'nevamiss'); ?>">

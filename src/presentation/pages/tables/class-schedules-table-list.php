@@ -49,7 +49,7 @@ class Schedules_Table_List extends \WP_List_Table {
 		);
 	}
 	public function no_items(): void {
-		_e( 'No Schedules found.', 'nevamiss' );
+		esc_html_e( 'No Schedules found.', 'nevamiss' );
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Schedules_Table_List extends \WP_List_Table {
 
 	public function display_rows(): void {
 		foreach ( $this->items as  $schedule ) {
-			echo "\n\t" . $this->single_row( $schedule );
+			echo "\n\t" . $this->single_row( $schedule ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 	protected function get_default_primary_column_name(): string {
@@ -111,24 +111,27 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 
 	public function column_schedule_name( Schedule $item ): void {
-		echo $item->name();
+		echo esc_html($item->name());
 	}
 
-	public function column_start_time( Schedule $schedule ): void {
+	/**
+	 * @throws \Exception
+	 */
+	public function column_start_time(Schedule $schedule ): void {
 		if ( ! $schedule->start_date() ) {
-			echo join( ',', $schedule->one_time_schedule() );
+			echo esc_html(join( ',', $schedule->one_time_schedule() ));
 			return;
 		}
 
 		$date           = Date::create_from_format( $schedule->start_date() );
-		$date_formatted = $date->format();
+		$date_formatted = esc_html($date->format());
 		$class_name     = $date->is_late() ? 'started' : 'not-started';
 
-		echo "<span class='$class_name'> $date_formatted </span>";
+		echo "<span class='$class_name'> $date_formatted </span>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	public function column_repeat_frequency( Schedule $schedule ): void {
-		echo $schedule->repeat_frequency();
+		echo esc_html($schedule->repeat_frequency());
 	}
 
 	/**
@@ -141,10 +144,10 @@ class Schedules_Table_List extends \WP_List_Table {
 		$posts = $this->queue_service->schedule_posts( $schedule );
 
 		foreach ( $posts as $post ) {
-			echo $this->link(
+			echo $this->link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				array(
-					'url'   => $post['link'],
-					'label' => $post['post_title'],
+					'url'   => $post['link'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					'label' => $post['post_title'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				)
 			) . PHP_EOL;
 		}
@@ -172,10 +175,10 @@ class Schedules_Table_List extends \WP_List_Table {
 
 		$posts = $this->queue_service->posts_by_ids( $post_ids );
 		foreach ( $posts as $post ) {
-			echo $this->link(
+			echo $this->link( //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				array(
-					'url'   => $post['link'],
-					'label' => $post['post_title'],
+					'url'   => $post['link'], //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					'label' => $post['post_title'], //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				)
 			) . PHP_EOL;
 		}
@@ -202,19 +205,23 @@ class Schedules_Table_List extends \WP_List_Table {
 		if ( empty( $parts ) ) {
 			$message = __( 'No time estimates, too close', 'nevamiss' );
 		}
-
+		/* translators: %s: A finish date for the schedule */
 		$message .= sprintf( __( ' ( on %s)', 'nevamiss' ), $finish_date );
 
-		echo $message;
+		echo esc_html($message);
 	}
 
 	private function format_estimate_message( $time_units ): string {
 		$parts = array();
 		foreach ( $time_units as $unit => $value ) {
 			if ( $value > 0 ) {
-				$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
+
+				//$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
+				$parts[] = sprintf( $this->translate($unit, $value), $value);
 			} elseif ( ! empty( $parts ) ) {
-				$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
+				/* translators: %s: A time formatting string such as month, day, hour or minute */
+				//$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
+				$parts[] = $parts[] = sprintf( $this->translate($unit, 0), 0);
 			}
 		}
 
@@ -254,5 +261,21 @@ class Schedules_Table_List extends \WP_List_Table {
 			),
 
 		);
+	}
+
+	public function translate(string $unit, int $value)
+	{
+
+		$units = [
+			/* translators: %s: A time formatting string such as month, day, hour or minute */
+			'day' => _n( "%s day", "%s days", $value, 'nevamiss' ),
+			/* translators: %s: A time formatting string such as month, day, hour or minute */
+			'month' => _n( "%s month", "%s months", $value, 'nevamiss' ),
+			/* translators: %s: A time formatting string such as month, day, hour or minute */
+			'hour' => _n( "%s hour", "%s hours", $value, 'nevamiss' ),
+			/* translators: %s: A time formatting string such as month, day, hour or minute */
+			'minute' => _n( "%s minute", "%s minutes", $value, 'nevamiss' ),
+		];
+		return $units[$unit] ?? '';
 	}
 }
