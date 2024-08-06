@@ -20,10 +20,9 @@ use Exception;
 use Inpsyde\Modularity\Package;
 use Inpsyde\Modularity\Properties\PluginProperties;
 use Nevamiss\Application\Application_Module;
-use Nevamiss\Application\DB;
 use Nevamiss\Application\Setup;
 use Nevamiss\Networks\Media_Networks_Module;
-use Nevamiss\Presentation\Pages\Presentation_Module;
+use Nevamiss\Presentation\Presentation_Module;
 use Nevamiss\Service\Factory_Module;
 use Nevamiss\Service\Repositories_Module;
 use Nevamiss\Services\Services_Module;
@@ -70,6 +69,7 @@ try {
 
 	Setup::instance( $wpdb );
 } catch ( Exception $exception ) {
+
 	error_notice( $exception->getMessage() );
 }
 
@@ -101,7 +101,7 @@ add_action(
 
 		try {
 			plugin()->boot();
-		} catch ( Throwable $exception ) {
+		} catch ( Throwable|\Exception $exception ) {
 			error_notice( $exception->getMessage() );
 		}
 	}

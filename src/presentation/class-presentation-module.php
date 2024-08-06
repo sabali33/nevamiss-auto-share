@@ -1,6 +1,6 @@
 <?php
 
-namespace Nevamiss\Presentation\Pages;
+namespace Nevamiss\Presentation;
 
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
@@ -10,6 +10,12 @@ use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Presentation\Pages\Auto_Share_Page;
+use Nevamiss\Presentation\Pages\Schedule_Form;
+use Nevamiss\Presentation\Pages\Schedule_View_Page;
+use Nevamiss\Presentation\Pages\Schedules_Page;
+use Nevamiss\Presentation\Pages\Settings_Page;
+use Nevamiss\Presentation\Pages\Suggestions_Page;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 use Nevamiss\Presentation\Pages\Tables\Schedules_Table_List;
 use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
@@ -50,7 +56,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 
-			Suggestions_Page::class                  => static fn ( ContainerInterface $container ) => new Suggestions_Page(
+			Suggestions_Page::class            => static fn ( ContainerInterface $container ) => new Suggestions_Page(
 				$container->get( Posts_Stats_Repository::class )
 			),
 
@@ -74,8 +80,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				return new Post_Meta(
 					$container->get( Factory::class ),
 					$container->get( Network_Post_Provider::class ),
-					$container->get(Settings::class),
-					$container->get(Network_Account_Repository::class)
+					$container->get( Settings::class ),
+					$container->get( Network_Account_Repository::class )
 				);
 			},
 			Schedules_Table_List::class        => fn( ContainerInterface $container ) => new Schedules_Table_List(
