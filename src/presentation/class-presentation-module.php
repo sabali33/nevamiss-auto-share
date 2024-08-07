@@ -121,21 +121,29 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 	}
 
 	public function run( ContainerInterface $container ): bool {
+		/**
+		 * @var Schedule_Form $schedule_form
+		 */
+		$schedule_form = $container->get( Schedule_Form::class );
 		add_action(
 			'admin_menu',
-			static function () use ( $container ) {
+			static function () use ( $container, $schedule_form ) {
 				$container->get( Auto_Share_Page::class )->register();
 				$container->get( Schedules_Page::class )->register();
 				$container->get( Settings_Page::class )->register();
 				$container->get( Schedule_View_Page::class )->register();
 				$container->get( Suggestions_Page::class )->register();
-				$container->get( Schedule_Form::class )->register();
+				$schedule_form->register();
 			}
 		);
 
 		add_action(
 			'add_meta_boxes',
 			array( $container->get( Post_Meta::class ), 'meta_boxes' )
+		);
+		add_action(
+			'admin_post_nevamiss_create_schedule',
+			[$schedule_form, 'maybe_save_form']
 		);
 
 		return true;

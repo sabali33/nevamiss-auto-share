@@ -12,12 +12,8 @@ use Nevamiss\Presentation\Pages\Schedule_Form;
 <?php
 
 $button_label = $this->schedule() ? __('Update', 'nevamiss') : __('Create', 'nevamiss');
+$schedule_id = $this->schedule() ? $this->schedule()->id() : null;
 
-if($this->schedule()){
-	$this->update_form();
-}else{
-	$this->maybe_save_form();
-}
 ?>
 
 <div class="wrap schedule-form">
@@ -26,8 +22,13 @@ if($this->schedule()){
     <h1 class="wp-heading-inline">
 		<?php echo esc_html($this->title()); ?>
     </h1>
-    <form method="post">
+    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php?action=nevamiss_create_schedule')); ?>">
         <?php wp_nonce_field('nevamiss_create_schedule'); ?>
+        <input type="hidden" name="action" value="nevamiss_create_schedule">
+        <?php if($schedule_id): ?>
+            <input type="hidden" name="schedule_id" value="<?php echo esc_attr($this->schedule()->id()); ?>">
+        <?php endif; ?>
+
         <?php foreach ($this->fields() as $field): ?>
             <?php echo $this->render_field($field)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         <?php endforeach; ?>

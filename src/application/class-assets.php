@@ -7,9 +7,11 @@ namespace Nevamiss\Application;
 class Assets {
 
 	public function enqueue_script( string $page ) {
+
 		if ( ! $this->is_page( $page ) ) {
 			return;
 		}
+
 		['dependencies' => $deps, 'version' => $version ] = require NEVAMISS_PATH . '/build/main.asset.php';
 		wp_register_script( 'nevamiss-scripts', NEVAMISS_URL . '/build/main.js', $deps, $version, true );
 		wp_register_style( 'nevamiss-flatpickr-style', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', [], 20240608 );
@@ -26,6 +28,7 @@ class Assets {
 				'toplevel_page_auto-share-content',
 				'auto-share_page_schedules',
 				'dashboard_page_edit-schedule',
+				'admin_page_edit-schedule',
 				'auto-share_page_nevamiss-settings',
 				'auto-share_page_nevamiss-suggestions',
 				'post.php',

@@ -315,15 +315,17 @@ class Schedule_Form extends Page {
 		if ( ! isset( $_POST['schedule_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return;
 		}
+		$error_message = array(
+			'page'    => 'edit-schedule',
+			'status'  => 'error',
+		);
+		$schedule_id = $_POST['schedule_id'] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if($schedule_id){
+			$error_message['schedule_id'] = $schedule_id;
+		}
 		if ( ! $this->is_authorized() ) {
-
-			$this->redirect(
-				array(
-					'page'    => 'edit-schedule',
-					'status'  => 'error',
-					'message' => __( 'Unauthorized', 'nevamiss' ),
-				)
-			);
+			$error_message['message']  = __( 'Unauthorized', 'nevamiss' );
+			$this->redirect($error_message);
 			exit;
 		}
 
@@ -332,14 +334,9 @@ class Schedule_Form extends Page {
 		$validated_data = $this->validate( $data );
 
 		if ( ! empty( $this->validator->errors() ) ) {
+			$error_message['message'] = join( ', ', $this->validator->errors() );
 
-			$this->redirect(
-				array(
-					'page'    => 'edit-schedule',
-					'status'  => 'error',
-					'message' => join( ', ', $this->validator->errors() ),
-				)
-			);
+			$this->redirect($error_message);
 			exit;
 		}
 
@@ -350,7 +347,25 @@ class Schedule_Form extends Page {
 		$schedules_url = admin_url( 'admin.php?page=schedules' );
 
 		try {
+			if($schedule_id){
+				$this->schedule_repository->update($schedule_id, $data);
+				/* translators: %s: A link to schedules page */
+				$message = rawurlencode( sprintf( __( "Successfully updated the schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
+
+				$this->redirect(
+					array(
+						'page'        => 'edit-schedule',
+						'status'      => 'success',
+						'message'     => $message,
+						'schedule_id' => $schedule_id,
+					)
+				);
+
+				exit;
+			}
+
 			$schedule_id = $this->schedule_repository->create( $data );
+
 			/* translators: %s: A link to schedules page */
 			$message = rawurlencode( sprintf( __( "Successfully created a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
 
@@ -447,7 +462,7 @@ class Schedule_Form extends Page {
 	}
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php' ) );
-		wp_redirect( $url );
+		wp_redirect( $url, 301 );
 	}
 
 	private function format_dates( array $data ): array {
