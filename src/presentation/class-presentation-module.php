@@ -102,6 +102,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 					new Logs_Tab( $factory ),
 				);
 			},
+
 			Tab_Collection::class              => function ( ContainerInterface $container ) {
 				$collection = new Tab_Collection();
 				/**
@@ -125,6 +126,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 		 * @var Schedule_Form $schedule_form
 		 */
 		$schedule_form = $container->get( Schedule_Form::class );
+
 		add_action(
 			'admin_menu',
 			static function () use ( $container, $schedule_form ) {
@@ -143,7 +145,21 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 		);
 		add_action(
 			'admin_post_nevamiss_create_schedule',
-			[$schedule_form, 'maybe_save_form']
+			array( $schedule_form, 'maybe_save_form' )
+		);
+
+		add_action(
+			'admin_post_nevamiss_settings',
+			static function () use ( $container ) {
+
+				$container->get( Settings_Page::class )->save_form();
+			}
+		);
+		add_action(
+			'admin_post_nevamiss_schedules_delete_action',
+			static function () use ( $container ) {
+				call_user_func( array( $container->get( Schedules_Page::class ), 'bulk_delete' ) );
+			}
 		);
 
 		return true;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services;
 
-use Nevamiss\Presentation\Tabs\General_Tab;
+use Nevamiss\Presentation\Pages\Settings_Page;
 
 class Settings {
 
@@ -30,7 +30,7 @@ class Settings {
 		return '';
 	}
 	public function settings() {
-		return get_option( General_Tab::GENERAL_SETTINGS );
+		return get_option( Settings_Page::GENERAL_SETTINGS );
 	}
 
 	public function network_credentials( string $network_slug ): array {
@@ -50,9 +50,7 @@ class Settings {
 
 	public function linkedin_content_type(): string {
 		$content_type = $this->setting( 'nevamiss_linkedin_content_type' );
-		return $content_type ?
-			$content_type :
-			'article';
+		return $content_type ?: 'article';
 	}
 
 	public function repeat_cycle() {

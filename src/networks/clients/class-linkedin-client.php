@@ -176,7 +176,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			return $entities;
 		}
 		if ( isset( $entities['status'] ) && $entities['status'] === 401 ) {
-			throw new Exception( esc_html( $entities['message'] ));
+			throw new Exception( esc_html( $entities['message'] ) );
 		}
 
 		$organizations = array();

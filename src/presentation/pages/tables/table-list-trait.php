@@ -28,10 +28,10 @@ trait Table_List_Trait {
 		if ( ! isset( $action['url'] ) ) {
 			return '';
 		}
-		$title = isset($action['label']) ? esc_html($action['label']) :  __( 'no label', 'nevamiss' );
-		$class = isset($action['class']) ? esc_attr($action['class']) : '';
-        $title_attr = isset($action['label']) ? esc_attr($title) : '';
-        $url = esc_url($action['url']);
+		$title      = isset( $action['label'] ) ? esc_html( $action['label'] ) : __( 'no label', 'nevamiss' );
+		$class      = isset( $action['class'] ) ? esc_attr( $action['class'] ) : '';
+		$title_attr = isset( $action['label'] ) ? esc_attr( $title ) : '';
+		$url        = esc_url( $action['url'] );
 		return "<span class='$class'><a href='{$url}' title='$title_attr' class='$class'> $title</a></span>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	protected function _bulk_actions(): array {
@@ -52,7 +52,7 @@ trait Table_List_Trait {
 			<?php
 			if ( method_exists( $item, 'name' ) ) {
 				/* translators: %s: An item name */
-				printf( esc_html__( 'Select %s' ), esc_html($item->name()) );
+				printf( esc_html__( 'Select %s' ), esc_html( $item->name() ) );
 			}
 			?>
 			</span>
@@ -65,7 +65,7 @@ trait Table_List_Trait {
 				printf(
 				/* translators: Hidden accessibility text. %s: Post title. */
 					esc_html__( '&#8220;%s&#8221; is locked' ),
-					esc_html($item->name())
+					esc_html( $item->name() )
 				);
 			}
 

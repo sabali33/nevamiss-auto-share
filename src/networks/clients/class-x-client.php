@@ -148,7 +148,7 @@ class X_Client implements Network_Clients_Interface {
 		$response = $this->request->post( $url, $args );
 
 		if ( ! isset( $response['data']['id'] ) ) {
-			throw new \Exception( esc_html(  "Unable to share to {$account->name()} on {$account->network()}" ));
+			throw new \Exception( esc_html( "Unable to share to {$account->name()} on {$account->network()}" ) );
 		}
 		return $response['data']['id'];
 	}

@@ -46,7 +46,7 @@ class Schedules_Page extends Page {
 			return;
 		}
 		wp_admin_notice(
-			$_GET['message'], // // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$_GET['message'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			array(
 				'type'               => $_GET['type'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'dismissible'        => false,
@@ -59,16 +59,34 @@ class Schedules_Page extends Page {
 	 * @throws \Exception
 	 */
 	public function bulk_delete(): void {
-		if ( ! isset( $_REQUEST['action'] ) && ! isset( $_REQUEST['action2'] ) ) {
-			return;
+
+		if ( ! isset( $_REQUEST['bulk_action'] ) && ! isset( $_REQUEST['bulk_action2'] ) ) {
+			$this->redirect( $_REQUEST );
+			exit;
 		}
 
-		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST['schedules'] ) ) {
-			return;
+		if ( $_REQUEST['bulk_action'] !== 'delete_all' || ! isset( $_REQUEST['schedules'] ) ) {
+
+			if ( isset( $_REQUEST['s'] ) ) {
+				$this->redirect(
+					array(
+						's' => $_REQUEST['s'],
+					)
+				);
+				exit;
+			}
+			$this->redirect( array() );
+			exit;
 		}
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-schedules' ) ) {
-			return;
+			$this->redirect(
+				array(
+					'type'    => 'error',
+					'message' => esc_html__( 'Unauthorized', 'nevamiss' ),
+				)
+			);
+			exit;
 		}
 
 		['schedules' => $schedules] = filter_input_array(
@@ -84,5 +102,18 @@ class Schedules_Page extends Page {
 		foreach ( $schedules as $schedule ) {
 			$this->schedule_repository->delete( $schedule );
 		}
+
+		$this->redirect(
+			array(
+				'type'    => 'success',
+				'message' => __( 'Schedule Successfully Deleted', 'nevamiss' ),
+			)
+		);
+		exit;
+	}
+
+	private function redirect( array $data ): void {
+		$url = add_query_arg( $data, admin_url( 'admin.php?page=schedules' ) );
+		wp_redirect( $url );
 	}
 }

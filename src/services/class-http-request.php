@@ -14,12 +14,12 @@ class Http_Request {
 		$response = wp_remote_get( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			throw new Exception( esc_html( $response->get_error_message() ));
+			throw new Exception( esc_html( $response->get_error_message() ) );
 		}
 		$body = wp_remote_retrieve_body( $response );
 
 		if ( ! $body ) {
-			throw new Exception( esc_html( $response['response']['message'] ));
+			throw new Exception( esc_html( $response['response']['message'] ) );
 		}
 
 		return json_decode( $body, true );
@@ -35,13 +35,13 @@ class Http_Request {
 			$args
 		);
 		if ( is_wp_error( $response ) ) {
-			throw new Exception( esc_html( $response->get_error_message() ));
+			throw new Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		$body = wp_remote_retrieve_body( $response );
 
 		if ( ! $body && ! in_array( $response['response']['code'], array( 200, 201 ) ) ) {
-			throw new Exception( esc_html( $response['response']['message'] ));
+			throw new Exception( esc_html( $response['response']['message'] ) );
 		}
 
 		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ) ) ) {
@@ -62,7 +62,7 @@ class Http_Request {
 			wp_parse_args( $args, array( 'method' => 'PUT' ) )
 		);
 		if ( is_wp_error( $response ) ) {
-			throw new Exception( esc_html( $response->get_error_message()) );
+			throw new Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		return json_decode( wp_remote_retrieve_body( $response ), true );

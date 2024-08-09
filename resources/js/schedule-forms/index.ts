@@ -13,6 +13,7 @@ class ScheduleForms<O extends typeof flatpickr> {
             this.attachDateToField();
 
             const repeatFrequencyField = document.querySelector('#repeat-frequency');
+
             if(!repeatFrequencyField){
                 return;
             }
@@ -28,7 +29,6 @@ class ScheduleForms<O extends typeof flatpickr> {
                         document.querySelectorAll(`[data-repeat-frequency=${value}]`)
                     );
                     this.maybeToggleNegatedWrappers(this.negatedWrappers, value);
-
 
                 })
             document.querySelector('.schedule-form').addEventListener(

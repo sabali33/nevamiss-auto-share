@@ -43,7 +43,7 @@ class Schedule_Queue_Repository implements Create_Interface, Get_One_Interface, 
 		$results = $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( $results === null ) {
-			throw new Exception( esc_html($this->wpdb->last_error ));
+			throw new Exception( esc_html( $this->wpdb->last_error ) );
 		}
 		if ( empty( $results ) ) {
 			return false;

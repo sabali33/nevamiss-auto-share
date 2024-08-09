@@ -151,7 +151,7 @@ class WP_Cron_Service implements Cron_Interface {
 				array( $schedule_id )
 			);
 			if ( ! $scheduled ) {
-				throw new \Exception(  esc_html("Schedule with id: $schedule_id, was unable to schedule" ) );
+				throw new \Exception( esc_html( "Schedule with id: $schedule_id, was unable to schedule" ) );
 			}
 		}
 	}

@@ -12,7 +12,6 @@ use Nevamiss\Presentation\Tabs\General_Tab;
 
 $current_section = $_GET['section']?? 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-$this->maybe_save_settings();
 ?>
 
 <ul class="subsubsub">
@@ -34,10 +33,11 @@ $this->maybe_save_settings();
 </ul>
 <div class="clear"></div>
 <div class="tab-section">
-    <form action="" method="post">
+    <form action="<?php echo esc_url(admin_url('admin-post.php?action=nevamiss_settings')) ?>" method="post">
         <input type="hidden" name="page" value="nevamiss-settings">
         <input type="hidden" name="tab" value="general">
         <input type="hidden" name="section" value="<?php echo esc_attr($current_section); ?>">
+        <input type="hidden" name="action" value="nevamiss_settings">
         <?php wp_nonce_field('nevamiss-general-settings-action') ?>
     <?php
     /**

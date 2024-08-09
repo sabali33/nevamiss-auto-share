@@ -62,7 +62,7 @@ abstract class Page implements Renderable {
 		);
 	}
 
-	public function page_url(): string {
-		return $this->page_url;
+	public function title(): string {
+		return $this->title;
 	}
 }

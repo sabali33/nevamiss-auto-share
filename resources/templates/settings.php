@@ -12,19 +12,6 @@ use Nevamiss\Presentation\Pages\Settings_Page;
  * @var Settings_Page $this
  */
 
-//$networks = $this->network_collection();
-//
-//$enabled_networks = $this->settings()->enabled_networks();
-
-//foreach( $enabled_networks as $enabled_network){
-//	$network = ucfirst($enabled_network);
-//	/**
-//	 * @var Network_Clients_Interface $client
-//	 */
-//	$client = $networks->get($enabled_network);
-//
-//	echo "<a href='{$client->auth_link()}'> Login to $network</a>";
-//}
 ?>
 
 <?php
@@ -62,8 +49,7 @@ $tabs = $this->tabs();
                 break;
             default:
 	            echo $this->tab(General_Tab::SLUG)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-
+            break;
         }
         ?>
     </div>

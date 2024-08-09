@@ -7,8 +7,9 @@ namespace Nevamiss\Presentation\Pages\Tables;
 use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Services\Date;
+use WP_List_Table;
 
-class Network_Accounts_Table_List extends \WP_List_Table {
+class Network_Accounts_Table_List extends WP_List_Table {
 
 	use Table_List_Trait;
 
@@ -85,20 +86,20 @@ class Network_Accounts_Table_List extends \WP_List_Table {
 	}
 
 	public function column_name( Network_Account $account ): void {
-		echo esc_html($account->name());
+		echo esc_html( $account->name() );
 	}
 	public function column_network( Network_Account $account ): void {
-		echo esc_html($account->network());
+		echo esc_html( $account->network() );
 	}
 	public function column_remote_account_id( Network_Account $account ): void {
-		echo esc_html($account->remote_account_id());
+		echo esc_html( $account->remote_account_id() );
 	}
 	public function column_parent_remote_id( Network_Account $account ): void {
-		echo esc_html($account->parent_remote_id());
+		echo esc_html( $account->parent_remote_id() );
 	}
 	public function column_created_at( Network_Account $account ): void {
 		$date = Date::create_from_format( $account->created_at(), 'Y-m-d H:i:s' );
-		echo esc_html($date->format( 'dS M Y @ H:i' ));
+		echo esc_html( $date->format( 'dS M Y @ H:i' ) );
 	}
 
 	/**

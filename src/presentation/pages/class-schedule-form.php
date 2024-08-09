@@ -62,8 +62,7 @@ class Schedule_Form extends Page {
 		return $this->schedule;
 	}
 
-	public function title(): string
-	{
+	public function title(): string {
 		return $this->title;
 	}
 
@@ -316,16 +315,16 @@ class Schedule_Form extends Page {
 			return;
 		}
 		$error_message = array(
-			'page'    => 'edit-schedule',
-			'status'  => 'error',
+			'page'   => 'edit-schedule',
+			'status' => 'error',
 		);
-		$schedule_id = $_POST['schedule_id'] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if($schedule_id){
+		$schedule_id   = $_POST['schedule_id'] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( $schedule_id ) {
 			$error_message['schedule_id'] = $schedule_id;
 		}
 		if ( ! $this->is_authorized() ) {
-			$error_message['message']  = __( 'Unauthorized', 'nevamiss' );
-			$this->redirect($error_message);
+			$error_message['message'] = __( 'Unauthorized', 'nevamiss' );
+			$this->redirect( $error_message );
 			exit;
 		}
 
@@ -336,7 +335,7 @@ class Schedule_Form extends Page {
 		if ( ! empty( $this->validator->errors() ) ) {
 			$error_message['message'] = join( ', ', $this->validator->errors() );
 
-			$this->redirect($error_message);
+			$this->redirect( $error_message );
 			exit;
 		}
 
@@ -347,8 +346,8 @@ class Schedule_Form extends Page {
 		$schedules_url = admin_url( 'admin.php?page=schedules' );
 
 		try {
-			if($schedule_id){
-				$this->schedule_repository->update($schedule_id, $data);
+			if ( $schedule_id ) {
+				$this->schedule_repository->update( (int) $schedule_id, $data );
 				/* translators: %s: A link to schedules page */
 				$message = rawurlencode( sprintf( __( "Successfully updated the schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
 
@@ -462,7 +461,7 @@ class Schedule_Form extends Page {
 	}
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php' ) );
-		wp_redirect( $url, 301 );
+		wp_redirect( $url );
 	}
 
 	private function format_dates( array $data ): array {

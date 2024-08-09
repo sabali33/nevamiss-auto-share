@@ -221,12 +221,18 @@ class Schedule_Queue {
 
 	/**
 	 * @throws Not_Found_Exception
+	 * @throws Exception
 	 */
 	public function schedule_posts( Schedule $schedule ): array {
 		/**
 		 * @var \Nevamiss\Domain\Entities\Schedule_Queue $queue
 		 */
-		$queue       = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule->id() );
+		$queue = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule->id() );
+
+		if ( ! $queue ) {
+			throw new Exception( "No queues found for this schedule({$schedule->name()})" );
+		}
+
 		$posts_count = (int) $schedule->query_args()['posts_per_page'];
 		$post_ids    = array_slice( $queue->all_posts_ids(), 0, $posts_count );
 

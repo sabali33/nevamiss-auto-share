@@ -35,6 +35,67 @@ class Schedules_Table_List extends \WP_List_Table {
 			$this->get_default_primary_column_name(),
 		);
 	}
+
+	/**This function is redeclared because the name attribute of the select field needs to change.
+	 *
+	 * @param $which
+	 * @return void
+	 */
+	protected function bulk_actions( $which = '' ) {
+		if ( is_null( $this->_actions ) ) {
+			$this->_actions = $this->get_bulk_actions();
+
+			/**
+			 * Filters the items in the bulk actions menu of the list table.
+			 *
+			 * The dynamic portion of the hook name, `$this->screen->id`, refers
+			 * to the ID of the current screen.
+			 *
+			 * @since 3.1.0
+			 * @since 5.6.0 A bulk action can now contain an array of options in order to create an optgroup.
+			 *
+			 * @param array $actions An array of the available bulk actions.
+			 */
+			$this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+
+			$two = '';
+		} else {
+			$two = '2';
+		}
+
+		if ( empty( $this->_actions ) ) {
+			return;
+		}
+
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' .
+			/* translators: Hidden accessibility text. */
+			__( 'Select bulk action' ) .
+			'</label>';
+		echo '<select name="bulk_action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
+
+		foreach ( $this->_actions as $key => $value ) {
+			if ( is_array( $value ) ) {
+				echo "\t" . '<optgroup label="' . esc_attr( $key ) . '">' . "\n";
+
+				foreach ( $value as $name => $title ) {
+					$class = ( 'edit' === $name ) ? ' class="hide-if-no-js"' : '';
+
+					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . $title . "</option>\n";
+				}
+				echo "\t" . "</optgroup>\n";
+			} else {
+				$class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
+
+				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . $value . "</option>\n";
+			}
+		}
+
+		echo "</select>\n";
+
+		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		echo "\n";
+	}
 	public function prepare_items(): void {
 
 		[$per_page, $args] = $this->query_args( array( 'search_field' => 'schedule_name' ) );
@@ -111,45 +172,49 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 
 	public function column_schedule_name( Schedule $item ): void {
-		echo esc_html($item->name());
+		echo esc_html( $item->name() );
 	}
 
 	/**
 	 * @throws \Exception
 	 */
-	public function column_start_time(Schedule $schedule ): void {
+	public function column_start_time( Schedule $schedule ): void {
 		if ( ! $schedule->start_date() ) {
-			echo esc_html(join( ',', $schedule->one_time_schedule() ));
+			echo esc_html( join( ',', $schedule->one_time_schedule() ) );
 			return;
 		}
 
 		$date           = Date::create_from_format( $schedule->start_date() );
-		$date_formatted = esc_html($date->format());
+		$date_formatted = esc_html( $date->format() );
 		$class_name     = $date->is_late() ? 'started' : 'not-started';
 
 		echo "<span class='$class_name'> $date_formatted </span>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	public function column_repeat_frequency( Schedule $schedule ): void {
-		echo esc_html($schedule->repeat_frequency());
+		echo esc_html( $schedule->repeat_frequency() );
 	}
 
 	/**
 	 * @throws Not_Found_Exception
 	 */
 	public function column_next_post( Schedule $schedule ): void {
-		/**
-		 * @var array{post_title: string, link: string } $posts
-		 */
-		$posts = $this->queue_service->schedule_posts( $schedule );
+		try {
+			/**
+			 * @var array{post_title: string, link: string } $posts
+			 */
+			$posts = $this->queue_service->schedule_posts( $schedule );
 
-		foreach ( $posts as $post ) {
-			echo $this->link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				array(
-					'url'   => $post['link'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					'label' => $post['post_title'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				)
-			) . PHP_EOL;
+			foreach ( $posts as $post ) {
+				echo $this->link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					array(
+						'url'       => $post['link'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							'label' => $post['post_title'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					)
+				) . PHP_EOL;
+			}
+		} catch ( \Exception $exception ) {
+			printf( '<i class="danger">%s</i>', esc_html( $exception->getMessage() ) );
 		}
 	}
 
@@ -208,7 +273,7 @@ class Schedules_Table_List extends \WP_List_Table {
 		/* translators: %s: A finish date for the schedule */
 		$message .= sprintf( __( ' ( on %s)', 'nevamiss' ), $finish_date );
 
-		echo esc_html($message);
+		echo esc_html( $message );
 	}
 
 	private function format_estimate_message( $time_units ): string {
@@ -216,12 +281,13 @@ class Schedules_Table_List extends \WP_List_Table {
 		foreach ( $time_units as $unit => $value ) {
 			if ( $value > 0 ) {
 
-				//$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
-				$parts[] = sprintf( $this->translate($unit, $value), $value);
+				// $parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
+				$parts[] = sprintf( $this->translate( $unit, $value ), $value );
 			} elseif ( ! empty( $parts ) ) {
-				/* translators: %s: A time formatting string such as month, day, hour or minute */
-				//$parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
-				$parts[] = $parts[] = sprintf( $this->translate($unit, 0), 0);
+				/*
+				translators: %s: A time formatting string such as month, day, hour or minute */
+				// $parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
+				$parts[] = $parts[] = sprintf( $this->translate( $unit, 0 ), 0 );
 			}
 		}
 
@@ -263,19 +329,18 @@ class Schedules_Table_List extends \WP_List_Table {
 		);
 	}
 
-	public function translate(string $unit, int $value)
-	{
+	public function translate( string $unit, int $value ) {
 
-		$units = [
+		$units = array(
 			/* translators: %s: A time formatting string such as month, day, hour or minute */
-			'day' => _n( "%s day", "%s days", $value, 'nevamiss' ),
+			'day'    => _n( '%s day', '%s days', $value, 'nevamiss' ),
 			/* translators: %s: A time formatting string such as month, day, hour or minute */
-			'month' => _n( "%s month", "%s months", $value, 'nevamiss' ),
+			'month'  => _n( '%s month', '%s months', $value, 'nevamiss' ),
 			/* translators: %s: A time formatting string such as month, day, hour or minute */
-			'hour' => _n( "%s hour", "%s hours", $value, 'nevamiss' ),
+			'hour'   => _n( '%s hour', '%s hours', $value, 'nevamiss' ),
 			/* translators: %s: A time formatting string such as month, day, hour or minute */
-			'minute' => _n( "%s minute", "%s minutes", $value, 'nevamiss' ),
-		];
-		return $units[$unit] ?? '';
+			'minute' => _n( '%s minute', '%s minutes', $value, 'nevamiss' ),
+		);
+		return $units[ $unit ] ?? '';
 	}
 }

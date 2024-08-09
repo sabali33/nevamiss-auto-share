@@ -85,19 +85,19 @@ class Stats_Table_List extends \WP_List_Table {
 	/**
 	 * @throws \Exception
 	 */
-	public function column_posted_on(Stats $account ): void {
+	public function column_posted_on( Stats $account ): void {
 		$date = Date::create_from_format( $account->posted_on(), 'Y-m-d H:i:s' );
-		echo esc_html($date->format());
+		echo esc_html( $date->format() );
 	}
 
 	public function column_schedule_id( Stats $stats ): void {
-		echo esc_html($stats->schedule_id());
+		echo esc_html( $stats->schedule_id() );
 	}
 	public function column_post_id( Stats $stats ): void {
-		echo esc_html($stats->post_id());
+		echo esc_html( $stats->post_id() );
 	}
 	public function column_remote_post_id( Stats $stats ): void {
-		echo esc_html($stats->remote_post_id());
+		echo esc_html( $stats->remote_post_id() );
 	}
 
 	public function repository(): Posts_Stats_Repository {

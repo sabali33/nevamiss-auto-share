@@ -14,12 +14,12 @@ use Nevamiss\Presentation\Components\Input_Fields\TextArea;
 use Nevamiss\Presentation\Components\Tabs\Section;
 use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Components\Wrapper;
+use Nevamiss\Presentation\Pages\Settings_Page;
 
 class General_Tab implements Tab_Interface, Section_Interface {
 
-	public const SLUG      = 'general';
-	const TEMPLATE_PATH    = 'resources/templates/general-settings';
-	const GENERAL_SETTINGS = 'nevamiss_general_settings';
+	public const SLUG   = 'general';
+	const TEMPLATE_PATH = 'resources/templates/general-settings';
 
 	public function __construct( private Factory $factory ) {
 	}
@@ -55,7 +55,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	}
 
 	public function sections(): array {
-		$settings = get_option( self::GENERAL_SETTINGS );
+		$settings = get_option( Settings_Page::GENERAL_SETTINGS );
 
 		$general          = $settings['general'] ?? array(
 			'repeat_cycle'        => 1,
@@ -256,17 +256,11 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		return $tabs_components;
 	}
 
-	public function redirect( array $data ): void {
-		$url = add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-settings&tab=general' ) );
-		wp_redirect( $url );
-	}
-
 	public function render_sections( string $current_section ) {
 		$sections = $this->sections();
 
 		if ( ! isset( $sections[ $current_section ]['fields'] ) ) {
-			$this->redirect( array() );
-			exit;
+			return array();
 		}
 		$section_components = array();
 		foreach ( $sections[ $current_section ]['fields'] as $field ) {
@@ -322,103 +316,5 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			default => Input::class,
 		};
 		return $this->factory->component( $field_class, $field );
-	}
-
-	public function maybe_save_settings(): void {
-		if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			return;
-		}
-
-		if ( ! $this->authorized() ) {
-			wp_die( 'unathorized' );
-		}
-
-		$data     = $this->extract_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$section  = sanitize_text_field( $_POST['section'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$settings = get_option( self::GENERAL_SETTINGS );
-
-		if ( ! $settings ) {
-			update_option( self::GENERAL_SETTINGS, array( $section => $data ) );
-			return;
-		}
-
-		$settings[ $section ] = $data;
-
-		update_option( self::GENERAL_SETTINGS, $settings );
-
-		$this->redirect(
-			array(
-				'status'  => 'success',
-				'message' => __( 'Settings saved!', 'nevamiss' ),
-				'section' => $section,
-			)
-		);
-
-		exit;
-	}
-
-	private function authorized(): bool {
-		return isset( $_POST['_wpnonce'] ) &&
-			wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss-general-settings-action' );
-	}
-
-	private function extract_data( array $post_data ): array {
-		$schema        = $this->post_keys( $post_data['section'] );
-		$sanitize_data = array();
-
-		foreach ( $schema as $key => $value ) {
-			['type' => $type ] = $value;
-
-			if ( ! isset( $post_data[ $key ] ) ) {
-				$sanitize_data[ $key ] = $this->translate_data_type( $type );
-				continue;
-			}
-			if ( $post_data[ $key ] === 'on' ) {
-				$sanitize_data[ $key ] = 1;
-				continue;
-			}
-			if ( is_string( $post_data[ $key ] ) ) {
-				$sanitize_data[ $key ] = sanitize_text_field( $post_data[ $key ] );
-				continue;
-			}
-			$sanitize_data[ $key ] = filter_var_array(
-				$post_data[ $key ],
-				FILTER_SANITIZE_ENCODED
-			);
-
-		}
-
-		return $sanitize_data;
-	}
-
-	private function post_keys( mixed $section ): array {
-		$array_type   = array( 'type' => 'array' );
-		$string_type  = array( 'type' => 'string' );
-		$boolean_type = array( 'type' => 'boolean' );
-
-		return match ( $section ) {
-			'general' => array(
-				'repeat_cycle'        => $boolean_type,
-				'pause_all_schedules' => $boolean_type,
-				'keep_records'        => $boolean_type,
-			),
-			'network_api_keys' => array(
-				'networks_to_post'       => $array_type,
-				'facebook'               => $array_type,
-				'linkedin'               => $array_type,
-				'x'                      => $array_type,
-				'oa_rebrandly_api'       => $string_type,
-				'oa_rebrandly_shortlink' => $string_type,
-			),
-			'post' => array( 'share_on_publish' => $array_type )
-		};
-	}
-
-	private function translate_data_type( mixed $type ): array|int|string {
-		return match ( $type ) {
-			'array' => array(),
-			'string' => '',
-			'boolean' => 0,
-		};
 	}
 }

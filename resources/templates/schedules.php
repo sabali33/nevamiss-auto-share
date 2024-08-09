@@ -8,16 +8,13 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
  * @var Schedules_Page $this
  */
 
-
 ?>
 <div class="wrap">
     <?php $this->notices(); ?>
 
-    <?php $this->bulk_delete(); ?>
-
     <p>
         <h1 class="wp-heading-inline">
-            <?php echo esc_html($this->title); ?>
+            <?php echo esc_html($this->title()); ?>
         </h1>
         <?php $this->new_link(); ?>
     </p>
@@ -27,12 +24,12 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
 
     <?php $this->table_list->views(); ?>
 
-    <form action="">
-
+    <form action="<?php echo esc_url(admin_url('admin-post.php?action=nevamiss_schedules_delete_action')); ?>">
         <?php $this->table_list->search_box( __( 'Search Schedules' ), 'schedules' ); ?>
-        <input type="hidden" name="page" value="schedules">
 
-	    <?php $this->table_list->display(); ?>
+        <input type="hidden" name="action" value="nevamiss_schedules_delete_action">
+
+		<?php $this->table_list->display(); ?>
 
     </form>
 
