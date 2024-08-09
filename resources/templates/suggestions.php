@@ -14,8 +14,9 @@ $this->maybe_process_form();
 <div class="wrap">
     <?php $this->notices(); ?>
 
-	<h2><?php esc_html_e('Suggestions/Feedback', 'nevamiss') ?></h2>
+
 	<div class="suggestion-form">
+        <h2><?php esc_html_e('Suggestions/Feedback', 'nevamiss') ?></h2>
 		<form action="" method="post">
             <?php echo wp_nonce_field('nevamiss-suggestion-form-action'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <p>
