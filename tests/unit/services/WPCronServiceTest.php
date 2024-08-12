@@ -1,14 +1,12 @@
 <?php
 
-namespace unit;
+namespace unit\services;
 
-use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\WP_Cron_Service;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\stubEscapeFunctions;

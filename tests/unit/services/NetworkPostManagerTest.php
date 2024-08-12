@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace nevamiss\tests\unit;
+namespace unit\services;
 
 use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;

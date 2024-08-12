@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace unit;
+namespace unit\services;
 
 use Nevamiss\Services\Ajax;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
