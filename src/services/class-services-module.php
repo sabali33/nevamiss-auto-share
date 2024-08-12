@@ -65,7 +65,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
 		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ) );
 
-		add_action( 'cron_schedules', array( $wp_cron_service, 'add_cron' ) );
+		add_filter( 'cron_schedules', array( $wp_cron_service, 'add_cron' ) );
 		add_action( 'nevamiss_created_schedule', array( $wp_cron_service, 'create_cron' ) );
 		add_action( 'nevamiss_after_schedule_updated', array( $wp_cron_service, 'maybe_reschedule_cron' ), 10 );
 

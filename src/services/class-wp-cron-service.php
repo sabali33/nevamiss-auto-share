@@ -133,9 +133,15 @@ class WP_Cron_Service implements Cron_Interface {
 		);
 	}
 
-	private function schedule_one_cron( array $dates, int $schedule_id ): void {
+	/**
+	 * @throws \Exception
+	 */
+	private function schedule_one_cron(array $dates, int $schedule_id ): void {
 		foreach ( $dates as $date ) {
-			wp_schedule_single_event( $date, self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_id ) );
+			$scheduled = wp_schedule_single_event( $date, self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_id ) );
+			if(!$scheduled){
+				throw new \Exception( esc_html( "Schedule with id: $schedule_id, was unable to schedule" ) );
+			}
 		}
 	}
 
@@ -143,6 +149,7 @@ class WP_Cron_Service implements Cron_Interface {
 	 * @throws \Exception
 	 */
 	private function schedule_cron( array $dates, int $schedule_id, $frequency ): void {
+
 		foreach ( $dates as $date ) {
 			$scheduled = wp_schedule_event(
 				$date,
@@ -157,11 +164,11 @@ class WP_Cron_Service implements Cron_Interface {
 	}
 
 	private function monthly_timestamps( string $start_date, array $times ): array {
-		$date = Date::create_from_format( $start_date );
 
 		$timestamps = array();
 
 		foreach ( $times as $time ) {
+			$date = Date::create_from_format( $start_date );
 			$date->set_day( $time['day'] );
 			$date->set_time( $time['hour'], $time['minute'] );
 
