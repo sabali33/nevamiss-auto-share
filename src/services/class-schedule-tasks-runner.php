@@ -25,7 +25,8 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 	 * @throws Not_Found_Exception
 	 */
 	public function run( int $schedule_id ): void {
-		do_action( 'schedule_task_begins', $schedule_id );
+
+		do_action(Logger::SCHEDULE_LOGS, "Schedule Task begin", $schedule_id);
 
 		$active_task = $this->task_repository->get_all(
 			array(
@@ -33,43 +34,55 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 					'schedule_id' => $schedule_id,
 					'status'      => 'pending',
 				),
+				'per_page' => 1,
 			)
 		);
 
 		if ( ! $active_task ) {
+
+			do_action(Logger::SCHEDULE_LOGS, "Ended: No active tasks found", $schedule_id);
+
 			return;
 		}
 
-		/**
-		 * @var Task $active_task
-		 */
-		[$active_task] = $active_task;
-		$class_name    = $active_task->class_identifier();
-		$parameters    = $active_task->parameters();
+		try{
 
-		[
-			'account' => $network_account,
-			'network_client' => $network_client
-		] = $this->schedule_provider->provide_network( $parameters['account_id'] );
+			/**
+			 * @var Task $active_task
+			 */
+			[$active_task] = $active_task;
+			$class_name    = $active_task->class_identifier();
+			$parameters    = $active_task->parameters();
 
-		$data = $this->schedule_provider->format_post( $parameters['post_id'] );
+			[
+				'account' => $network_account,
+				'network_client' => $network_client
+			] = $this->schedule_provider->provide_network( $parameters['account_id'] );
 
-		/**
-		 * @var Network_Post_Manager $post_manager
-		 */
-		$post_manager = $this->factory->new( $class_name, $network_account, $network_client );
+			$data = $this->schedule_provider->format_post( $parameters['post_id'] );
 
-		$remote_post_id = $post_manager->post( $data );
+			/**
+			 * @var Network_Post_Manager $post_manager
+			 */
+			$post_manager = $this->factory->new( $class_name, $network_account, $network_client );
 
-		do_action(
-			'nevamiss_schedule_task_complete',
-			$active_task[0]['id'],
-			array(
-				'schedule_id'    => $schedule_id,
-				'post_id'        => $parameters['post_id'],
-				'remote_post_id' => $remote_post_id,
-			)
-		);
+			$remote_post_id = $post_manager->post( $data );
+
+			do_action(
+				'nevamiss_schedule_task_complete',
+				$active_task[0]['id'],
+				array(
+					'schedule_id'    => $schedule_id,
+					'post_id'        => $parameters['post_id'],
+					'remote_post_id' => $remote_post_id,
+				)
+			);
+
+			do_action(Logger::SCHEDULE_LOGS, "Successfully Posted", $schedule_id);
+
+		}catch (\Throwable $throwable){
+			do_action(Logger::SCHEDULE_LOGS, $throwable->getMessage(), $schedule_id);
+		}
 
 		sleep( 2 );
 

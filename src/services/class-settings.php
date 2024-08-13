@@ -72,4 +72,9 @@ class Settings {
 	public function allowed_post_types() {
 		return $this->share_on_publish();
 	}
+
+	public function logging_option()
+	{
+		return $this->setting('logging_option');
+	}
 }

@@ -9,6 +9,7 @@ use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
@@ -100,12 +101,22 @@ class Services_Module implements ServiceModule, ExecutableModule {
 
 		add_action( 'wp_ajax_nevamiss_instant_share', array( $container->get( Ajax::class ), 'instant_posting_callback' ) );
 
+		/**
+		 * @var Logger $logger
+		 */
+		$logger = $container->get(Logger::class);
+
+		add_action('nevamiss_schedule_log', array($logger, 'log_callback'), 10, 2);
+
 		return true;
 	}
 
 	public function services(): array {
 		return array(
-			Logger::class                      => fn(): Logger => new Logger(),
+			Logger::class                      => fn(ContainerInterface $container): Logger => new Logger(
+				$container->get(Logger_Repository::class),
+				$container->get(Settings::class),
+			),
 			Schedule_Post_Manager::class       => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
 				$container->get( Schedule_Repository::class ),
 				$container->get( Factory::class ),

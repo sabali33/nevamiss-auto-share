@@ -32,26 +32,40 @@ class Schedule_Post_Manager {
 	 */
 	public function run( int $schedule_id ): void {
 
+		do_action(Logger::SCHEDULE_LOGS, "Preparing to share", $schedule_id);
+
 		if ( $this->settings->pause_all_schedules() ) {
-			return;
-		}
-		/**
-		 * @var Schedule $schedule
-		 */
-		$schedule = $this->schedule_repository->get( $schedule_id );
-
-		if ( ! $schedule->is_heavy() ) {
-
-			$data_set = $this->schedule_provider->provide_instant_share_data( $schedule );
-
-			$this->instant_post( $data_set, $schedule_id );
-
+			do_action(Logger::SCHEDULE_LOGS, "Scheduling is paused at Settings", $schedule_id);
 			return;
 		}
 
-		$data_set = $this->schedule_provider->provide_for_schedule( $schedule );
+		try {
+			/**
+			 * @var Schedule $schedule
+			 */
+			$schedule = $this->schedule_repository->get( $schedule_id );
 
-		$this->create_tasks( $schedule, $data_set );
+			if ( ! $schedule->is_heavy() ) {
+
+				$data_set = $this->schedule_provider->provide_instant_share_data( $schedule );
+
+				$this->instant_post( $data_set, $schedule_id );
+
+				do_action(Logger::SCHEDULE_LOGS, "Post Shared Instantly", $schedule_id);
+
+				return;
+			}
+
+			$data_set = $this->schedule_provider->provide_for_schedule( $schedule );
+
+			$this->create_tasks( $schedule, $data_set );
+
+			do_action(Logger::SCHEDULE_LOGS, "Created Tasks for sharing", $schedule_id);
+
+		}catch (\Throwable $exception){
+			do_action(Logger::SCHEDULE_LOGS, $exception->getMessage(), $schedule_id);
+		}
+
 	}
 
 	/**
@@ -69,6 +83,7 @@ class Schedule_Post_Manager {
 				'network_client' => $network_client,
 				'data' => $data
 			] = $item;
+
 			/**
 			 * @var Network_Post_Manager $network_post_manager
 			 */

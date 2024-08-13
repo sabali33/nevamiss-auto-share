@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace unit\services;
 
 use Nevamiss\Services\Ajax;
+use Nevamiss\Services\Logger;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
 use Nevamiss\Services\Row_Action_Handlers\Schedule_Row_Action_Handler;
 use Nevamiss\Services\Row_Action_Handlers\Stats_Row_Action_Handler;
@@ -30,9 +31,8 @@ class ServicesModuleTest extends TestCase
 	}
 	public function test_it_can_init_services()
 	{
-		$mockContainer = $this->createMock(
-			ContainerInterface::class
-		);
+		$mockContainer = $this->createMock(ContainerInterface::class);
+
 		$schedulePostManagerMock = $this->createMock(Schedule_Post_Manager::class);
 		$wpCronServiceMock = $this->createMock(WP_Cron_Service::class);
 		$scheduleRowMock = $this->createMock(Schedule_Row_Action_Handler::class);
@@ -42,8 +42,9 @@ class ServicesModuleTest extends TestCase
 		$accountsRowActionMock = $this->createMock(Accounts_Row_Action_Handler::class);
 		$statsRowActionMock = $this->createMock(Stats_Row_Action_Handler::class);
 		$ajaxMock = $this->createMock(Ajax::class);
+		$loggerMock = $this->createMock(Logger::class);
 
-		$mockContainer->expects($this->exactly(9))
+		$mockContainer->expects($this->exactly(10))
 			->method('get')->with($this->logicalOr(
 				$this->equalTo(Schedule_Post_Manager::class),
 				$this->equalTo(WP_Cron_Service::class),
@@ -54,6 +55,7 @@ class ServicesModuleTest extends TestCase
 				$this->equalTo(Accounts_Row_Action_Handler::class),
 				$this->equalTo(Stats_Row_Action_Handler::class),
 				$this->equalTo(Ajax::class),
+				$this->equalTo(Logger::class),
 			))->willReturnCallback(
 				function($arg1) use(
 					$schedulePostManagerMock,
@@ -64,7 +66,8 @@ class ServicesModuleTest extends TestCase
 					$statsRowActionMock,
 					$ajaxMock,
 					$scheduleTaskRunnerMock,
-					$accountsRowActionMock
+					$accountsRowActionMock,
+					$loggerMock
 				) {
 					return match ($arg1) {
 						Schedule_Post_Manager::class => $schedulePostManagerMock,
@@ -76,6 +79,7 @@ class ServicesModuleTest extends TestCase
 						Ajax::class => $ajaxMock,
 						Schedule_Tasks_Runner::class => $scheduleTaskRunnerMock,
 						Accounts_Row_Action_Handler::class => $accountsRowActionMock,
+						Logger::class => $loggerMock,
 						default => '',
 					};
 				}
@@ -107,6 +111,8 @@ class ServicesModuleTest extends TestCase
 		$this->assertNotFalse(has_action('admin_post_nevamiss_stats_delete', [ $statsRowActionMock, 'delete_stat_row_callback' ]));
 
 		$this->assertNotFalse(has_action('wp_ajax_nevamiss_instant_share', [ $ajaxMock, 'instant_posting_callback' ]));
+
+		$this->assertNotFalse(has_action(Logger::SCHEDULE_LOGS, [$loggerMock, 'log_callback']));
 
 		$this->assertTrue($booted);
 	}
