@@ -29,6 +29,9 @@
         "classmap": ["./src"],
         "files": ["./functions.php"]
     },
+    "autoload-dev": {
+      "Nevamiss\\Tests\\": "./tests"
+    },
 
     "license": "MIT",
     "config": {
