@@ -87,8 +87,12 @@ class Schedule_Queue {
 		[
 			'schedule_id' => $schedule_id,
 			'post_id' => $post_id,
+			'status' => $status
 		] = $args;
 
+		if('failed' === $status){
+			return;
+		}
 		$schedule_queue = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule_id );
 
 		if ( ! $schedule_queue ) {

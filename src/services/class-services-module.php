@@ -63,8 +63,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 */
 		$schedule_tasks_runner = $container->get( Schedule_Tasks_Runner::class );
 
-		add_action( 'schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
-		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ) );
+		add_action( 'nevamiss_schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
+		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ), 10, 2 );
 
 		add_filter( 'cron_schedules', array( $wp_cron_service, 'add_cron' ) );
 		add_action( 'nevamiss_created_schedule', array( $wp_cron_service, 'create_cron' ) );
@@ -113,7 +113,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 
 	public function services(): array {
 		return array(
-			Logger::class                      => fn(ContainerInterface $container): Logger => new Logger(
+			Logger::class                      => fn(ContainerInterface $container): Logger => Logger::instance(
 				$container->get(Logger_Repository::class),
 				$container->get(Settings::class),
 			),

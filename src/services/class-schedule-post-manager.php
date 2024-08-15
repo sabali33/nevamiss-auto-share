@@ -32,11 +32,18 @@ class Schedule_Post_Manager {
 	 */
 	public function run( int $schedule_id ): void {
 
-		do_action(Logger::SCHEDULE_LOGS, "Preparing to share", $schedule_id);
+		$instant_sharing = doing_action('admin_post_nevamiss_schedule_share');
+
+		do_action(Logger::SCHEDULE_LOGS, ["Preparing to share"], $schedule_id);
 
 		if ( $this->settings->pause_all_schedules() ) {
-			do_action(Logger::SCHEDULE_LOGS, "Scheduling is paused at Settings", $schedule_id);
-			return;
+
+			do_action(Logger::SCHEDULE_LOGS, ["Scheduling is paused at Settings", true], $schedule_id);
+
+			if($instant_sharing){
+				throw new Exception(__("Scheduling is paused at Settings", 'nevamiss'));
+			}
+
 		}
 
 		try {
@@ -49,9 +56,11 @@ class Schedule_Post_Manager {
 
 				$data_set = $this->schedule_provider->provide_instant_share_data( $schedule );
 
+				do_action(Logger::SCHEDULE_LOGS, ["Starting to post without creating tasks"], $schedule_id);
+
 				$this->instant_post( $data_set, $schedule_id );
 
-				do_action(Logger::SCHEDULE_LOGS, "Post Shared Instantly", $schedule_id);
+				do_action(Logger::SCHEDULE_LOGS, ["Post shared without creating tasks", true], $schedule_id);
 
 				return;
 			}
@@ -60,10 +69,16 @@ class Schedule_Post_Manager {
 
 			$this->create_tasks( $schedule, $data_set );
 
-			do_action(Logger::SCHEDULE_LOGS, "Created Tasks for sharing", $schedule_id);
+			do_action(Logger::SCHEDULE_LOGS, ["Successfully shared from tasks", true], $schedule_id);
 
 		}catch (\Throwable $exception){
-			do_action(Logger::SCHEDULE_LOGS, $exception->getMessage(), $schedule_id);
+
+			do_action(Logger::SCHEDULE_LOGS, [$exception->getMessage(), true ], $schedule_id);
+
+			if($instant_sharing){
+				throw new Exception($exception->getMessage());
+			}
+
 		}
 
 	}
@@ -105,10 +120,15 @@ class Schedule_Post_Manager {
 	 * @throws Exception
 	 */
 	private function create_tasks( Schedule $schedule, array $data_set ): void {
+
+		do_action(Logger::SCHEDULE_LOGS, ["Starting to create tasks"], $schedule->id());
+
 		foreach ( $data_set as $data ) {
 			$this->task_repository->create( $data );
 		}
 
-		do_action( 'schedule_create_tasks_completed', $schedule->id() );
+		do_action(Logger::SCHEDULE_LOGS, ["Finished creating tasks"], $schedule->id());
+
+		do_action( 'nevamiss_schedule_create_tasks_completed', $schedule->id() );
 	}
 }

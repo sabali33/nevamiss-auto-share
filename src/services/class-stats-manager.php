@@ -16,19 +16,19 @@ class Stats_Manager {
 	 */
 	public function record_stats_callback( int $task_id, array $args ): void {
 		[
-			'remote_post_id' => $remote_post_id,
 			'schedule_id' => $schedule_id,
 			'post_id' => $post_id,
+			'status' => $status
 		] = $args;
 
-		if ( ! $remote_post_id ) {
+		if ( $status === 'error' ) {
 			return;
 		}
 
 		$this->stats_repository->create(
 			array(
 				'post_id'        => $post_id,
-				'remote_post_id' => $remote_post_id,
+				'remote_post_id' => $args['remote_post_id'],
 				'remote_posted'  => 0,
 				'schedule_id'    => $schedule_id,
 			)
