@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace unit\services;
+namespace Nevamiss\Tests\Unit\Services;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Nevamiss\Services\Ajax;
 use Nevamiss\Services\Logger;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
@@ -24,6 +25,7 @@ use function Brain\Monkey\tearDown;
 #[CoversClass(Services_Module::class)]
 class ServicesModuleTest extends TestCase
 {
+	use MockeryPHPUnitIntegration;
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -119,5 +121,6 @@ class ServicesModuleTest extends TestCase
 	protected function tearDown(): void
 	{
 		tearDown();
+		parent::tearDown();
 	}
 }

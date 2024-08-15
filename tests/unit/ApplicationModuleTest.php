@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace nevamiss\tests\unit;
+namespace Nevamiss\Tests\Unit;
 
 
 use Brain\Monkey\Expectation\Exception\ExpectationArgsRequired;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Nevamiss\Application\Application_Module;
 use Nevamiss\Application\Assets;
 use Nevamiss\Application\Setup;
@@ -18,6 +19,8 @@ use function Brain\Monkey\tearDown;
 
 #[CoversClass(Application_Module::class)]
 final class ApplicationModuleTest extends TestCase {
+
+	use MockeryPHPUnitIntegration;
 
 	protected function setUp(): void
 	{
@@ -53,6 +56,7 @@ final class ApplicationModuleTest extends TestCase {
 		define("NEVAMISS_ROOT", '/');
 
 		$application = new Application_Module();
+
 		expect('register_deactivation_hook')->once()->with(NEVAMISS_ROOT, [$setupMock, 'deactivate']);
 
 		$booted = $application->run($mockContainer);
@@ -64,5 +68,6 @@ final class ApplicationModuleTest extends TestCase {
 	protected function tearDown(): void
 	{
 		tearDown();
+		parent::tearDown();
 	}
 }

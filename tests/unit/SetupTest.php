@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace nevamiss\tests\unit;
+namespace Nevamiss\Tests\Unit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Nevamiss\Application\Application_Module;
@@ -16,6 +16,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use function Brain\Monkey\Functions\expect;
+use function Brain\Monkey\Functions\stubs;
 use function Brain\Monkey\tearDown;
 
 #[CoversClass(Setup::class)]
@@ -55,6 +56,7 @@ final class SetupTest extends TestCase
 		$dbMock->expects($this->once())->method('setup_tables');
 
 		$dependencies = $this->createMock(Versions_Dependency_Interface::class);
+
 		$dependencies->expects($this->once())->method('php_version')->willReturn('8.0');
 
 		$setup = new Setup($dbMock, $dependencies, null);
@@ -117,5 +119,6 @@ final class SetupTest extends TestCase
 	protected function tearDown(): void
 	{
 		tearDown();
+		parent::tearDown();
 	}
 }

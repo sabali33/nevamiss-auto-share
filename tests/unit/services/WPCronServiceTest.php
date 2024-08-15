@@ -1,7 +1,8 @@
 <?php
 
-namespace unit\services;
+namespace Nevamiss\Tests\Unit\Services;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\WP_Cron_Service;
@@ -16,6 +17,7 @@ use function Brain\Monkey\tearDown;
 #[CoversClass(WP_Cron_Service::class)]
 class WPCronServiceTest extends TestCase
 {
+	use MockeryPHPUnitIntegration;
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -207,5 +209,6 @@ class WPCronServiceTest extends TestCase
 	protected function tearDown(): void
 	{
 		tearDown();
+		parent::tearDown();
 	}
 }
