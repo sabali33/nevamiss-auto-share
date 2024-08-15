@@ -11,17 +11,12 @@ class Logger implements Logger_Interface {
 
 	public const SCHEDULE_LOGS = 'nevamiss_schedule_log';
 
-	private array $messages = [];
 
 	public function __construct(
 		private Logger_Repository $logger_repository,
 		private Settings $settings,
 	)
 	{
-	}
-
-	public function messages(): array {
-		return $this->messages;
 	}
 
 	/**
@@ -39,7 +34,8 @@ class Logger implements Logger_Interface {
 		match($this->settings->logging_option()){
 			'both' => $this->log_and_save($message, $schedule_id),
 			'file' => $this->log_to_file("$message, $schedule_id"),
-			default => $this->save($message, $schedule_id)
+			'database' => $this->save($message, $schedule_id),
+			default => false
 		};
 	}
 
@@ -51,7 +47,7 @@ class Logger implements Logger_Interface {
 		$this->save($message, $schedule_id);
 		$this->log_to_file($message);
 	}
-	private function log_to_file(string $message): void
+	public function log_to_file(string $message): void
 	{
 		if(class_exists(\Monolog\Logger::class)){
 			do_action( 'wonolog.log.debug', [ 'message' => $message, 'level' => 'DEBUG' ] );
