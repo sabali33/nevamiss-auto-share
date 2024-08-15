@@ -125,6 +125,7 @@ class Settings_Page extends Page {
 				'repeat_cycle'        => $boolean_type,
 				'pause_all_schedules' => $boolean_type,
 				'keep_records'        => $boolean_type,
+				'logging_option'        => $string_type,
 			),
 			'network_api_keys' => array(
 				'networks_to_post'       => $array_type,

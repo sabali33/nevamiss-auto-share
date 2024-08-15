@@ -57,11 +57,12 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	public function sections(): array {
 		$settings = get_option( Settings_Page::GENERAL_SETTINGS );
 
-		$general          = $settings['general'] ?? array(
+		$general          = wp_parse_args($settings['general'] ?? [], array(
 			'repeat_cycle'        => 1,
 			'pause_all_schedules' => 0,
 			'keep_records'        => 1,
-		);
+			'logging_option' => 'database',
+		));
 		$network_api_keys = $settings['network_api_keys'] ?? array(
 			'networks_to_post'       => array( 'facebook', 'x' ),
 			'facebook'               => array(
@@ -109,6 +110,18 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'type'    => 'checkbox',
 						'checked' => $general['keep_records'],
 						'class'   => 'keep-records',
+					),
+					array(
+						'name'    => 'logging_option',
+						'label'   => __( 'Log to:', 'nevamiss' ),
+						'type'    => 'select',
+						'class'   => 'logging-option',
+						'value' => [$general['logging_option']],
+						'choices'   => [
+							'file' => __('File', 'nevamiss'),
+							'database' => __('Database', 'nevamiss'),
+							'both' => __('Both file and database', 'nevamiss'),
+						],
 					),
 				),
 			),
