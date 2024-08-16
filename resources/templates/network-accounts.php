@@ -33,9 +33,9 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
     ?>
 
 	<p>
-	<h1 class="wp-heading-inline">
-		<?php echo esc_html($this->label()); ?>
-	</h1>
+        <h1 class="wp-heading-inline">
+            <?php echo esc_html($this->label()); ?>
+        </h1>
 
 	</p>
     <p>
