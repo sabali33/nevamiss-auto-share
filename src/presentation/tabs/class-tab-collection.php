@@ -21,4 +21,9 @@ class Tab_Collection {
 	public function get( string $tab ): Tab_Interface {
 		return $this->tabs[ $tab ];
 	}
+
+	public function tab_exists(string $tab): bool
+	{
+		return isset($this->tabs[$tab]);
+	}
 }

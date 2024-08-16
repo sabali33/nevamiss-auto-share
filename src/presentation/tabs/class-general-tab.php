@@ -273,7 +273,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		$sections = $this->sections();
 
 		if ( ! isset( $sections[ $current_section ]['fields'] ) ) {
-			return array();
+			$current_section = General_Tab::SLUG;
 		}
 		$section_components = array();
 		foreach ( $sections[ $current_section ]['fields'] as $field ) {

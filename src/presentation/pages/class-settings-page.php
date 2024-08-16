@@ -3,6 +3,7 @@
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Presentation\Tabs\General_Tab;
 use Nevamiss\Presentation\Tabs\Tab_Collection;
 use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Services\Settings;
@@ -35,6 +36,11 @@ class Settings_Page extends Page {
 		return $this->network_collection;
 	}
 
+	public function render_tab(string $tab): ?Tab_Interface
+	{
+		return $this->tab($tab) ?? $this->tab(General_Tab::SLUG);
+	}
+
 	public function settings(): Settings {
 		return $this->data;
 	}
@@ -46,8 +52,12 @@ class Settings_Page extends Page {
 		return $this->tab_collection->get_all();
 	}
 
-	public function tab( string $tab ): Tab_Interface {
-		return $this->tab_collection->get( $tab );
+	public function tab( string $tab ): ?Tab_Interface {
+
+		if($this->tab_collection->tab_exists($tab)){
+			return $this->tab_collection->get( $tab );
+		}
+		return null;
 	}
 
 	public function save_form(): void {

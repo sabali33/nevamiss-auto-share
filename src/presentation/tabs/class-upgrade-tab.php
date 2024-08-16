@@ -28,7 +28,7 @@ class Upgrade_Tab implements Tab_Interface {
 	}
 
 	public function label(): ?string {
-		return __( 'Become a Pro member', 'nevamiss' );
+		return __( 'Become a pro member', 'nevamiss' );
 	}
 
 	public function slug(): string {
