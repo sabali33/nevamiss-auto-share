@@ -12,19 +12,12 @@ use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Logs_Table_List;
 
 class Logs_Tab implements Tab_Interface {
+	use Render_Interface;
 
 	public const SLUG = 'logs';
 	const TEMPLATE_PATH = 'resources/templates/logs';
 
 	public function __construct( private Factory $factory, private Logs_Table_List $table_list) {
-	}
-
-	public function render( $attributes = array() ): string {
-		ob_start();
-
-		include NEVAMISS_PATH . self::TEMPLATE_PATH . '.php';
-
-		return ob_get_clean();
 	}
 
 	public function label(): ?string {

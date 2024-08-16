@@ -18,6 +18,8 @@ use Nevamiss\Presentation\Pages\Settings_Page;
 
 class General_Tab implements Tab_Interface, Section_Interface {
 
+	use Render_Interface;
+
 	public const SLUG   = 'general';
 	const TEMPLATE_PATH = 'resources/templates/general-settings';
 
@@ -44,14 +46,6 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				'active_tab' => $active_tab,
 			)
 		);
-	}
-
-	public function render(): string {
-		ob_start();
-
-		include NEVAMISS_PATH . self::TEMPLATE_PATH . '.php';
-
-		return ob_get_clean();
 	}
 
 	public function sections(): array {

@@ -12,19 +12,11 @@ use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Logs_Table_List;
 
 class Upgrade_Tab implements Tab_Interface {
-
+	use Render_Interface;
 	public const SLUG = 'upgrade';
 	const TEMPLATE_PATH = 'resources/templates/upgrade';
 
 	public function __construct( private Factory $factory) {
-	}
-
-	public function render( $attributes = array() ): string {
-		ob_start();
-
-		include NEVAMISS_PATH . self::TEMPLATE_PATH . '.php';
-
-		return ob_get_clean();
 	}
 
 	public function label(): ?string {

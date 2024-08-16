@@ -12,6 +12,7 @@ use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
 
 class Stats_Tab implements Tab_Interface {
 	use Bulk_Delete_Trait;
+	use Render_Interface;
 
 	const TEMPLATE_PATH = 'resources/templates/stats';
 
@@ -23,13 +24,6 @@ class Stats_Tab implements Tab_Interface {
 
 	public const SLUG = 'stats';
 
-	public function render( $attributes = array() ): string {
-		ob_start();
-
-		include NEVAMISS_PATH . self::TEMPLATE_PATH . '.php';
-
-		return ob_get_clean();
-	}
 
 	public function label(): ?string {
 		return __( 'Stats', 'nevamiss' );

@@ -12,6 +12,7 @@ use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 
 class Network_Accounts_Tab implements Tab_Interface {
+	use Render_Interface;
 
 	const TEMPLATE_PATH = 'resources/templates/network-accounts';
 	const LOGIN_PATH    = 'resources/templates/network-login';
@@ -25,13 +26,6 @@ class Network_Accounts_Tab implements Tab_Interface {
 	}
 	public const SLUG = 'network-accounts';
 
-	public function render( $attributes = array() ): string {
-		ob_start();
-
-		include NEVAMISS_PATH . self::TEMPLATE_PATH . '.php';
-
-		return ob_get_clean();
-	}
 
 	public function label(): ?string {
 		return __( 'Network Accounts', 'nevamiss' );
