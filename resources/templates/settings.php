@@ -39,7 +39,7 @@ $tabs = $this->tabs();
         <?php
         switch ($active_tab) {
             case Logs_Tab::SLUG:
-	            echo "Logs";
+	            echo $this->tab(Logs_Tab::SLUG)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 break;
             case Network_Accounts_Tab::SLUG:
 	            echo $this->tab(Network_Accounts_Tab::SLUG)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

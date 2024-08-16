@@ -6,6 +6,7 @@ use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
@@ -16,6 +17,7 @@ use Nevamiss\Presentation\Pages\Schedule_View_Page;
 use Nevamiss\Presentation\Pages\Schedules_Page;
 use Nevamiss\Presentation\Pages\Settings_Page;
 use Nevamiss\Presentation\Pages\Suggestions_Page;
+use Nevamiss\Presentation\Pages\Tables\Logs_Table_List;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 use Nevamiss\Presentation\Pages\Tables\Schedules_Table_List;
 use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
@@ -89,9 +91,10 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$container->get( Posts_Stats_Repository::class ),
 				$container->get( Schedule_Queue::class ),
 			),
+			Logs_Table_List::class => fn(ContainerInterface $container) => new Logs_Table_List($container->get(Logger_Repository::class)),
 			Tab_Collection_Interface::class    => function ( ContainerInterface $container ) {
 				$factory = $container->get( Factory::class );
-				return array(
+				return apply_filters( 'nevamiss-settings-tabs', array(
 					new General_Tab( $factory ),
 					new Network_Accounts_Tab(
 						$factory,
@@ -99,8 +102,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 						$container->get( Media_Network_Collection::class )
 					),
 					new Stats_Tab( $factory, $container->get( Stats_Table_List::class ) ),
-					new Logs_Tab( $factory ),
-				);
+					new Logs_Tab( $factory, $container->get(Logs_Table_List::class) ),
+				));
 			},
 
 			Tab_Collection::class              => function ( ContainerInterface $container ) {

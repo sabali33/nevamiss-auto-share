@@ -6,18 +6,25 @@ namespace Nevamiss\Presentation\Tabs;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
+use Nevamiss\Presentation\Pages\Tables\Logs_Table_List;
 
 class Logs_Tab implements Tab_Interface {
 
 	public const SLUG = 'logs';
+	const TEMPLATE_PATH = 'resources/templates/logs';
 
-	public function __construct( private Factory $factory ) {
+	public function __construct( private Factory $factory, private Logs_Table_List $table_list) {
 	}
 
 	public function render( $attributes = array() ): string {
-		return 'Logs';
+		ob_start();
+
+		include NEVAMISS_PATH . self::TEMPLATE_PATH . '.php';
+
+		return ob_get_clean();
 	}
 
 	public function label(): ?string {
@@ -40,5 +47,9 @@ class Logs_Tab implements Tab_Interface {
 				'active_tab' => $active_tab,
 			)
 		);
+	}
+	public function table_list(): Logs_Table_List
+	{
+		return $this->table_list;
 	}
 }
