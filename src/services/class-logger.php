@@ -14,7 +14,7 @@ class Logger implements Logger_Interface {
 	public const SCHEDULE_LOGS = 'nevamiss_schedule_log';
 
 
-	private function __construct(
+	public function __construct(
 		private Logger_Repository $logger_repository,
 		private Settings $settings,
 	)
@@ -33,11 +33,9 @@ class Logger implements Logger_Interface {
 	/**
 	 * @throws \Exception
 	 */
-	public function save(array $messages, int $schedule_id): void {
-		$this->logger_repository->create([
-			'schedule_id' => $schedule_id,
-			'messages' => wp_json_encode($messages)
-		]);
+	public function save(array $post_data): void {
+
+		$this->logger_repository->create($post_data);
 	}
 
 	/**
@@ -46,12 +44,17 @@ class Logger implements Logger_Interface {
 	public function log_callback(array $messages, int $schedule_id): void
 	{
 		self::$messages[] = $messages[0];
+		$post_data = [
+			'schedule_id' => $schedule_id,
+			'messages' => wp_json_encode(self::$messages)
+		];
 
 		if(isset($messages[1]) && $messages[1]){
+
 			match($this->settings->logging_option()){
-				'both' => $this->log_and_save(self::$messages, $schedule_id),
-				'file' => $this->log_to_file(self::$messages, $schedule_id),
-				'database' => $this->save(self::$messages, $schedule_id),
+				'both' => $this->log_and_save($post_data),
+				'file' => $this->log_to_file($post_data),
+				'database' => $this->save($post_data),
 				default => false
 			};
 			self::$messages = [];
@@ -62,24 +65,24 @@ class Logger implements Logger_Interface {
 	/**
 	 * @throws \Exception
 	 */
-	private function log_and_save(array $messages, $schedule_id): void
+	private function log_and_save(array $messages): void
 	{
-		$this->save($messages, $schedule_id);
-		$this->log_to_file($messages, $schedule_id);
+		$this->save($messages);
+		$this->log_to_file($messages);
 	}
-	public function log_to_file(array $messages, int $schedule_id): void
+	public function log_to_file(array $messages): void
 	{
-		$messages[] = "Schedule ID $schedule_id";
+		$encoded_data = wp_json_encode($messages);
 
 		if(class_exists(\Monolog\Logger::class)){
 
 			do_action( 'wonolog.log.debug', [
-				'message' => wp_json_encode($messages),
+				'message' => $encoded_data,
 				'level' => 'DEBUG',
 			] );
-			//return;
+			return;
 		}
-		$message_string = join('\n', $messages);
-		error_log($message_string);
+
+		error_log($encoded_data);
 	}
 }
