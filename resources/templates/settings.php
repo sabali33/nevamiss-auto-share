@@ -7,6 +7,7 @@ use Nevamiss\Presentation\Tabs\Logs_Tab;
 use Nevamiss\Presentation\Tabs\Network_Accounts_Tab;
 use Nevamiss\Presentation\Tabs\Stats_Tab;
 use Nevamiss\Presentation\Pages\Settings_Page;
+use Nevamiss\Presentation\Tabs\Upgrade_Tab;
 
 /**
  * @var Settings_Page $this
@@ -41,6 +42,9 @@ $tabs = $this->tabs();
             case Logs_Tab::SLUG:
 	            echo $this->tab(Logs_Tab::SLUG)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 break;
+	        case Upgrade_Tab::SLUG:
+		        echo $this->tab(Upgrade_Tab::SLUG)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		        break;
             case Network_Accounts_Tab::SLUG:
 	            echo $this->tab(Network_Accounts_Tab::SLUG)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 break;
