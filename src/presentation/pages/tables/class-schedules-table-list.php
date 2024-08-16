@@ -282,7 +282,7 @@ class Schedules_Table_List extends \WP_List_Table {
 			if ( $value > 0 ) {
 
 				// $parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
-				$parts[] = sprintf( $this->translate( $unit, $value ), $value );
+				$parts[] = sprintf( $this->translate( $unit, (int)$value ), $value );
 			} elseif ( ! empty( $parts ) ) {
 				/*
 				translators: %s: A time formatting string such as month, day, hour or minute */
