@@ -20,7 +20,7 @@ class Task_Runner implements Task_Runner_Interface {
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	public function run( int $task_id ): void {
+	public function run( int $task_id ): bool {
 		[
 			'class_identifier' => $class_name,
 			'parameter' => $parameters,
@@ -47,5 +47,7 @@ class Task_Runner implements Task_Runner_Interface {
 				'task'    => $task_id,
 			)
 		);
+
+		return true;
 	}
 }
