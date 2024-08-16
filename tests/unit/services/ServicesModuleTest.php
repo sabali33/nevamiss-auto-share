@@ -88,7 +88,7 @@ class ServicesModuleTest extends TestCase
 			);
 		$servicesModule = new Services_Module();
 		$booted = $servicesModule->run($mockContainer);
-		$this->assertNotFalse(has_action('schedule_create_tasks_completed', [ $scheduleTaskRunnerMock, 'run' ]));
+		$this->assertNotFalse(has_action('nevamiss_schedule_create_tasks_completed', [ $scheduleTaskRunnerMock, 'run' ]));
 		$this->assertNotFalse(has_action('nevamiss_schedule_task_complete', [ $scheduleTaskRunnerMock, 'update_task' ]));
 
 		$this->assertNotFalse(has_filter('cron_schedules', [ $wpCronServiceMock, 'add_cron' ]));

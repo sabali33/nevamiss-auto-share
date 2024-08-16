@@ -43,24 +43,25 @@ class LoggerTest extends TestCase
 	public function test_it_save_log_message_to_database()
 	{
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
-		$post_data = ['message' => 'Test log message', 'schedule_id' => 3];
+		$post_data = ['messages' => ['Test log message'], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
 		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
+
 		$loggerRepositoryLogger->expects($this->once())->method('create')->with($post_data);
-		$logger->save($post_data['message'], $post_data['schedule_id']);
+		$logger->save($post_data);
 	}
 
 	public function test_it_log_message_through_third_party_log()
 	{
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
-		$post_data = 'Test log message, 3';
+		$post_data = ['messages' => ['Test log message'], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
 
-		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
+		$logger = Logger::instance($loggerRepositoryLogger, $settingsMock);
 
 		when('class_exists')->justReturn(true);
 
-		expect('do_action')->once()->with('wonolog.log.debug', [ 'message' => $post_data, 'level' => 'DEBUG' ]);
+		expect('do_action')->once()->with('wonolog.log.debug', [ 'message' => wp_json_encode($post_data), 'level' => 'DEBUG' ]);
 
 		expect('error_log')->never();
 
@@ -70,13 +71,13 @@ class LoggerTest extends TestCase
 	public function test_it_log_message_to_file()
 	{
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
-		$post_data = 'Test log message, 3';
+		$post_data = ['messages' => ['Test log message'], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
 
 		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
 
 		expect('error_log')->once();
-		expect('do_action')->with('wonolog.log.debug', [ 'message' => $post_data, 'level' => 'DEBUG' ])->never();
+		expect('do_action')->with('wonolog.log.debug', [ 'message' => wp_json_encode($post_data), 'level' => 'DEBUG' ])->never();
 
 
 		$logger->log_to_file($post_data);
@@ -90,26 +91,31 @@ class LoggerTest extends TestCase
 	public function test_it_log_message_from_callback(string $logType)
 	{
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
-		$post_data = ['message' => 'Test log message', 'schedule_id' => 3];
+		$post_data = ['messages' => ['Test log message', true], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
 		$settingsMock->expects($this->once())->method('logging_option')->willReturn($logType);
 		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
 
+		$expect_save_data = [
+			'messages' => wp_json_encode(['Test log message']),
+			'schedule_id' => 3
+		];
+
 		if($logType === 'both'){
 			expect('error_log')->once();
-			$loggerRepositoryLogger->expects($this->once())->method('create')->with($post_data)->willReturn(1);
+			$loggerRepositoryLogger->expects($this->once())->method('create')->with($expect_save_data)->willReturn(1);
 		}elseif('file' === $logType){
 
 			expect('error_log')->once();
-			expect('do_action')->with('wonolog.log.debug', [ 'message' => $post_data, 'level' => 'DEBUG' ])->never();
+			expect('do_action')->with('wonolog.log.debug', [ 'message' => wp_json_encode($post_data), 'level' => 'DEBUG' ])->never();
 
 		}else{
 			expect('error_log')->never();
-			expect('do_action')->with('wonolog.log.debug', [ 'message' => $post_data, 'level' => 'DEBUG' ])->never();
-			$loggerRepositoryLogger->expects($this->once())->method('create')->with($post_data)->willReturn(1);
+			expect('do_action')->with('wonolog.log.debug', [ 'message' => wp_json_encode($post_data), 'level' => 'DEBUG' ])->never();
+			$loggerRepositoryLogger->expects($this->once())->method('create')->with($expect_save_data)->willReturn(1);
 		}
 
-		$logger->log_callback($post_data['message'], $post_data['schedule_id']);
+		$logger->log_callback($post_data['messages'], $post_data['schedule_id']);
 
 	}
 
