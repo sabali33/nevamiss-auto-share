@@ -43,7 +43,7 @@ class Schedule_Post_Manager {
 			if($instant_sharing){
 				throw new Exception(__("Scheduling is paused at Settings", 'nevamiss'));
 			}
-
+			return;
 		}
 
 		try {
