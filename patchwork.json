@@ -2,6 +2,7 @@
   "redefinable-internals": [
     "class_exists",
     "version_compare",
-    "error_log"
+    "error_log",
+    "sleep"
   ]
 }
