@@ -150,8 +150,6 @@ class WPCronServiceTest extends TestCase
 		$scheduleMock->method('start_date')->willReturn('2024-08-15');
 		$scheduleMock->method('id')->willReturn(3);
 
-		\Mockery::spy('wp_schedule_event');
-		\Mockery::spy('Nevamiss\Services\get_option');
 		expect('wp_schedule_event')->once()->andReturn(false);
 		expect('get_option')->times(count($dates));
 		stubEscapeFunctions();
