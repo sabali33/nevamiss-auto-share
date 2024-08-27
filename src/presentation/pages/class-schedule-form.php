@@ -333,8 +333,8 @@ class Schedule_Form extends Page {
 		$validated_data = $this->validate( $data );
 
 		if ( ! empty( $this->validator->errors() ) ) {
-			$error_message['message'] = join( ', ', $this->validator->errors() );
 
+			$error_message['message'] = join( ', ', $this->validator->errors() );
 			$this->redirect( $error_message );
 			exit;
 		}
@@ -347,6 +347,7 @@ class Schedule_Form extends Page {
 
 		try {
 			if ( $schedule_id ) {
+
 				$this->schedule_repository->update( (int) $schedule_id, $data );
 				/* translators: %s: A link to schedules page */
 				$message = rawurlencode( sprintf( __( "Successfully updated the schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
@@ -392,73 +393,6 @@ class Schedule_Form extends Page {
 		}
 	}
 
-	/**
-	 * @throws \Exception
-	 */
-	public function update_form(): void {
-		if ( ! isset( $_POST['schedule_name'] ) || ! $this->schedule() ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			return;
-		}
-
-		if ( ! $this->is_authorized() ) {
-			$this->redirect(
-				array(
-					'page'        => 'edit-schedule',
-					'status'      => 'error',
-					'message'     => __( 'Unauthorized', 'nevamiss' ),
-					'schedule_id' => $this->schedule->id(),
-				)
-			);
-			exit;
-		}
-
-		$data = $this->schedule_repository->allowed_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-		$validated_data = $this->validate( $data );
-
-		if ( ! empty( $this->validator->errors() ) ) {
-
-			$this->redirect(
-				array(
-					'page'        => 'edit-schedule',
-					'status'      => 'error',
-					'message'     => join( ', ', $this->validator->errors() ),
-					'schedule_id' => $this->schedule->id(),
-				)
-			);
-			exit;
-		}
-
-		$data = $this->format_dates( $validated_data );
-
-		$data = $this->array_to_json( $data );
-
-		$schedules_url = admin_url( 'admin.php?page=schedules' );
-
-		try {
-			$this->schedule_repository->update( $this->schedule()->id(), $data );
-			/* translators: %s: A link to schedules page */
-			$message = rawurlencode( sprintf( __( "Successfully updated a schedule <a href='%s'>back</a>", 'nevamiss' ), esc_url( $schedules_url ) ) );
-
-			$type = 'success';
-
-			do_action( 'nevamiss_after_schedule_updated', $this->schedule );
-
-		} catch ( \Exception $exception ) {
-			$message = $exception->getMessage();
-			$type    = 'error';
-		}
-
-		$this->redirect(
-			array(
-				'page'        => 'edit-schedule',
-				'status'      => $type,
-				'message'     => $message,
-				'schedule_id' => $this->schedule->id(),
-			)
-		);
-		exit;
-	}
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php' ) );
 		wp_redirect( $url );
