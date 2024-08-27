@@ -40,5 +40,18 @@ class Upgrade_Tab implements Tab_Interface {
 			)
 		);
 	}
+	public function premium_feature_list()
+	{
+		return [
+			'Import export schedules',
+			'More channels to share to',
+			'Calendar view of schedules',
+			'Remote sharing support never miss a post',
+			'Pre-publish account customization',
+			'Group share on post meta',
+			'AI generated posts for sharing',
+			'Automatic clearing of logs'
+		];
+	}
 
 }

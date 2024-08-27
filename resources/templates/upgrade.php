@@ -10,4 +10,24 @@ use Nevamiss\Presentation\Tabs\Upgrade_Tab;
 
 ?>
 
-Upgrade more benefits
+<div class="premium-features-wrap">
+    <h2>
+		<?php esc_html_e('** Premium Features **'); ?>
+    </h2>
+    <ul class="premium-feature-list">
+		<?php foreach ($this->premium_feature_list() as $feature) : ?>
+            <li>
+				<?php echo esc_html($feature)." (Coming Soon)"; ?>
+            </li>
+		<?php endforeach; ?>
+
+    </ul>
+
+    <div class="convert-action">
+        <a href="#" class="button button-primary"> <?php esc_html_e('Upgrade', 'nevamiss'); ?>  </a>
+	    <?php esc_html_e(' or ', 'nevamiss'); ?>
+        <a href="#" class="button button-default"> <?php esc_html_e('Donate', 'nevamiss'); ?> </a>
+    </div>
+
+
+</div>

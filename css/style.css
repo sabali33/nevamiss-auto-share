@@ -57,3 +57,25 @@ Post meta settings
     flex-direction: column;
     gap: 1.5rem;
 }
+
+/**
+Upgrade Tab styles
+ */
+.premium-feature-list li{
+    padding: 10px 0;
+}
+.premium-feature-list li::before{
+    content: " ";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: solid 1px #1f9681;
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+.premium-features-wrap{
+    margin: 3rem auto;
+}
+.premium-features-wrap .convert-action {
+    margin-top: 2rem;
+}
