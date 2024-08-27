@@ -8,6 +8,7 @@
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
          failOnRisky="true"
+         backupGlobals="true"
          failOnWarning="true">
     <testsuites>
         <testsuite name="unit">

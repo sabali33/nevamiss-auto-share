@@ -3,6 +3,7 @@
     "class_exists",
     "version_compare",
     "error_log",
-    "sleep"
+    "sleep",
+    "join"
   ]
 }
