@@ -372,7 +372,9 @@ class ScheduleFormTest extends TestCase {
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-schedules',
 			'wp_verify_nonce' => true,
-			'wp_redirect' => function(){ throw new \Exception('Exiting'); },
+			'wp_redirect' => function(){
+				throw new \Exception('Exiting');
+			},
 		]);
 
 		$form = new Schedule_Form($scheduleRepositoryMock, $networkAccountRepoMock, $formValidatorMock, $factoryMock);
