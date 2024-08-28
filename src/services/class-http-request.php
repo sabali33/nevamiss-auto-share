@@ -49,6 +49,9 @@ class Http_Request {
 
 			return $headers['x-restli-id'];
 		}
+		if(!in_array($response['response']['code'], array(200, 201, 202, 204))){
+			throw new Exception('Unable to successfully make the request');
+		}
 
 		return json_decode( $body, true );
 	}

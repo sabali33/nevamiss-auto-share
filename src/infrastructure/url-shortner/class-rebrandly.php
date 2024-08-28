@@ -32,18 +32,21 @@ class Rebrandly implements URL_Shortner_Interface
 			array(
 				'headers' => [
 					'accept' => 'application/json',
-					'apikey' => $api['key'],
+					'apikey' => $api['api_key'],
 					'content-type' => 'application/json',
 				],
-				'body' => [
+				'body' => wp_json_encode([
 					'destination' => $url,
 					'title' => $args['title'] ?? '',
 					'hashtag' => $args['hashtag'] ?? '',
 					'domain' => $args['domain'] ?? ['id' => null, 'fullName' => ''],
-				]
+				])
 			)
 		);
-		return new Url_Shortner_Response($response['shortUrl'], $response['id'], $response['status'], $response['isPublic']);
+
+		$status = $response['status'] === 'active';
+
+		return new Url_Shortner_Response($response['shortUrl'], $response['id'], $status, $response['isPublic']);
 	}
 
 	/**

@@ -16,6 +16,7 @@ use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
 use Nevamiss\Infrastructure\Url_Shortner\Rebrandly;
+use Nevamiss\Infrastructure\Url_Shortner\Shortner_Collection;
 use Nevamiss\Networks\Network_Clients;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
@@ -120,6 +121,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 	}
 
 	public function services(): array {
+
 		return array(
 			Logger::class                      => fn(ContainerInterface $container): Logger => Logger::instance(
 				$container->get(Logger_Repository::class),
@@ -186,7 +188,10 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			},
 			Stats_Manager::class               => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
 			Ajax::class                        => fn( ContainerInterface $container ) => new Ajax( $container->get( Post_Meta::class ) ),
-			Url_Shortner_Manager::class =>  fn() => new Url_Shortner_Manager(),
+			Url_Shortner_Manager::class =>  fn(ContainerInterface $container) => new Url_Shortner_Manager(
+				$container->get(Settings::class),
+				$container->get(Shortner_Collection::class)
+			),
 		);
 	}
 }

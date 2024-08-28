@@ -21,6 +21,7 @@ class Infrastructure_Module implements ServiceModule{
 	 */
 	public function services(): array
 	{
+
 		return [
 			Rebrandly::class => fn(ContainerInterface $container) => new Rebrandly(
 				$container->get(Http_Request::class),
