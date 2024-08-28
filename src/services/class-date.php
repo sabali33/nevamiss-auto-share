@@ -101,4 +101,13 @@ class Date implements Date_Interface {
 	public function time_format(): string {
 		return get_option( 'time_format' );
 	}
+
+	public function date_time(): \DateTime
+	{
+		return $this->date;
+	}
+	public function diff(Date $date): \DateInterval|bool
+	{
+		return $this->date->diff($date->date_time());
+	}
 }

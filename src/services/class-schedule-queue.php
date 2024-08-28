@@ -13,8 +13,6 @@ use Nevamiss\Domain\Repositories\Schedule_Repository;
 
 class Schedule_Queue {
 
-	private const HOUR_DIVISOR_IN_SECONDS = 60 * 60;
-	private const DAY_DIVISOR_IN_SECONDS  = self::HOUR_DIVISOR_IN_SECONDS * 24;
 	public function __construct(
 		private Schedule_Repository $schedule_repository,
 		private Schedule_Queue_Repository $queue_repository,
@@ -291,6 +289,14 @@ class Schedule_Queue {
 		};
 	}
 
+	/**
+	 * Estimate posting completion time for monthly schedules.
+	 *
+	 * @param Schedule $schedule
+	 * @param int $posts_count
+	 * @return array
+	 * @throws Exception
+	 */
 	private function estimate_monthly_schedule( Schedule $schedule, int $posts_count ): array {
 		$time_units = array();
 
@@ -326,23 +332,22 @@ class Schedule_Queue {
 	}
 
 	/**
+	 * Finds difference between to dates
+	 *
 	 * @param Date $date
 	 * @param Date $end_date
 	 * @return array
 	 */
 	private function hour_minute( Date $date, Date $end_date ): array {
+
+		$time_difference = $end_date->diff($date);
+
 		$time_units                 = array();
-		$time_difference_in_seconds = $end_date->timestamp() - $date->timestamp();
+		$time_units['day'] = $time_difference->d;
 
-		$time_difference_in_seconds = $time_difference_in_seconds % ( self::DAY_DIVISOR_IN_SECONDS * 30 );
+		$time_units['hour'] = $time_difference->h;
 
-		$time_units['day'] = floor( $time_difference_in_seconds / self::DAY_DIVISOR_IN_SECONDS );
-		$remaining_seconds = $time_difference_in_seconds % self::DAY_DIVISOR_IN_SECONDS;
-
-		$time_units['hour'] = floor( $remaining_seconds / self::HOUR_DIVISOR_IN_SECONDS );
-		$remaining_seconds  = $remaining_seconds % self::HOUR_DIVISOR_IN_SECONDS;
-
-		$time_units['minute'] = ceil( $remaining_seconds / 60 );
+		$time_units['minute'] = $time_difference->i;
 
 		$format = "{$end_date->date_format()} @ {$end_date->time_format()}";
 
@@ -352,12 +357,15 @@ class Schedule_Queue {
 	}
 
 	/**
-	 * @param Date     $date
-	 * @param int      $remaining_posts
+	 * Retrieve the last date to finish posting.
+	 *
+	 * @param Date $date
+	 * @param int $remaining_posts
 	 * @param Schedule $schedule
-	 * @return Date|false
+	 * @return Date
+	 * @throws Exception
 	 */
-	private function last_cycle_date( Date $date, int $remaining_posts, Schedule $schedule ): Date|false {
+	private function last_cycle_date( Date $date, int $remaining_posts, Schedule $schedule ): Date {
 		$end_date = Date::create_from_format( $date->format( 'Y-m-d' ) );
 
 		$number_of_days_to_post = ceil( $remaining_posts / (int) $schedule->query_args()['posts_per_page'] );
@@ -386,7 +394,7 @@ class Schedule_Queue {
 			$this->update_time( $end_date, $last_day );
 			return $end_date;
 		}
-		return false;
+		return $date;
 	}
 
 	private function estimate_weekly_schedule( Schedule $schedule, int $posts_count ): array {
@@ -487,16 +495,11 @@ class Schedule_Queue {
 	 * @return array
 	 */
 	private function modifiers( Date $date ): array {
-		$time_difference = Date::now()->timestamp() - $date->timestamp();
-
-		$difference_in_months = floor( $time_difference / ( self::DAY_DIVISOR_IN_SECONDS * 30 ) );
-		$remaining_difference = $time_difference % ( self::DAY_DIVISOR_IN_SECONDS * 30 );
-
-		$difference_in_days   = floor( $remaining_difference / self::DAY_DIVISOR_IN_SECONDS );
-		$remaining_difference = $remaining_difference % self::DAY_DIVISOR_IN_SECONDS;
-
-		$difference_in_hours  = $remaining_difference / self::HOUR_DIVISOR_IN_SECONDS;
-		$remaining_difference = $remaining_difference % self::HOUR_DIVISOR_IN_SECONDS;
+		$time_difference = Date::now()->diff($date);
+		$difference_in_months = $time_difference->m;
+		$difference_in_days = $time_difference->d;
+		$difference_in_hours = $time_difference->h;
+		$difference_in_minutes = $time_difference->i;
 
 		$modifiers = array();
 
@@ -509,7 +512,6 @@ class Schedule_Queue {
 		if ( $difference_in_hours ) {
 			$modifiers[] = "+$difference_in_hours day";
 		}
-		$difference_in_minutes = floor( $remaining_difference / 60 );
 		$modifiers[]           = "+$difference_in_minutes minute";
 
 		return $modifiers;
