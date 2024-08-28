@@ -257,6 +257,7 @@ class Schedule_Queue {
 
 	/**
 	 * @throws Not_Found_Exception
+	 * @throws Exception
 	 */
 	public function estimate_schedule_cycle_completion( Schedule $schedule ): array {
 		/**
@@ -281,7 +282,10 @@ class Schedule_Queue {
 		return $this->schedule_estimated_completion_time( $schedule, $remaining_posts_count );
 	}
 
-	private function schedule_estimated_completion_time( Schedule $schedule, int $posts_count ): array {
+	/**
+	 * @throws Exception
+	 */
+	private function schedule_estimated_completion_time(Schedule $schedule, int $posts_count ): array {
 		return match ( $schedule->repeat_frequency() ) {
 			'monthly' => $this->estimate_monthly_schedule( $schedule, $posts_count ),
 			'weekly' => $this->estimate_weekly_schedule( $schedule, $posts_count ),
@@ -394,6 +398,7 @@ class Schedule_Queue {
 			$this->update_time( $end_date, $last_day );
 			return $end_date;
 		}
+
 		return $date;
 	}
 
