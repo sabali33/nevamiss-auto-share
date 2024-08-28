@@ -12,6 +12,7 @@ class Logger implements Logger_Interface {
 	private static $messages = [];
 	private static ?self $instance = null;
 	public const SCHEDULE_LOGS = 'nevamiss_schedule_log';
+	public const GENERAL_LOGS = 'nevamiss_general_log';
 
 
 	public function __construct(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services;
 
+use Nevamiss\Infrastructure\Url_Shortner\Rebrandly;
 use Nevamiss\Presentation\Pages\Settings_Page;
 
 class Settings {
@@ -75,6 +76,16 @@ class Settings {
 
 	public function logging_option()
 	{
+
 		return $this->setting('logging_option');
+	}
+
+	public function url_shortner(): string
+	{
+		return $this->setting('url_shortner');
+	}
+	public function url_shortner_credentials(string $id = Rebrandly::REBRANDLY): array
+	{
+		return [];
 	}
 }

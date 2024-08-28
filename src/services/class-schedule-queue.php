@@ -498,6 +498,7 @@ class Schedule_Queue {
 	/**
 	 * @param Date $date
 	 * @return array
+	 * @throws Exception
 	 */
 	private function modifiers( Date $date ): array {
 		$time_difference = Date::now()->diff($date);
@@ -517,7 +518,7 @@ class Schedule_Queue {
 		if ( $difference_in_hours ) {
 			$modifiers[] = "+$difference_in_hours day";
 		}
-		$modifiers[]           = "+$difference_in_minutes minute";
+		$modifiers[] = "+$difference_in_minutes minute";
 
 		return $modifiers;
 	}

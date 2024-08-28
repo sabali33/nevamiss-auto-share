@@ -15,6 +15,7 @@ use Nevamiss\Services\Schedule_Queue;
 use Nevamiss\Services\Schedule_Tasks_Runner;
 use Nevamiss\Services\Services_Module;
 use Nevamiss\Services\Stats_Manager;
+use Nevamiss\Services\Url_Shortner_Manager;
 use Nevamiss\Services\WP_Cron_Service;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -45,8 +46,9 @@ class ServicesModuleTest extends TestCase
 		$statsRowActionMock = $this->createMock(Stats_Row_Action_Handler::class);
 		$ajaxMock = $this->createMock(Ajax::class);
 		$loggerMock = $this->createMock(Logger::class);
+		$shortnerManagerMock = $this->createMock(Url_Shortner_Manager::class);
 
-		$mockContainer->expects($this->exactly(10))
+		$mockContainer->expects($this->exactly(11))
 			->method('get')->with($this->logicalOr(
 				$this->equalTo(Schedule_Post_Manager::class),
 				$this->equalTo(WP_Cron_Service::class),
@@ -58,6 +60,7 @@ class ServicesModuleTest extends TestCase
 				$this->equalTo(Stats_Row_Action_Handler::class),
 				$this->equalTo(Ajax::class),
 				$this->equalTo(Logger::class),
+				$this->equalTo(Url_Shortner_Manager::class),
 			))->willReturnCallback(
 				function($arg1) use(
 					$schedulePostManagerMock,
@@ -69,7 +72,8 @@ class ServicesModuleTest extends TestCase
 					$ajaxMock,
 					$scheduleTaskRunnerMock,
 					$accountsRowActionMock,
-					$loggerMock
+					$loggerMock,
+					$shortnerManagerMock,
 				) {
 					return match ($arg1) {
 						Schedule_Post_Manager::class => $schedulePostManagerMock,
@@ -82,6 +86,7 @@ class ServicesModuleTest extends TestCase
 						Schedule_Tasks_Runner::class => $scheduleTaskRunnerMock,
 						Accounts_Row_Action_Handler::class => $accountsRowActionMock,
 						Logger::class => $loggerMock,
+						Url_Shortner_Manager::class => $shortnerManagerMock,
 						default => '',
 					};
 				}
@@ -113,6 +118,7 @@ class ServicesModuleTest extends TestCase
 		$this->assertNotFalse(has_action('admin_post_nevamiss_stats_delete', [ $statsRowActionMock, 'delete_stat_row_callback' ]));
 
 		$this->assertNotFalse(has_action('wp_ajax_nevamiss_instant_share', [ $ajaxMock, 'instant_posting_callback' ]));
+		$this->assertNotFalse(has_action('transition_post_status', [ $shortnerManagerMock, 'on_post_publish' ]));
 
 		$this->assertNotFalse(has_action(Logger::SCHEDULE_LOGS, [$loggerMock, 'log_callback']));
 

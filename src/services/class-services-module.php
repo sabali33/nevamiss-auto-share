@@ -15,6 +15,7 @@ use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
+use Nevamiss\Infrastructure\Url_Shortner\Rebrandly;
 use Nevamiss\Networks\Network_Clients;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Services\Row_Action_Handlers\Accounts_Row_Action_Handler;
@@ -63,6 +64,11 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 */
 		$schedule_tasks_runner = $container->get( Schedule_Tasks_Runner::class );
 
+		/**
+		 * @var Url_Shortner_Manager $url_shortner_manager
+		 */
+		$url_shortner_manager = $container->get(Url_Shortner_Manager::class);
+
 		add_action( 'nevamiss_schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
 		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ), 10, 2 );
 
@@ -82,6 +88,8 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'admin_post_nevamiss_schedule_delete', array( $post_handler, 'delete_schedule_callback' ) );
 		add_action( 'admin_post_nevamiss_schedule_unschedule', array( $post_handler, 'unschedule_callback' ) );
 		add_action( 'admin_post_nevamiss_schedule_share', array( $post_handler, 'share_schedule_posts_callback' ) );
+
+		add_action( 'transition_post_status', array($url_shortner_manager, 'on_post_publish'));
 
 		add_action(
 			'admin_post_nevamiss_network_accounts_delete',
@@ -178,6 +186,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			},
 			Stats_Manager::class               => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
 			Ajax::class                        => fn( ContainerInterface $container ) => new Ajax( $container->get( Post_Meta::class ) ),
+			Url_Shortner_Manager::class =>  fn() => new Url_Shortner_Manager(),
 		);
 	}
 }
