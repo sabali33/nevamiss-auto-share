@@ -74,19 +74,16 @@ class Settings {
 		return $this->share_on_publish();
 	}
 
-	public function logging_option()
-	{
+	public function logging_option() {
 
-		return $this->setting('logging_option');
+		return $this->setting( 'logging_option' );
 	}
 
-	public function url_shortner(): string
-	{
-		return $this->setting('url_shortner_client') ?: 'rebrandly';
+	public function url_shortner(): string {
+		return $this->setting( 'url_shortner_client' ) ?: 'rebrandly';
 	}
-	public function url_shortner_credentials(string $id = Rebrandly::REBRANDLY): array
-	{
+	public function url_shortner_credentials( string $id = Rebrandly::REBRANDLY ): array {
 		$url_shortner_client = $this->url_shortner();
-		return $this->setting($url_shortner_client);
+		return $this->setting( $url_shortner_client );
 	}
 }

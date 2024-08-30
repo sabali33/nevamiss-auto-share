@@ -12,10 +12,10 @@ class Log {
 	private string $posted_on;
 
 	public function __construct( array $log ) {
-		$this->schedule_id    = (int) $log['schedule_id'];
-		$this->messages = $log['messages'];
-		$this->posted_on      = $log['created_at'];
-		$this->id      = (int)$log['id'];
+		$this->schedule_id = (int) $log['schedule_id'];
+		$this->messages    = $log['messages'];
+		$this->posted_on   = $log['created_at'];
+		$this->id          = (int) $log['id'];
 	}
 
 	public function schedule_id(): int {

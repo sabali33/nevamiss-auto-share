@@ -88,7 +88,7 @@ class Schedule_Queue {
 			'status' => $status
 		] = $args;
 
-		if('failed' === $status){
+		if ( 'failed' === $status ) {
 			return;
 		}
 		$schedule_queue = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule_id );
@@ -285,7 +285,7 @@ class Schedule_Queue {
 	/**
 	 * @throws Exception
 	 */
-	private function schedule_estimated_completion_time(Schedule $schedule, int $posts_count ): array {
+	private function schedule_estimated_completion_time( Schedule $schedule, int $posts_count ): array {
 		return match ( $schedule->repeat_frequency() ) {
 			'monthly' => $this->estimate_monthly_schedule( $schedule, $posts_count ),
 			'weekly' => $this->estimate_weekly_schedule( $schedule, $posts_count ),
@@ -297,7 +297,7 @@ class Schedule_Queue {
 	 * Estimate posting completion time for monthly schedules.
 	 *
 	 * @param Schedule $schedule
-	 * @param int $posts_count
+	 * @param int      $posts_count
 	 * @return array
 	 * @throws Exception
 	 */
@@ -344,9 +344,9 @@ class Schedule_Queue {
 	 */
 	private function hour_minute( Date $date, Date $end_date ): array {
 
-		$time_difference = $end_date->diff($date);
+		$time_difference = $end_date->diff( $date );
 
-		$time_units                 = array();
+		$time_units        = array();
 		$time_units['day'] = $time_difference->d;
 
 		$time_units['hour'] = $time_difference->h;
@@ -363,8 +363,8 @@ class Schedule_Queue {
 	/**
 	 * Retrieve the last date to finish posting.
 	 *
-	 * @param Date $date
-	 * @param int $remaining_posts
+	 * @param Date     $date
+	 * @param int      $remaining_posts
 	 * @param Schedule $schedule
 	 * @return Date
 	 * @throws Exception
@@ -501,10 +501,10 @@ class Schedule_Queue {
 	 * @throws Exception
 	 */
 	private function modifiers( Date $date ): array {
-		$time_difference = Date::now()->diff($date);
-		$difference_in_months = $time_difference->m;
-		$difference_in_days = $time_difference->d;
-		$difference_in_hours = $time_difference->h;
+		$time_difference       = Date::now()->diff( $date );
+		$difference_in_months  = $time_difference->m;
+		$difference_in_days    = $time_difference->d;
+		$difference_in_hours   = $time_difference->h;
 		$difference_in_minutes = $time_difference->i;
 
 		$modifiers = array();

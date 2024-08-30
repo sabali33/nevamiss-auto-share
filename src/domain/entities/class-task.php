@@ -18,7 +18,7 @@ class Task {
 	}
 
 	public function parameters(): array {
-		return json_decode($this->task['parameters'], true);
+		return json_decode( $this->task['parameters'], true );
 	}
 
 	public function status(): string {

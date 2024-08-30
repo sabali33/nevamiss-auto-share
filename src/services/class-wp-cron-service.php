@@ -136,10 +136,10 @@ class WP_Cron_Service implements Cron_Interface {
 	/**
 	 * @throws \Exception
 	 */
-	private function schedule_one_cron(array $dates, int $schedule_id ): void {
+	private function schedule_one_cron( array $dates, int $schedule_id ): void {
 		foreach ( $dates as $date ) {
 			$scheduled = wp_schedule_single_event( $date, self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_id ) );
-			if(!$scheduled){
+			if ( ! $scheduled ) {
 				throw new \Exception( esc_html( "Schedule with id: $schedule_id, was unable to schedule" ) );
 			}
 		}

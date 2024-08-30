@@ -6,5 +6,5 @@ namespace Nevamiss\Services\Contracts;
 
 interface Logger_Interface {
 
-	public function save(array $post_data): void;
+	public function save( array $post_data ): void;
 }

@@ -68,7 +68,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		/**
 		 * @var Url_Shortner_Manager $url_shortner_manager
 		 */
-		$url_shortner_manager = $container->get(Url_Shortner_Manager::class);
+		$url_shortner_manager = $container->get( Url_Shortner_Manager::class );
 
 		add_action( 'nevamiss_schedule_create_tasks_completed', array( $schedule_tasks_runner, 'run' ) );
 		add_action( 'nevamiss_schedule_task_complete', array( $schedule_tasks_runner, 'update_task' ), 10, 2 );
@@ -90,7 +90,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'admin_post_nevamiss_schedule_unschedule', array( $post_handler, 'unschedule_callback' ) );
 		add_action( 'admin_post_nevamiss_schedule_share', array( $post_handler, 'share_schedule_posts_callback' ) );
 
-		add_action( 'transition_post_status', array($url_shortner_manager, 'on_post_publish'));
+		add_action( 'transition_post_status', array( $url_shortner_manager, 'on_post_publish' ) );
 
 		add_action(
 			'admin_post_nevamiss_network_accounts_delete',
@@ -113,9 +113,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		/**
 		 * @var Logger $logger
 		 */
-		$logger = $container->get(Logger::class);
+		$logger = $container->get( Logger::class );
 
-		add_action('nevamiss_schedule_log', array($logger, 'log_callback'), 10, 2);
+		add_action( 'nevamiss_schedule_log', array( $logger, 'log_callback' ), 10, 2 );
 
 		return true;
 	}
@@ -123,9 +123,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 	public function services(): array {
 
 		return array(
-			Logger::class                      => fn(ContainerInterface $container): Logger => Logger::instance(
-				$container->get(Logger_Repository::class),
-				$container->get(Settings::class),
+			Logger::class                      => fn( ContainerInterface $container ): Logger => Logger::instance(
+				$container->get( Logger_Repository::class ),
+				$container->get( Settings::class ),
 			),
 			Schedule_Post_Manager::class       => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
 				$container->get( Schedule_Repository::class ),
@@ -188,9 +188,9 @@ class Services_Module implements ServiceModule, ExecutableModule {
 			},
 			Stats_Manager::class               => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
 			Ajax::class                        => fn( ContainerInterface $container ) => new Ajax( $container->get( Post_Meta::class ) ),
-			Url_Shortner_Manager::class =>  fn(ContainerInterface $container) => new Url_Shortner_Manager(
-				$container->get(Settings::class),
-				$container->get(Shortner_Collection::class)
+			Url_Shortner_Manager::class        => fn( ContainerInterface $container ) => new Url_Shortner_Manager(
+				$container->get( Settings::class ),
+				$container->get( Shortner_Collection::class )
 			),
 		);
 	}

@@ -13,33 +13,35 @@ use Nevamiss\Services\Http_Request;
 use Nevamiss\Services\Settings;
 use Psr\Container\ContainerInterface;
 
-class Infrastructure_Module implements ServiceModule{
+class Infrastructure_Module implements ServiceModule {
 	use ModuleClassNameIdTrait;
 
 	/**
 	 * @return callable[]
 	 */
-	public function services(): array
-	{
+	public function services(): array {
 
-		return [
-			Rebrandly::class => fn(ContainerInterface $container) => new Rebrandly(
-				$container->get(Http_Request::class),
-				$container->get(Settings::class)
+		return array(
+			Rebrandly::class           => fn( ContainerInterface $container ) => new Rebrandly(
+				$container->get( Http_Request::class ),
+				$container->get( Settings::class )
 			),
-			Shortner_Collection::class => function (ContainerInterface $container) {
+			Shortner_Collection::class => function ( ContainerInterface $container ) {
 				$collection = new Shortner_Collection();
 
-				$shortners = apply_filters('nevamiss-url-shortners', array(
-					$container->get(Rebrandly::class)
-				));
+				$shortners = apply_filters(
+					'nevamiss-url-shortners',
+					array(
+						$container->get( Rebrandly::class ),
+					)
+				);
 
-				foreach ($shortners as $shortner){
-					$collection->register($shortner);
+				foreach ( $shortners as $shortner ) {
+					$collection->register( $shortner );
 				}
 
 				return $collection;
-			}
-		];
+			},
+		);
 	}
 }

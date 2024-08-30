@@ -25,8 +25,8 @@ class Logger_Repository implements Create_Interface, Delete_Interface, Get_All_I
 		'schedule_id',
 		'messages',
 	);
-	private const ENTITY_NAME  = 'Network Account';
-	private const ENTITY_CLASS = Log::class;
+	private const ENTITY_NAME           = 'Network Account';
+	private const ENTITY_CLASS          = Log::class;
 
 	private const ENTITY_SLUG = 'logger';
 	private function table_name(): string {

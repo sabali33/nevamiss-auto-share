@@ -13,10 +13,11 @@ use Nevamiss\Presentation\Pages\Tables\Logs_Table_List;
 
 class Upgrade_Tab implements Tab_Interface {
 	use Render_Interface;
-	public const SLUG = 'upgrade';
+
+	public const SLUG   = 'upgrade';
 	const TEMPLATE_PATH = 'resources/templates/upgrade';
 
-	public function __construct( private Factory $factory) {
+	public function __construct( private Factory $factory ) {
 	}
 
 	public function label(): ?string {
@@ -40,9 +41,8 @@ class Upgrade_Tab implements Tab_Interface {
 			)
 		);
 	}
-	public function premium_feature_list()
-	{
-		return [
+	public function premium_feature_list() {
+		return array(
 			'Import export schedules',
 			'More channels to share to',
 			'Calendar view of schedules',
@@ -50,8 +50,7 @@ class Upgrade_Tab implements Tab_Interface {
 			'Pre-publish account customization',
 			'Group share on post meta',
 			'AI generated posts for sharing',
-			'Automatic clearing of logs'
-		];
+			'Automatic clearing of logs',
+		);
 	}
-
 }

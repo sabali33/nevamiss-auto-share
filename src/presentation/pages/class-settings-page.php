@@ -36,9 +36,8 @@ class Settings_Page extends Page {
 		return $this->network_collection;
 	}
 
-	public function render_tab(string $tab): ?Tab_Interface
-	{
-		return $this->tab($tab) ?? $this->tab(General_Tab::SLUG);
+	public function render_tab( string $tab ): ?Tab_Interface {
+		return $this->tab( $tab ) ?? $this->tab( General_Tab::SLUG );
 	}
 
 	public function settings(): Settings {
@@ -54,7 +53,7 @@ class Settings_Page extends Page {
 
 	public function tab( string $tab ): ?Tab_Interface {
 
-		if($this->tab_collection->tab_exists($tab)){
+		if ( $this->tab_collection->tab_exists( $tab ) ) {
 			return $this->tab_collection->get( $tab );
 		}
 		return null;
@@ -138,7 +137,7 @@ class Settings_Page extends Page {
 				'repeat_cycle'        => $boolean_type,
 				'pause_all_schedules' => $boolean_type,
 				'keep_records'        => $boolean_type,
-				'logging_option'        => $string_type,
+				'logging_option'      => $string_type,
 			),
 			'network_api_keys' => array(
 				'networks_to_post'       => $array_type,
@@ -147,8 +146,8 @@ class Settings_Page extends Page {
 				'x'                      => $array_type,
 				'oa_rebrandly_api'       => $string_type,
 				'oa_rebrandly_shortlink' => $string_type,
-				'rebrandly' => $array_type,
-				'url_shortner_client' => $string_type,
+				'rebrandly'              => $array_type,
+				'url_shortner_client'    => $string_type,
 			),
 			'post' => array( 'share_on_publish' => $array_type )
 		};

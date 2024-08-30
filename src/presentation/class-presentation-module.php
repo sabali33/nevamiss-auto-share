@@ -93,21 +93,21 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$container->get( Posts_Stats_Repository::class ),
 				$container->get( Schedule_Queue::class ),
 			),
-			Logs_Table_List::class => fn(ContainerInterface $container) => new Logs_Table_List($container->get(Logger_Repository::class)),
+			Logs_Table_List::class             => fn( ContainerInterface $container ) => new Logs_Table_List( $container->get( Logger_Repository::class ) ),
 			Tab_Collection_Interface::class    => function ( ContainerInterface $container ) {
 				$factory = $container->get( Factory::class );
 				return apply_filters(
 					'nevamiss-settings-tabs',
 					array(
-						new General_Tab( $factory, $container->get(Shortner_Collection::class) ),
+						new General_Tab( $factory, $container->get( Shortner_Collection::class ) ),
 						new Network_Accounts_Tab(
 							$factory,
 							$container->get( Network_Accounts_Table_List::class ),
 							$container->get( Media_Network_Collection::class )
 						),
 						new Stats_Tab( $factory, $container->get( Stats_Table_List::class ) ),
-						new Logs_Tab( $factory, $container->get(Logs_Table_List::class) ),
-						new Upgrade_Tab($factory)
+						new Logs_Tab( $factory, $container->get( Logs_Table_List::class ) ),
+						new Upgrade_Tab( $factory ),
 					)
 				);
 			},
@@ -126,7 +126,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			new Network_Accounts_Table_List( $container->get( Network_Account_Repository::class ) ),
 			Stats_Table_List::class            => function ( ContainerInterface $container ) {
 				return new Stats_Table_List( $container->get( Posts_Stats_Repository::class ) );
-			}
+			},
 		);
 	}
 

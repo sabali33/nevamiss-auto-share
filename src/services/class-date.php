@@ -102,12 +102,10 @@ class Date implements Date_Interface {
 		return get_option( 'time_format' );
 	}
 
-	public function date_time(): \DateTime
-	{
+	public function date_time(): \DateTime {
 		return $this->date;
 	}
-	public function diff(Date $date): \DateInterval|bool
-	{
-		return $this->date->diff($date->date_time());
+	public function diff( Date $date ): \DateInterval|bool {
+		return $this->date->diff( $date->date_time() );
 	}
 }

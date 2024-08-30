@@ -48,9 +48,9 @@ class Logs_Table_List extends \WP_List_Table {
 	}
 	public function get_columns(): array {
 		return array(
-			'messages' => __( 'Message', 'nevamiss' ),
-			'schedule_id'    => __( 'Schedule ID', 'nevamiss' ),
-			'posted_on'      => __( 'Shared Date', 'nevamiss' ),
+			'messages'    => __( 'Message', 'nevamiss' ),
+			'schedule_id' => __( 'Schedule ID', 'nevamiss' ),
+			'posted_on'   => __( 'Shared Date', 'nevamiss' ),
 
 		);
 	}
@@ -64,7 +64,7 @@ class Logs_Table_List extends \WP_List_Table {
 	}
 
 	protected function get_bulk_actions(): array {
-		return [];
+		return array();
 	}
 	private function action_list( Log $item ): array {
 		return array();

@@ -17,6 +17,8 @@ use Nevamiss\Presentation\Components\Tabs\Section;
 use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Components\Wrapper;
 use Nevamiss\Presentation\Pages\Settings_Page;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class General_Tab implements Tab_Interface, Section_Interface {
 
@@ -53,17 +55,21 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	public function sections(): array {
 		$settings = get_option( Settings_Page::GENERAL_SETTINGS );
 
-		$general          = wp_parse_args($settings['general'] ?? [], array(
-			'repeat_cycle'        => 1,
-			'pause_all_schedules' => 0,
-			'keep_records'        => 1,
-			'logging_option' => 'database',
-		));
-		$network_api_keys = wp_parse_args($settings['network_api_keys'] ?? [], $this->default_values());
+		$general = wp_parse_args(
+			$settings['general'] ?? array(),
+			array(
+				'repeat_cycle'        => 1,
+				'pause_all_schedules' => 0,
+				'keep_records'        => 1,
+				'logging_option'      => 'database',
+			)
+		);
+
+		$network_api_keys = wp_parse_args( $settings['network_api_keys'] ?? array(), $this->default_values() );
 
 		$post = $settings['post'] ?? array( 'share_on_publish' => array( 'post' ) );
 
-		return array(
+		$fields = array(
 			'general'          => array(
 				'label'  => __( 'General', 'nevamiss' ),
 				'fields' => array(
@@ -95,12 +101,12 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'label'   => __( 'Log to:', 'nevamiss' ),
 						'type'    => 'select',
 						'class'   => 'logging-option',
-						'value' => [$general['logging_option']],
-						'choices'   => [
-							'file' => __('File', 'nevamiss'),
-							'database' => __('Database', 'nevamiss'),
-							'both' => __('Both file and database', 'nevamiss'),
-						],
+						'value'   => array( $general['logging_option'] ),
+						'choices' => array(
+							'file'     => __( 'File', 'nevamiss' ),
+							'database' => __( 'Database', 'nevamiss' ),
+							'both'     => __( 'Both file and database', 'nevamiss' ),
+						),
 					),
 				),
 			),
@@ -192,13 +198,15 @@ class General_Tab implements Tab_Interface, Section_Interface {
 							),
 						),
 					),
-					$this->url_shortner_fields([
-						'url_shortner_client' => $network_api_keys['url_shortner_client'],
-						'rebrandly' => array(
-							'api_key' => $network_api_keys['rebrandly']['api_key'] ?? '',
-							'shortlink' => $network_api_keys['rebrandly']['shortlink'] ?? '',
+					$this->url_shortner_fields(
+						array(
+							'url_shortner_client' => $network_api_keys['url_shortner_client'],
+							'rebrandly'           => array(
+								'api_key'   => $network_api_keys['rebrandly']['api_key'] ?? '',
+								'shortlink' => $network_api_keys['rebrandly']['shortlink'] ?? '',
+							),
 						)
-					])
+					),
 				),
 			),
 			'post'             => array(
@@ -216,6 +224,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				),
 			),
 		);
+		return apply_filters( 'nevamiss-settings-fields', $fields, $settings );
 	}
 
 	/**
@@ -237,28 +246,25 @@ class General_Tab implements Tab_Interface, Section_Interface {
 		return $tabs_components;
 	}
 
-	public function shortner_clients(): array
-	{
-		return array_reduce($this->collection->all(), function(array $acc, URL_Shortner_Interface $client) {
-			$acc[$client->id()] = $client->label();
-			return $acc;
-		} , []);
-	}
-
-	public function url_shortner_fields(array $values): array
-	{
-		$fields = [];
-		foreach($this->collection->all() as  $client){
-			$fields = array_merge($fields, $client->settings_fields($values));
+	public function url_shortner_fields( array $values ): array {
+		$fields = array();
+		foreach ( $this->collection->all() as  $client ) {
+			$fields = array_merge( $fields, $client->settings_fields( $values ) );
 		}
 		return $fields;
 	}
 
-	public function render_sections( string $current_section ) {
+	/**
+	 * @throws Not_Found_Exception
+	 * @throws NotFoundExceptionInterface
+	 * @throws ContainerExceptionInterface
+	 * @throws \Throwable
+	 */
+	public function render_sections( string $current_section ): array {
 		$sections = $this->sections();
 
 		if ( ! isset( $sections[ $current_section ]['fields'] ) ) {
-			$current_section = General_Tab::SLUG;
+			$current_section = self::SLUG;
 		}
 		$section_components = array();
 		foreach ( $sections[ $current_section ]['fields'] as $field ) {
@@ -319,24 +325,29 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	/**
 	 * @return array
 	 */
-	private function default_values(): array
-	{
-		return apply_filters('nevamiss-default-settings-values', array(
-			'networks_to_post' => array('facebook', 'x'),
-			'facebook' => array(
-				'client_id' => '',
-				'client_secret' => '',
-			),
-			'x' => array(
-				'client_id' => '',
-				'client_secret' => '',
-			),
-			'linkedin' => array(
-				'client_id' => '',
-				'client_secret' => '',
-			),
-			'rebrandly' => ['api_key' => '', 'shortlink' => ''],
-			'url_shortner_client' => '',
-		));
+	private function default_values(): array {
+		return apply_filters(
+			'nevamiss-default-settings-values',
+			array(
+				'networks_to_post'    => array( 'facebook', 'x' ),
+				'facebook'            => array(
+					'client_id'     => '',
+					'client_secret' => '',
+				),
+				'x'                   => array(
+					'client_id'     => '',
+					'client_secret' => '',
+				),
+				'linkedin'            => array(
+					'client_id'     => '',
+					'client_secret' => '',
+				),
+				'rebrandly'           => array(
+					'api_key'   => '',
+					'shortlink' => '',
+				),
+				'url_shortner_client' => '',
+			)
+		);
 	}
 }

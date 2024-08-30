@@ -27,11 +27,11 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 	 */
 	public function run( int $schedule_id ): bool {
 
-		do_action(Logger::SCHEDULE_LOGS, ["Schedule Task preparing to share"], $schedule_id);
+		do_action( Logger::SCHEDULE_LOGS, array( 'Schedule Task preparing to share' ), $schedule_id );
 
 		$active_tasks = $this->task_repository->get_all(
 			array(
-				'where' => array(
+				'where'    => array(
 					'schedule_id' => $schedule_id,
 					'status'      => 'pending',
 				),
@@ -41,12 +41,12 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 
 		if ( ! $active_tasks ) {
 
-			do_action(Logger::SCHEDULE_LOGS, ["Ended: No active tasks found", true], $schedule_id);
+			do_action( Logger::SCHEDULE_LOGS, array( 'Ended: No active tasks found', true ), $schedule_id );
 
 			return true;
 		}
 
-		try{
+		try {
 			/**
 			 * @var Task $active_task
 			 */
@@ -61,7 +61,7 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 
 			$data = $this->schedule_provider->format_post( $parameters['post_id'] );
 
-			do_action(Logger::SCHEDULE_LOGS, ["Beginning to share to {$network_account->network()}"], $schedule_id);
+			do_action( Logger::SCHEDULE_LOGS, array( "Beginning to share to {$network_account->network()}" ), $schedule_id );
 
 			/**
 			 * @var Network_Post_Manager $post_manager
@@ -77,31 +77,31 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 					'schedule_id'    => $schedule_id,
 					'post_id'        => $parameters['post_id'],
 					'remote_post_id' => $remote_post_id,
-					'status' => 'success'
+					'status'         => 'success',
 				)
 			);
 
-			do_action(Logger::SCHEDULE_LOGS, ["Successfully Posted {$network_account->network()}", true], $schedule_id);
+			do_action( Logger::SCHEDULE_LOGS, array( "Successfully Posted {$network_account->network()}", true ), $schedule_id );
 
-		}catch (\Throwable $throwable){
+		} catch ( \Throwable $throwable ) {
 			do_action(
 				'nevamiss_schedule_task_complete',
 				$active_task->id(),
 				array(
-					'schedule_id'    => $schedule_id,
-					'post_id'        => $parameters['post_id'],
-					'status' => 'error',
+					'schedule_id' => $schedule_id,
+					'post_id'     => $parameters['post_id'],
+					'status'      => 'error',
 				)
 			);
 
-			if(doing_action('admin_post_nevamiss_schedule_share')){
-				throw new Exception($throwable->getMessage());
+			if ( doing_action( 'admin_post_nevamiss_schedule_share' ) ) {
+				throw new Exception( $throwable->getMessage() );
 			}
-			do_action(Logger::SCHEDULE_LOGS, [$throwable->getMessage()], $schedule_id);
+			do_action( Logger::SCHEDULE_LOGS, array( $throwable->getMessage() ), $schedule_id );
 
 		}
 
-		if(!isset($active_tasks[1])){
+		if ( ! isset( $active_tasks[1] ) ) {
 			return true;
 		}
 		sleep( 2 );
@@ -115,7 +115,7 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 	 * @throws Exception
 	 */
 	public function update_task( int $task_id, $payload ): void {
-		if($payload['status'] === 'success'){
+		if ( $payload['status'] === 'success' ) {
 			$this->task_repository->update( $task_id, array( 'status' => 'succeeded' ) );
 			return;
 		}

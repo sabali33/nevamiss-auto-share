@@ -14,10 +14,10 @@ use Nevamiss\Presentation\Pages\Tables\Logs_Table_List;
 class Logs_Tab implements Tab_Interface {
 	use Render_Interface;
 
-	public const SLUG = 'logs';
+	public const SLUG   = 'logs';
 	const TEMPLATE_PATH = 'resources/templates/logs';
 
-	public function __construct( private Factory $factory, private Logs_Table_List $table_list) {
+	public function __construct( private Factory $factory, private Logs_Table_List $table_list ) {
 	}
 
 	public function label(): ?string {
@@ -41,8 +41,7 @@ class Logs_Tab implements Tab_Interface {
 			)
 		);
 	}
-	public function table_list(): Logs_Table_List
-	{
+	public function table_list(): Logs_Table_List {
 		return $this->table_list;
 	}
 }

@@ -22,8 +22,7 @@ class Tab_Collection {
 		return $this->tabs[ $tab ];
 	}
 
-	public function tab_exists(string $tab): bool
-	{
-		return isset($this->tabs[$tab]);
+	public function tab_exists( string $tab ): bool {
+		return isset( $this->tabs[ $tab ] );
 	}
 }
