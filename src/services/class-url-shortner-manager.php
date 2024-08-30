@@ -43,8 +43,5 @@ class Url_Shortner_Manager {
 		}catch (\Throwable $throwable){
 			do_action(Logger::GENERAL_LOGS, [$throwable->getMessage(), true], $post );
 		}
-
-
-
 	}
 }

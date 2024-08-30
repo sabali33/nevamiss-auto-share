@@ -64,4 +64,38 @@ class Rebrandly implements URL_Shortner_Interface
 	{
 		return 'Rebrandly';
 	}
+
+	public function settings_fields(array $settings_values): array
+	{
+		$url_shortner_clients = $settings_values['url_shortner_client'];
+
+		return array(
+			'name'       => 'url_shortner_client',
+			'label'      => __( 'Enable Rebrandly', 'nevamiss' ),
+			'type'       =>  'checkbox',
+			'value'      => 'rebrandly',
+			'checked'    => 'rebrandly' === $url_shortner_clients,
+			'class'      => 'parent-field',
+			'sub_fields' => array(
+				array(
+					'name'  => 'rebrandly[api_key]',
+					'label' => __( 'Rebrandly Api key', 'nevamiss' ),
+					'type'  => 'text',
+					'value' => $settings_values['rebrandly']['api_key'],
+					'size'  => 30,
+					'class' => 'rebrandly-api',
+					'disabled'    => 'rebrandly' !== $url_shortner_clients,
+				),
+				array(
+					'name'  => 'rebrandly[shortlink]',
+					'label' => __( 'Short Link', 'nevamiss' ),
+					'type'  => 'text',
+					'value' => $settings_values['rebrandly']['shortlink'],
+					'size'  => 30,
+					'class' => 'rebrandly-link',
+					'disabled'    => 'rebrandly' !== $url_shortner_clients,
+				),
+			),
+		);
+	}
 }

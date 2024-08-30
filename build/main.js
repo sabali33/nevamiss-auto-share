@@ -216,7 +216,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 class Settings {
   static init() {
-    document.querySelectorAll('[name="networks_to_post[]"]').forEach(element => {
+    document.querySelectorAll('[name="networks_to_post[]"], .parent-field').forEach(element => {
       const subFieldElement = document.querySelector(`.sub-field-wrapper.${element.value}`);
       this.toggleSubFields(subFieldElement, element.checked);
       element.addEventListener('change', e => {

@@ -11,4 +11,6 @@ interface URL_Shortner_Interface
 	public function id();
 	public function label();
 
+	public function settings_fields(array $settings_values): array;
+
 }

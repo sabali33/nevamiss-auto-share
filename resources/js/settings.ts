@@ -1,7 +1,7 @@
 
 export class Settings {
     static init(){
-        document.querySelectorAll('[name="networks_to_post[]"]').forEach((element: HTMLInputElement) => {
+        document.querySelectorAll('[name="networks_to_post[]"], .parent-field').forEach((element: HTMLInputElement) => {
 
             const subFieldElement = document.querySelector(`.sub-field-wrapper.${element.value}`)
             this.toggleSubFields(subFieldElement, element.checked);

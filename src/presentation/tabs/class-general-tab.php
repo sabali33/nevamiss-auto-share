@@ -5,6 +5,8 @@ namespace Nevamiss\Presentation\Tabs;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Infrastructure\Url_Shortner\Shortner_Collection;
+use Nevamiss\Infrastructure\Url_Shortner\URL_Shortner_Interface;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Input_Fields\Checkbox_Group;
 use Nevamiss\Presentation\Components\Input_Fields\Input;
@@ -23,7 +25,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	public const SLUG   = 'general';
 	const TEMPLATE_PATH = 'resources/templates/general-settings';
 
-	public function __construct( private Factory $factory ) {
+	public function __construct( private Factory $factory, private Shortner_Collection $collection ) {
 	}
 
 	public function label(): string {
@@ -57,24 +59,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			'keep_records'        => 1,
 			'logging_option' => 'database',
 		));
-		$network_api_keys = $settings['network_api_keys'] ?? array(
-			'networks_to_post'       => array( 'facebook', 'x' ),
-			'facebook'               => array(
-				'client_id'     => '',
-				'client_secret' => '',
-			),
-			'x'                      => array(
-				'client_id'     => '',
-				'client_secret' => '',
-			),
-			'linkedin'               => array(
-				'client_id'     => '',
-				'client_secret' => '',
-			),
-			'oa_rebrandly_api'       => '',
-			'oa_rebrandly_shortlink' => '',
-
-		);
+		$network_api_keys = wp_parse_args($settings['network_api_keys'] ?? [], $this->default_values());
 
 		$post = $settings['post'] ?? array( 'share_on_publish' => array( 'post' ) );
 
@@ -207,24 +192,13 @@ class General_Tab implements Tab_Interface, Section_Interface {
 							),
 						),
 					),
-					array(
-						'name'  => 'oa_rebrandly_api',
-						'label' => __( 'Rebrandly Api key', 'nevamiss' ),
-						'type'  => 'text',
-						'value' => $network_api_keys['oa_rebrandly_api'],
-						'size'  => 30,
-						'class' => 'rebrandly-api',
-
-					),
-					array(
-						'name'  => 'oa_rebrandly_shortlink',
-						'label' => __( 'Short Link', 'nevamiss' ),
-						'type'  => 'text',
-						'value' => $network_api_keys['oa_rebrandly_shortlink'],
-						'size'  => 30,
-						'class' => 'rebrandly-link',
-
-					),
+					$this->url_shortner_fields([
+						'url_shortner_client' => $network_api_keys['url_shortner_client'],
+						'rebrandly' => array(
+							'api_key' => $network_api_keys['rebrandly']['api_key'] ?? '',
+							'shortlink' => $network_api_keys['rebrandly']['shortlink'] ?? '',
+						)
+					])
 				),
 			),
 			'post'             => array(
@@ -261,6 +235,23 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			);
 		}
 		return $tabs_components;
+	}
+
+	public function shortner_clients(): array
+	{
+		return array_reduce($this->collection->all(), function(array $acc, URL_Shortner_Interface $client) {
+			$acc[$client->id()] = $client->label();
+			return $acc;
+		} , []);
+	}
+
+	public function url_shortner_fields(array $values): array
+	{
+		$fields = [];
+		foreach($this->collection->all() as  $client){
+			$fields = array_merge($fields, $client->settings_fields($values));
+		}
+		return $fields;
 	}
 
 	public function render_sections( string $current_section ) {
@@ -323,5 +314,29 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			default => Input::class,
 		};
 		return $this->factory->component( $field_class, $field );
+	}
+
+	/**
+	 * @return array
+	 */
+	private function default_values(): array
+	{
+		return apply_filters('nevamiss-default-settings-values', array(
+			'networks_to_post' => array('facebook', 'x'),
+			'facebook' => array(
+				'client_id' => '',
+				'client_secret' => '',
+			),
+			'x' => array(
+				'client_id' => '',
+				'client_secret' => '',
+			),
+			'linkedin' => array(
+				'client_id' => '',
+				'client_secret' => '',
+			),
+			'rebrandly' => ['api_key' => '', 'shortlink' => ''],
+			'url_shortner_client' => '',
+		));
 	}
 }

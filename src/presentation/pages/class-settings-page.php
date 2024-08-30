@@ -97,7 +97,10 @@ class Settings_Page extends Page {
 			wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss-general-settings-action' );
 	}
 	private function extract_data( array $post_data ): array {
-		$schema        = $this->post_keys( $post_data['section'] );
+		$schema        = apply_filters(
+			'nevamiss-settings-schema',
+			$this->post_keys( $post_data['section'] )
+		);
 		$sanitize_data = array();
 
 		foreach ( $schema as $key => $value ) {
@@ -144,6 +147,8 @@ class Settings_Page extends Page {
 				'x'                      => $array_type,
 				'oa_rebrandly_api'       => $string_type,
 				'oa_rebrandly_shortlink' => $string_type,
+				'rebrandly' => $array_type,
+				'url_shortner_client' => $string_type,
 			),
 			'post' => array( 'share_on_publish' => $array_type )
 		};

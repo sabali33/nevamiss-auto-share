@@ -10,6 +10,7 @@ use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Infrastructure\Url_Shortner\Shortner_Collection;
 use Nevamiss\Networks\Media_Network_Collection;
 use Nevamiss\Presentation\Pages\Auto_Share_Page;
 use Nevamiss\Presentation\Pages\Schedule_Form;
@@ -98,7 +99,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				return apply_filters(
 					'nevamiss-settings-tabs',
 					array(
-						new General_Tab( $factory ),
+						new General_Tab( $factory, $container->get(Shortner_Collection::class) ),
 						new Network_Accounts_Tab(
 							$factory,
 							$container->get( Network_Accounts_Table_List::class ),

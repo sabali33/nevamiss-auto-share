@@ -82,10 +82,11 @@ class Settings {
 
 	public function url_shortner(): string
 	{
-		return $this->setting('url_shortner');
+		return $this->setting('url_shortner_client') ?: 'rebrandly';
 	}
 	public function url_shortner_credentials(string $id = Rebrandly::REBRANDLY): array
 	{
-		return [];
+		$url_shortner_client = $this->url_shortner();
+		return $this->setting($url_shortner_client);
 	}
 }
