@@ -11,6 +11,8 @@ use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
+use Nevamiss\Infrastructure\Url_Shortner\URL_Shortner_Interface;
+use Nevamiss\Infrastructure\Url_Shortner\Url_Shortner_Response;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 
 class Network_Post_Provider {
@@ -107,17 +109,22 @@ class Network_Post_Provider {
 
 		$excerpt = wp_trim_words( $post->post_content, $excerpt_length );
 
-		$link = get_permalink( $post->ID );
+		/**
+		 * @var Url_Shortner_Response $short_url
+		 */
+		$short_url = get_post_meta($post->ID, '_nevamiss_short_url', true);
+
+		$url = $short_url ? $short_url->short_url() : get_permalink( $post->ID );
 
 		$output = str_replace( '%TITLE%', $post->post_title, $share_format );
-		$output = str_replace( '%LINK%', $link, $output );
+		$output = str_replace( '%LINK%', $url, $output );
 		$output = str_replace( '%EXCERPT%', $excerpt, $output );
 
 		$data              = array( 'status_text' => $output );
 		$data['image_url'] = get_the_post_thumbnail_url( $post->ID );
 		$data['title']     = $post->post_title;
 		$data['excerpt']   = $post->post_excerpt;
-		$data['link']      = get_permalink( $post->ID );
+		$data['link']      =  $url;
 
 		return $data;
 	}

@@ -21,7 +21,7 @@ class Url_Shortner_Manager {
 		}
 
 		if ( $new_status === 'publish' && $old_status === 'publish' ) {
-			return;
+			//return;
 		}
 		$post_id = $post->ID;
 
@@ -36,7 +36,7 @@ class Url_Shortner_Manager {
 		try {
 			$response = $shortner_client->create( get_permalink( $post ), array() );
 
-			update_post_meta( $post_id, 'nevamiss_short_url', $response );
+			update_post_meta( $post_id, '_nevamiss_short_url', $response );
 
 		} catch ( \Throwable $throwable ) {
 			do_action( Logger::GENERAL_LOGS, array( $throwable->getMessage(), true ), $post );
