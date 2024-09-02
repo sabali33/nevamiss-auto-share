@@ -140,6 +140,15 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'class'       => 'facebook-app-secret',
 								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'] ),
 							),
+							array(
+								'name'        => 'facebook[app_configuration]',
+								'label'       => __( 'App Configuration', 'nevamiss' ),
+								'type'        => 'text',
+								'value'       => $network_api_keys['facebook']['app_configuration'] ?? '',
+								'placeholder' => __( 'Enter the App Configuration', 'nevamiss' ),
+								'class'       => 'facebook-app-configurat',
+								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'] ),
+							),
 						),
 					),
 					array(

@@ -24,27 +24,36 @@ class Facebook_Client implements Network_Clients_Interface {
 	 */
 	public function __construct( private Http_Request $request, private array $credentials ) {
 		$this->root_url_versioned = 'https://graph.facebook.com/v20.0/';
-		$this->auth_dialog        = "{$this->root_url_versioned}dialog/oauth";
+		$this->auth_dialog        = "https://www.facebook.com/v20.0/dialog/oauth";
 
 		$this->auth_url = "{$this->root_url_versioned}oauth/access_token";
 		$this->root_url = 'https://graph.facebook.com/';
+		$this->scopes = array(
+			'email',
+			'pages_manage_posts',
+			'pages_show_list',
+			'publish_video',
+			'pages_manage_metadata',
+			'pages_manage_engagement'
+		);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function auth_link( array $scope = array() ): string {
+	public function auth_link( array $scopes = array() ): string {
 
 		$this->has_credentials( $this->credentials['client_id'], $this->credentials['client_secret'] );
-
+		$scopes = array_merge($this->scopes, $scopes);
 		return add_query_arg(
 			array(
 				'client_id'     => $this->credentials['client_id'],
 				'client_secret' => $this->credentials['client_secret'],
-				'redirect_uri'  => admin_url( 'admin-post.php?action=facebook' ),
+				'redirect_uri'  => $this->redirect_url(),
 				'auth_type'     => 'rerequest',
-				'config_id'     => '2143935749319824',
+				'config_id'     => $this->credentials['app_configuration'],
 				'state'         => wp_create_nonce( 'nevamiss-facebook-secret' ),
+				'scope'         => join(',', $scopes),
 
 			),
 			$this->auth_dialog
@@ -59,7 +68,7 @@ class Facebook_Client implements Network_Clients_Interface {
 			array(
 				'client_id'     => $this->credentials['client_id'],
 				'client_secret' => $this->credentials['client_secret'],
-				'redirect_uri'  => $this->credentials['redirect_url'],
+				'redirect_uri'  => $this->redirect_url(),
 				'code'          => $code,
 			),
 			$this->auth_url
@@ -95,9 +104,55 @@ class Facebook_Client implements Network_Clients_Interface {
 	}
 
 	public function post( array $data, Network_Account $account ) {
-		var_dump( $data );
+		return match (true){
+			(isset($data['image_url']) && $data['image_url']) => $this->post_media($data, $account),
+			default => $this->post_text($data, $account)
+		};
 	}
 
+	/**
+	 * Post image to a page.
+	 *
+	 * Find more about the parameters to this endpoint here: https://developers.facebook.com/docs/graph-api/reference/v20.0/photo#parameters-2
+	 *
+	 * @param array $data
+	 * @param Network_Account $account
+	 * @return array|string
+	 * @throws Exception
+	 */
+	public function post_media(array $data, Network_Account $account)
+	{
+		$endpoint = "$this->root_url_versioned{$account->remote_account_id()}/photos";
+
+		return $this->request->post($endpoint, array_merge(
+			$this->auth_header($account->token()),
+			array( 'body' => wp_json_encode([
+				'caption' => $data['status_text'],
+				'url' => $data['link']
+			]))
+		));
+	}
+
+	/**
+	 * Post simple text to a page
+	 *
+	 * @param array $data
+	 * @param Network_Account $account
+	 * @return array|string
+	 * @throws Exception
+	 */
+	public function post_text(array $data, Network_Account $account)
+	{
+		$endpoint = "$this->root_url_versioned{$account->remote_account_id()}/feed";
+
+		return $this->request->post($endpoint, array_merge(
+			$this->auth_header($account->token()),
+			array( 'body' => wp_json_encode([
+				'message' => $data['status_text'],
+				'link' => $data['link']
+			]))
+		));
+	}
 	/**
 	 * @throws Exception
 	 */
@@ -151,5 +206,13 @@ class Facebook_Client implements Network_Clients_Interface {
 			},
 			$pages
 		);
+	}
+
+	/**
+	 * @return string|null
+	 */
+	private function redirect_url(): ?string
+	{
+		return admin_url('admin-post.php?action=facebook');
 	}
 }
