@@ -181,8 +181,7 @@ class Network_Post_Provider {
 		$schedule_queue = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule->id() );
 
 		if ( ! $schedule_queue ) {
-			error_log( 'Error from Nevamiss: unable to retrieve Schedule Queue' );
-			return array();
+			throw new \RuntimeException('Error from Nevamiss: unable to retrieve Schedule Queue');
 		}
 		$remaining_queue_posts_count = $schedule_queue->post_count_to_share();
 
