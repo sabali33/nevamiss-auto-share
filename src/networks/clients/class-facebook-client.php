@@ -104,10 +104,11 @@ class Facebook_Client implements Network_Clients_Interface {
 	}
 
 	public function post( array $data, Network_Account $account ) {
-		return match (true){
+		$response = match (true){
 			(isset($data['image_url']) && $data['image_url']) => $this->post_media($data, $account),
 			default => $this->post_text($data, $account)
 		};
+		return $response['id'];
 	}
 
 	/**
