@@ -90,7 +90,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		add_action( 'admin_post_nevamiss_schedule_unschedule', array( $post_handler, 'unschedule_callback' ) );
 		add_action( 'admin_post_nevamiss_schedule_share', array( $post_handler, 'share_schedule_posts_callback' ) );
 
-		add_action( 'transition_post_status', array( $url_shortner_manager, 'on_post_publish' ) );
+		add_action( 'transition_post_status', array( $url_shortner_manager, 'on_post_publish' ), 10, 3 );
 
 		add_action(
 			'admin_post_nevamiss_network_accounts_delete',
