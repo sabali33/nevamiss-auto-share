@@ -36,7 +36,7 @@ class Post_Meta {
 	 * @throws Exception
 	 */
 	public function share_post_to_account( int $post_id, int $network_account_id ): mixed {
-		$data = $this->network_post_provider->format_post( $post_id );
+		$data = $this->network_post_provider->format_instant_share_post( $post_id );
 
 		[
 			'account' => $network_account,

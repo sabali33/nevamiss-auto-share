@@ -96,11 +96,8 @@ class Network_Post_Provider {
 
 		$default_share_format = <<< SHARE_FORMAT
             %TITLE%
-            
             %LINK%
-
             %EXCERPT%
-
             %TAGS%
         SHARE_FORMAT;
 
@@ -127,6 +124,13 @@ class Network_Post_Provider {
 
 	private function format_tags( string $tags, $data ): array|string {
 		return str_replace( '%TAGS%', $tags, $data );
+	}
+
+	public function format_instant_share_post(int|\WP_Post $post, string $tags= '')
+	{
+		$content = $this->format_post($post);
+		return $this->format_tags($tags, $content);
+
 	}
 
 	/**
