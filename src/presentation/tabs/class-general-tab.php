@@ -207,6 +207,34 @@ class General_Tab implements Tab_Interface, Section_Interface {
 							),
 						),
 					),
+					array(
+						'name'       => 'networks_to_post[]',
+						'label'      => __( 'Enable Instagram', 'nevamiss' ),
+						'type'       => 'checkbox',
+						'value'      => 'instagram',
+						'checked'    => in_array( 'instagram', $network_api_keys['networks_to_post'] ),
+						'sub_fields' => array(
+							array(
+								'name'        => 'instagram[client_id]',
+								'label'       => __( 'Client ID', 'nevamiss' ),
+								'type'        => 'text',
+								'value'       => $network_api_keys['instagram']['client_id'] ?? '',
+								'placeholder' => __( 'Enter Client ID', 'nevamiss' ),
+								'class'       => 'instagram-client-id',
+								'disabled'    => ! in_array( 'instagram', $network_api_keys['networks_to_post'] ),
+
+							),
+							array(
+								'name'        => 'instagram[client_secret]',
+								'label'       => __( 'Client Secret', 'nevamiss' ),
+								'type'        => 'text',
+								'value'       => $network_api_keys['instagram']['client_secret'] ?? '',
+								'placeholder' => __( 'Enter Client Secret', 'nevamiss' ),
+								'class'       => 'instagram-client-secret',
+								'disabled'    => ! in_array( 'instagram', $network_api_keys['networks_to_post'] ),
+							),
+						),
+					),
 					$this->url_shortner_fields(
 						array(
 							'url_shortner_client' => $network_api_keys['url_shortner_client'],

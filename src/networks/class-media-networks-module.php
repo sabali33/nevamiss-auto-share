@@ -55,7 +55,17 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 					$settings->network_credentials( 'linkedin' )
 				);
 			},
-			Instagram_Client::class         => fn() => new Instagram_Client(),
+			Instagram_Client::class         => function(ContainerInterface $container){
+				/**
+				 * @var Settings $settings
+				 */
+				$settings = $container->get( Settings::class );
+
+				return new Instagram_Client(
+					$container->get( Http_Request::class ),
+					$settings->network_credentials( 'instagram' )
+				);
+			},
 			Network_Clients::class          => function ( ContainerInterface $container ) {
 
 				return array(
@@ -101,6 +111,8 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 		add_action( 'admin_post_facebook', array( $network_authenticator, 'facebook_auth' ) );
 		add_action( 'admin_post_linkedin', array( $network_authenticator, 'linkedin_auth' ) );
 		add_action( 'admin_post_x', array( $network_authenticator, 'x_auth' ) );
+		add_action( 'admin_post_instagram', array( $network_authenticator, 'instagram_auth' ) );
+		add_action( 'admin_post', array( $network_authenticator, 'instagram_auth' ) );
 
 		return true;
 	}
