@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nevamiss\Networks\Clients;
 
+use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Http_Request;
 
@@ -17,6 +18,7 @@ class Instagram_Client implements Network_Clients_Interface {
 	public function __construct( private Http_Request $request, private array $credentials ) {
 		$this->root_auth = 'https://www.instagram.com/oauth/authorize';
 		$this->access_token_endpoint = 'https://api.instagram.com/oauth/access_token';
+		$this->root_api = "https://graph.instagram.com/v20.0/";
 	}
 	public function auth_link() {
 		$this->has_credentials( $this->credentials['client_id'], $this->credentials['client_secret'] );
@@ -43,7 +45,7 @@ class Instagram_Client implements Network_Clients_Interface {
 			'redirect_uri' => $this->redirect_url(),
 			'code' => $code
 		];
-		$endpoint = add_query_arg($parameters, $this->access_token_endpoint);
+
 		/**
 		 * @var array{data:<array{access_token: string, user_id: string, permissions: array}>} $access_token
 		 */
@@ -65,14 +67,17 @@ class Instagram_Client implements Network_Clients_Interface {
 		$endpoint = add_query_arg([
 			'access_token' => $access_token,
 			'fields' => 'id,name,username',
-		], "https://graph.instagram.com/v20.0/$this->user_id");
+		], "$this->root_api{$this->user_id}");
 
 		$respo = $this->request->get($endpoint);
 		return $respo;
 	}
 
-	public function post( array $data, mixed $account ) {
-		// TODO: Implement post() method.
+	public function post( array $data, Network_Account $account ) {
+		$container = $this->media_container($account, $data['image_url']);
+
+		$media = $this->publish_media($container, $account);
+		return $media['id'];
 	}
 
 	public function redirect_url(): ?string
@@ -104,5 +109,46 @@ class Instagram_Client implements Network_Clients_Interface {
 		], 'https://graph.instagram.com/refresh_access_token');
 
 		return $this->request->get($endpoint);
+	}
+
+	/**
+	 * @param Network_Account $account
+	 * @param string $image
+	 * @return void
+	 * @throws \Exception
+	 */
+	private function media_container(Network_Account $account, string $image): string
+	{
+		$endpoint = "$this->root_api{$account->remote_account_id()}/media";
+		$response = $this->request->post(
+			$endpoint,
+			[
+				'headers' => array(
+					'Content-Type'              => 'application/json',
+					'Authorization'             => "Bearer {$account->token()}",
+				),
+				'body' => wp_json_encode(array(
+					'image_url' => $image
+				))
+			]
+		);
+		return $response['id'];
+	}
+
+	public function publish_media(string $container_id, Network_Account $account)
+	{
+		$endpoint = "$this->root_api{$account->remote_account_id()}/media_publish";
+		return $this->request->post(
+			$endpoint,
+			array(
+				'headers' => array(
+					'Content-Type'              => 'application/json',
+					'Authorization'             => "Bearer {$account->token()}",
+				),
+				'body' => array(
+					'creation_id'=> $container_id
+				)
+			)
+		);
 	}
 }
