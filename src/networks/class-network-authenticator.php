@@ -52,11 +52,11 @@ class Network_Authenticator {
 			exit;
 		}
 
-		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['error'] ) && isset( $_GET['error_reason'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$this->redirect(
 				array(
 					'status'  => 'error',
-					'message' => $_GET['error_description'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'message' => new \Exception($_GET['error_description']), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				)
 			);
 			exit;
@@ -132,7 +132,7 @@ class Network_Authenticator {
 			exit;
 		}
 		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->redirect( $this->error_message( $_GET['error'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$this->redirect( $this->error_message( new \Exception($_GET['error_description']) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			exit;
 		}
 		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended

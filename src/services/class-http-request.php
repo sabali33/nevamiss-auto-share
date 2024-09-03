@@ -21,6 +21,7 @@ class Http_Request {
 		if ( ! $body ) {
 			throw new Exception( esc_html( $response['response']['message'] ) );
 		}
+		$this->validate_response($body, $response['response']);
 
 		return json_decode( $body, true );
 	}
@@ -40,18 +41,14 @@ class Http_Request {
 
 		$body = wp_remote_retrieve_body( $response );
 
-		if ( ! $body && ! in_array( $response['response']['code'], array( 200, 201 ) ) ) {
-			throw new Exception( esc_html( $response['response']['message'] ) );
-		}
+		$this->validate_response($body, $response['response']);
 
 		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ) ) ) {
 			$headers = $response['headers']->getAll();
 
 			return $headers['x-restli-id'];
 		}
-		if ( ! in_array( $response['response']['code'], array( 200, 201, 202, 204 ) ) ) {
-			throw new Exception( 'Unable to successfully make the request' . $body );
-		}
+
 
 		return json_decode( $body, true );
 	}
@@ -69,5 +66,21 @@ class Http_Request {
 		}
 
 		return json_decode( wp_remote_retrieve_body( $response ), true );
+	}
+
+	/**
+	 * @param string $body
+	 * @param $response1
+	 * @return void
+	 * @throws Exception
+	 */
+	private function validate_response(string $body, $response): void
+	{
+		if (!$body && !in_array($response['code'], array(200, 201))) {
+			throw new Exception(esc_html($response['message']));
+		}
+		if (!in_array($response['code'], array(200, 201, 202, 204))) {
+			throw new Exception('Unable to successfully make the request' . $body);
+		}
 	}
 }
