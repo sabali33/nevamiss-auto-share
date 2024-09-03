@@ -94,8 +94,6 @@ class Facebook_Client implements Network_Clients_Interface {
 
 		$user['pages'] = $this->user_pages( $user['id'], $access_token );
 
-		do_action( 'nevamiss_user_network_login', $user, 'facebook' );
-
 		return $user;
 	}
 
