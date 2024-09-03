@@ -112,7 +112,7 @@ class Network_Post_Provider {
 		/**
 		 * @var Url_Shortner_Response $short_url
 		 */
-		$short_url = get_post_meta($post->ID, '_nevamiss_short_url', true);
+		$short_url = get_post_meta( $post->ID, '_nevamiss_short_url', true );
 
 		$url = $short_url ? $short_url->short_url() : get_permalink( $post->ID );
 
@@ -124,7 +124,7 @@ class Network_Post_Provider {
 		$data['image_url'] = get_the_post_thumbnail_url( $post->ID );
 		$data['title']     = $post->post_title;
 		$data['excerpt']   = $post->post_excerpt;
-		$data['link']      =  $url;
+		$data['link']      = $url;
 
 		return $data;
 	}
@@ -133,11 +133,9 @@ class Network_Post_Provider {
 		return str_replace( '%TAGS%', $tags, $data );
 	}
 
-	public function format_instant_share_post(int|\WP_Post $post, string $tags= '')
-	{
-		$content = $this->format_post($post);
-		return $this->format_tags($tags, $content);
-
+	public function format_instant_share_post( int|\WP_Post $post, string $tags = '' ) {
+		$content = $this->format_post( $post );
+		return $this->format_tags( $tags, $content );
 	}
 
 	/**
@@ -181,7 +179,7 @@ class Network_Post_Provider {
 		$schedule_queue = $this->queue_repository->get_schedule_queue_by_schedule_id( $schedule->id() );
 
 		if ( ! $schedule_queue ) {
-			throw new \RuntimeException('Error from Nevamiss: unable to retrieve Schedule Queue');
+			throw new \RuntimeException( 'Error from Nevamiss: unable to retrieve Schedule Queue' );
 		}
 		$remaining_queue_posts_count = $schedule_queue->post_count_to_share();
 

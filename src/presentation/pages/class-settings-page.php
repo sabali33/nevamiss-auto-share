@@ -140,13 +140,13 @@ class Settings_Page extends Page {
 				'logging_option'      => $string_type,
 			),
 			'network_api_keys' => array(
-				'networks_to_post'       => $array_type,
-				'facebook'               => $array_type,
-				'linkedin'               => $array_type,
-				'x'                      => $array_type,
-				'instagram'              => $array_type,
-				'rebrandly'              => $array_type,
-				'url_shortner_client'    => $string_type,
+				'networks_to_post'    => $array_type,
+				'facebook'            => $array_type,
+				'linkedin'            => $array_type,
+				'x'                   => $array_type,
+				'instagram'           => $array_type,
+				'rebrandly'           => $array_type,
+				'url_shortner_client' => $string_type,
 			),
 			'post' => array( 'share_on_publish' => $array_type )
 		};

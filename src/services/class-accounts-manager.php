@@ -20,7 +20,7 @@ class Accounts_Manager {
 			'linkedin' => $this->prepare_linkedin_accounts( $user ),
 			'x' => $this->prepare_x_accounts( $user ),
 			'instagram' => $this->prepare_instagram_accounts( $user ),
-			default => apply_filters('nevamiss-user-auth-data', $user, $network)
+			default => apply_filters( 'nevamiss-user-auth-data', $user, $network )
 		};
 		foreach ( $posts_data as $posts_datum ) {
 			$remote_account = $this->account_repository->get_by_remote_id( $posts_datum['remote_account_id'] );
@@ -97,8 +97,7 @@ class Accounts_Manager {
 		);
 	}
 
-	public function prepare_instagram_accounts(array $data): array
-	{
+	public function prepare_instagram_accounts( array $data ): array {
 		return array(
 			array(
 				'name'              => $data['name'],

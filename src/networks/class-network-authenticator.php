@@ -47,6 +47,7 @@ class Network_Authenticator {
 	 * @throws \Exception
 	 */
 	public function linkedin_auth(): void {
+
 		if ( ! $this->authorize( 'linkedin' ) ) {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
@@ -56,12 +57,14 @@ class Network_Authenticator {
 			$this->redirect(
 				array(
 					'status'  => 'error',
-					'message' => new \Exception($_GET['error_description']), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'message' => new \Exception( $_GET['error_description'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				)
 			);
 			exit;
 		}
+
 		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		/**
 		 * @var Linkedin_Client $linkedin_client
 		 */
@@ -84,6 +87,7 @@ class Network_Authenticator {
 			exit;
 		}
 	}
+
 	private function authorize( string $network ): bool {
 		return isset( $_GET['state'] ) && wp_verify_nonce( $_GET['state'], "nevamiss-$network-secret" );
 	}
@@ -127,15 +131,19 @@ class Network_Authenticator {
 	}
 
 	public function x_auth(): void {
+
 		if ( ! $this->authorize( 'x' ) ) {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
+
 		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->redirect( $this->error_message( new \Exception($_GET['error_description']) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$this->redirect( $this->error_message( new \Exception( $_GET['error_description'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			exit;
 		}
+
 		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		/**
 		 * @var X_Client $x_client
 		 */
@@ -161,14 +169,13 @@ class Network_Authenticator {
 		}
 	}
 
-	public function instagram_auth(): void
-	{
+	public function instagram_auth(): void {
 		if ( ! $this->authorize( 'instagram' ) ) {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
 		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->redirect( $this->error_message( new \Exception($_GET['error_description']) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$this->redirect( $this->error_message( new \Exception( $_GET['error_description'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			exit;
 		}
 		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended

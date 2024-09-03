@@ -55,7 +55,7 @@ class Media_Networks_Module implements ServiceModule, ExecutableModule {
 					$settings->network_credentials( 'linkedin' )
 				);
 			},
-			Instagram_Client::class         => function(ContainerInterface $container){
+			Instagram_Client::class         => function ( ContainerInterface $container ) {
 				/**
 				 * @var Settings $settings
 				 */

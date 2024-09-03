@@ -21,7 +21,7 @@ class Url_Shortner_Manager {
 		}
 
 		if ( $new_status === 'publish' && $old_status === 'publish' ) {
-			//return;
+			// return;
 		}
 		$post_id = $post->ID;
 
