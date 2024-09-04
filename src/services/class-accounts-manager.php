@@ -22,6 +22,8 @@ class Accounts_Manager {
 			'instagram' => $this->prepare_instagram_accounts( $user ),
 			default => apply_filters( 'nevamiss-user-auth-data', $user, $network )
 		};
+
+		$accounts = [];
 		foreach ( $posts_data as $posts_datum ) {
 			$remote_account = $this->account_repository->get_by_remote_id( $posts_datum['remote_account_id'] );
 			if ( $remote_account ) {
@@ -34,8 +36,21 @@ class Accounts_Manager {
 				);
 				continue;
 			}
-			$this->account_repository->create( $posts_datum );
+			$accounts[] = $this->account_repository->create( $posts_datum );
 		}
+
+		if('linkedin' === $network){
+			update_option('nevamiss-linkedin-refresh-token', $user['refresh_token']);
+		}
+
+		do_action(
+			'nevamiss-user-network-login-complete',
+			array(
+				'expires_in' => $user['expires_in'],
+				'account_ids' => $accounts
+			),
+			$network
+		);
 	}
 
 	private function prepare_facebook_accounts( array $user ): array {
