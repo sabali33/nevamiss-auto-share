@@ -108,6 +108,8 @@ class Linkedin_Client implements Network_Clients_Interface {
 		$user['organizations'] = $this->user_organizations( $access_token );
 		$user['network_label'] = 'Linkedin';
 		$user['access_token']  = $access_token;
+		$user['token_expires_in']  = $response['expires_in'];
+		$user['refresh_token']  = $response['refresh_token'];
 
 		return $user;
 	}
@@ -334,6 +336,34 @@ class Linkedin_Client implements Network_Clients_Interface {
 				'description'      => $data['excerpt'] ?: 'An examplary living',
 				'thumbnailAltText' => $data['title'],
 			),
+		);
+	}
+
+	/**
+	 * @param string $refresh_token Refresh token received from initial authorization
+	 * @return void
+	 */
+	public function refresh_token(string $refresh_token)
+	{
+		$token_url = $this->root . 'oauth/v2/accessToken';
+		$body      = sprintf(
+			'grant_type=refresh_token&refresh_token=%1$s&client_id=%2$s&client_secret=%3$s',
+			$refresh_token,
+			$this->client_id,
+			$this->secret,
+		);
+
+		$response = $this->request->post(
+			$token_url,
+			array(
+				'headers' => array(
+					'Content-Type'  => 'application/x-www-form-urlencoded',
+					'Authorization' => 'Basic ' . base64_encode( $this->client_id . ':' . $this->secret ),
+				),
+				'method'  => 'POST',
+				'timeout' => 45,
+				'body'    => $body,
+			)
 		);
 	}
 }
