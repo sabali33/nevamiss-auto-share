@@ -115,7 +115,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function get_account( string $access_token ): array|string {
+	public function get_account( string $access_token, string $user_id=null ): array|string {
 
 		$response = $this->request->get(
 			$this->root_api . "/me?oauth2_access_token={$access_token}",

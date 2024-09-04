@@ -114,7 +114,7 @@ class X_Client implements Network_Clients_Interface {
 	/**
 	 * @throws \Exception
 	 */
-	public function get_account( string $access_token ): array {
+	public function get_account( string $access_token, string $user_id=null ): array {
 		$args = $this->auth_header( $access_token );
 
 		$url = "$this->root_api/users/me";
