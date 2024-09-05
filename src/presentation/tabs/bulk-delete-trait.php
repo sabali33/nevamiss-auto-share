@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Tabs;
 
-use Exception;
+use Nevamiss\Domain\Entities\Network_Account;
+use Nevamiss\Domain\Entities\Stats;
+
 
 trait Bulk_Delete_Trait {
 
@@ -13,18 +15,19 @@ trait Bulk_Delete_Trait {
 			return;
 		}
 
-		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST[ $model_name ] ) ) {
+		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST[ 'model_name' ] ) ) {
 			return;
 		}
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], "bulk-$model_name" ) ) {
 			return;
 		}
+		$translated_model_name = str_replace('-', '_', $model_name);
 
-		[$model_name => $models] = filter_input_array(
+		[$translated_model_name => $models] = filter_input_array(
 			INPUT_GET,
 			array(
-				$model_name => array(
+				$translated_model_name => array(
 					'filter' => FILTER_VALIDATE_INT,
 					'flags'  => FILTER_REQUIRE_ARRAY,
 				),
@@ -35,12 +38,22 @@ trait Bulk_Delete_Trait {
 			'error'   => array(),
 		);
 
-		foreach ( $models as $model ) {
+		foreach ( $models as $model_id ) {
 			try {
-				$deleted                      = $this->table_list->repository()->delete( $model );
-				$results['success'][ $model ] = $deleted;
-			} catch ( Exception $exception ) {
-				$results['error'][ $model ] = $exception->getMessage();
+				/**
+				 * @var Network_Account|Stats $model
+				 */
+				$model = $this->table_list->repository()->get($model_id);
+
+				$deleted = match(get_class($model)){
+					Network_Account::class => $this->delete_network_accounts($model, $model_id),
+					Stats::class => $this->delete_stats($model_id)
+				};
+				
+				$results['success'][ $model_id ] = $deleted;
+
+			} catch ( \Exception $exception ) {
+				$results['error'][ $model_id ] = $exception->getMessage();
 			}
 		}
 		if ( ! empty( $results['error'] ) ) {
@@ -53,13 +66,49 @@ trait Bulk_Delete_Trait {
 			);
 			exit;
 		}
-		$stats_ids = join( ', ', array_keys( $results['success'] ) );
+		$model_ids = join( ', ', array_keys( $results['success'] ) );
 		$this->redirect(
 			array(
 				'status'  => 'success',
-				'message' => "Deleted the data: $stats_ids",
+				'message' => "Deleted the data: $model_ids",
 			)
 		);
 		exit;
+	}
+
+	/**
+	 * @param Network_Account|Stats $model
+	 * @param mixed $model_id
+	 * @return bool|string
+	 * @throws \Exception
+	 */
+	private function delete_network_accounts(Network_Account|Stats $model, mixed $model_id): string|bool
+	{
+		if ($model->parent_remote_id()) {
+			$deleted = $this->table_list->repository()->delete($model_id);
+		} else {
+			$children_accounts = $this->table_list->repository()->get_all([
+				'where' => [
+					'parent_remote_id' => $model->remote_account_id()
+				]
+			]);
+
+			$all_accounts = [$model, ...$children_accounts];
+			$deleted = '';
+
+			/**
+			 * @var Network_Account $account
+			 */
+			foreach ($all_accounts as $account) {
+				$deleted .= $this->table_list->repository()->delete($account->id());
+			}
+
+		}
+		return $deleted;
+	}
+
+	private function delete_stats(int $model_id)
+	{
+		return $this->table_list->repository()->delete($model_id);
 	}
 }

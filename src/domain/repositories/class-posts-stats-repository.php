@@ -8,10 +8,11 @@ use Nevamiss\Domain\Contracts\Create_Interface;
 use Nevamiss\Domain\Contracts\Delete_All_Interface;
 use Nevamiss\Domain\Contracts\Delete_Interface;
 use Nevamiss\Domain\Contracts\Get_All_Interface;
+use Nevamiss\Domain\Contracts\Get_One_Interface;
 use Nevamiss\Domain\Entities\Stats;
 
 
-class Posts_Stats_Repository implements Create_Interface, Delete_Interface, Get_All_Interface, Delete_All_Interface {
+class Posts_Stats_Repository implements Create_Interface, Delete_Interface, Get_All_Interface, Delete_All_Interface, Get_One_Interface {
 
 	use Repository_Common_Trait;
 	use To_Model_Trait;
@@ -19,6 +20,7 @@ class Posts_Stats_Repository implements Create_Interface, Delete_Interface, Get_
 	use Delete_Trait;
 	use Delete_All_Trait;
 	use Get_All_Trait;
+	use Get_One_Trait;
 	use Count_Model_Trait;
 
 	private const ALLOWED_TABLE_COLUMNS = array(

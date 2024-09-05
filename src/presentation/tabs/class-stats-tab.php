@@ -10,7 +10,7 @@ use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
 
-class Stats_Tab implements Tab_Interface {
+class Stats_Tab implements Tab_Interface, Bulk_Delete_Interface {
 	use Bulk_Delete_Trait;
 	use Render_Interface;
 

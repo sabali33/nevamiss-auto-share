@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\presentation\Tabs;
+namespace Nevamiss\Presentation\Tabs;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
@@ -11,7 +11,9 @@ use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;
 
-class Network_Accounts_Tab implements Tab_Interface {
+class Network_Accounts_Tab implements Tab_Interface, Bulk_Delete_Interface {
+
+	use Bulk_Delete_Trait;
 	use Render_Interface;
 
 	const TEMPLATE_PATH = 'resources/templates/network-accounts';
@@ -53,41 +55,6 @@ class Network_Accounts_Tab implements Tab_Interface {
 		return $this->table_list;
 	}
 
-	/**
-	 * @throws \Exception
-	 */
-	public function bulk_delete(): bool {
-		if ( ! isset( $_REQUEST['action'] ) && ! isset( $_REQUEST['action2'] ) ) {
-			return false;
-		}
-
-		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST['network_accounts'] ) ) {
-			return false;
-		}
-
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-network-accounts' ) ) {
-			return false;
-		}
-
-		['network_accounts' => $network_accounts] = filter_input_array(
-			INPUT_GET,
-			array(
-				'network_accounts' => array(
-					'filter' => FILTER_VALIDATE_INT,
-					'flags'  => FILTER_REQUIRE_ARRAY,
-				),
-			)
-		);
-
-		if ( ! $network_accounts ) {
-			return false;
-		}
-
-		foreach ( $network_accounts as $network_account ) {
-			$this->table_list->repository()->delete( $network_account );
-		}
-		return true;
-	}
 	public function networks(): array {
 		$clients = $this->network_collection->get_all();
 

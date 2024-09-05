@@ -3,7 +3,9 @@
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Presentation\Tabs\Bulk_Delete_Interface;
 use Nevamiss\Presentation\Tabs\General_Tab;
+use Nevamiss\Presentation\Tabs\Network_Accounts_Tab;
 use Nevamiss\Presentation\Tabs\Tab_Collection;
 use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Services\Settings;
@@ -162,5 +164,18 @@ class Settings_Page extends Page {
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-settings&tab=general' ) );
 		wp_redirect( $url );
+	}
+
+	public function bulk_delete()
+	{
+		$model_name = filter_input(INPUT_GET, 'model_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		/**
+		 * @var Tab_Interface & Bulk_Delete_Interface $tab
+		 */
+		$tab = $this->tab_collection->get($model_name);
+
+		$tab->bulk_delete($model_name);
+
 	}
 }

@@ -25,7 +25,7 @@ use Nevamiss\Presentation\Pages\Tables\Stats_Table_List;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 use Nevamiss\Presentation\Tabs\General_Tab;
 use Nevamiss\Presentation\Tabs\Logs_Tab;
-use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
+use Nevamiss\Presentation\Tabs\Network_Accounts_Tab;
 use Nevamiss\Presentation\Tabs\Stats_Tab;
 use Nevamiss\Presentation\Tabs\Tab_Collection;
 use Nevamiss\Presentation\Tabs\Tab_Collection_Interface;
@@ -168,6 +168,16 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			'admin_post_nevamiss_schedules_delete_action',
 			static function () use ( $container ) {
 				call_user_func( array( $container->get( Schedules_Page::class ), 'bulk_delete' ) );
+			}
+		);
+
+		/**
+		 * Register hook to bulk delete stats and network accounts
+		 */
+		add_action(
+			'admin_post_delete_all',
+			static function () use ( $container ) {
+				call_user_func( array( $container->get( Settings_Page::class ), 'bulk_delete' ) );
 			}
 		);
 
