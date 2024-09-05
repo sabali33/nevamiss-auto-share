@@ -79,6 +79,7 @@ class DB {
             remote_account_id VARCHAR(60),
             parent_remote_id VARCHAR(60),
             token TEXT DEFAULT '',
+            expires_in TIMESTAMP NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset_collate";

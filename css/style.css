@@ -79,3 +79,20 @@ Upgrade Tab styles
 .premium-features-wrap .convert-action {
     margin-top: 2rem;
 }
+
+/**
+Style Network accounts
+ */
+
+.network-accounts .about-to-expire{
+    background: #e3a36f;
+    color: #ffffff;
+    padding: 3px;
+    border-radius: 3px;
+}
+.network-accounts .expired-danger{
+    background: #d71c1c;
+    color: #ffffff;
+    padding: 3px;
+    border-radius: 3px;
+}

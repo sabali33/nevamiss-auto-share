@@ -38,6 +38,7 @@ class Network_Account_Repository implements
 		'remote_account_id',
 		'token',
 		'network',
+		'expires_in'
 	);
 
 	public function get_by_remote_id( string|int $remote_account_id ): Network_Account|false {

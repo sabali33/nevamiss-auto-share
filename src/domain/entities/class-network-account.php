@@ -4,6 +4,10 @@ namespace Nevamiss\Domain\Entities;
 
 class Network_Account {
 
+	/**
+	 * @param array{name:string, remote_account_id:string, id:int, token:string,
+	 *     network:string, parent_remote_id:string, created_at:string, expires_in:int} $account
+	 */
 	public function __construct( private array $account ) {
 	}
 
@@ -33,6 +37,7 @@ class Network_Account {
 			'token'             => $this->token(),
 			'network'           => $this->network(),
 			'parent_remote_id'  => $this->parent_remote_id(),
+			'expires_in'        => $this->expires_in(),
 		);
 	}
 
@@ -42,5 +47,10 @@ class Network_Account {
 
 	public function created_at() {
 		return $this->account['created_at'];
+	}
+
+	public function expires_in()
+	{
+		return $this->account['expires_in'] ?? null;
 	}
 }

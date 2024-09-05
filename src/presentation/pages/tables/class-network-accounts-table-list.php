@@ -61,6 +61,7 @@ class Network_Accounts_Table_List extends WP_List_Table {
 			'network'           => __( 'Network', 'nevamiss' ),
 			'remote_account_id' => __( 'Remote Account ID', 'nevamiss' ),
 			'parent_remote_id'  => __( 'Parent Remote ID', 'nevamiss' ),
+			'expires_in'        => __( 'Token Expires In', 'nevamiss' ),
 			'created_at'        => __( 'Login At', 'nevamiss' ),
 
 		);
@@ -68,8 +69,9 @@ class Network_Accounts_Table_List extends WP_List_Table {
 
 	protected function get_sortable_columns(): array {
 		return array(
-			'name'       => array( 'name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
-			'created_at' => array( 'created_at', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
+			'name'       => array( 'name', false, esc_html__( 'Name', 'nevamiss' ), esc_html__( 'Table ordered by Name.' ), 'asc' ),
+			'created_at' => array( 'created_at', false, esc_html__( 'Created Date', 'nevamiss' ), esc_html__( 'Table ordered by Created Date.', 'nevamiss' ) ),
+			'expires_in' => array('expires_in', false, esc_html__('Expire Date', 'nevamiss'), esc_html__('Table ordered by expire date', 'nevamiss'))
 		);
 	}
 
@@ -100,6 +102,78 @@ class Network_Accounts_Table_List extends WP_List_Table {
 	public function column_created_at( Network_Account $account ): void {
 		$date = Date::create_from_format( $account->created_at(), 'Y-m-d H:i:s' );
 		echo esc_html( $date->format( 'dS M Y @ H:i' ) );
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function column_expires_in(Network_Account $account ): void {
+
+		if(!$account->expires_in() && $account->parent_remote_id()){
+			$account = $this->account_repository->get_by_remote_id($account->parent_remote_id());
+		}
+
+		$date = Date::create_from_format( $account->expires_in(), 'Y-m-d h:i:s' );
+
+		$time_diff = Date::now()->diff($date);
+
+		$style_classes = $this->style_classes($time_diff);
+
+		$months = $time_diff->m;
+		$days = $time_diff->d;
+		$minutes = $time_diff->i;
+		$hours = $time_diff->h;
+
+		$expired_label = $time_diff->invert ? esc_html__('Expired since', 'nevamiss') : '';
+
+		$output = '';
+
+		if($months){
+			$output .= sprintf(_n('%s month', '%s months', $months, 'nevamiss'), $months);
+			$output .= ', ';
+		}
+
+		if($days){
+			$output .= sprintf(_n('%s day', '%s days', $days, 'nevamiss'), $days);
+			$output .= ', ';
+		}
+
+		if($hours){
+			$output .= sprintf(_n('%s hour', '%s hours', $hours, 'nevamiss'), $hours);
+			$output .= ', ';
+		}
+
+		$output .= sprintf(_n('%s minute', '%s minutes', $minutes, 'nevamiss'), $minutes);
+
+		$message = sprintf('<span class="%1$s">%3$s %2$s</span>', esc_attr($style_classes), esc_html( $output ), $expired_label ) ;
+
+		if($time_diff->invert){
+			$message = sprintf(__('<span class="%1$s">%3$s %2$s ago</span>', 'nevamiss'), esc_attr($style_classes), esc_html( $output ), $expired_label ) ;
+		}
+		echo $message;
+	}
+
+	private function style_classes(\DateInterval $interval): string
+	{
+		$classes = '';
+
+		if($interval->invert){
+			$classes .= 'expired-danger';
+			return $classes;
+		}
+
+		if($interval->m === 0 && $interval->d < 10 ){
+			$classes .= 'about-to-expire ';
+		}
+
+		if($interval->m === 0 && $interval->d === 1  && $interval->h < 12 ){
+			$classes .= 'expiring-danger';
+		}
+
+
+
+		return $classes;
+
 	}
 
 	/**

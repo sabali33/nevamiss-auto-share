@@ -53,13 +53,17 @@ class Accounts_Manager {
 		);
 	}
 
-	private function prepare_facebook_accounts( array $user ): array {
+	/**
+	 * @throws \Exception
+	 */
+	private function prepare_facebook_accounts(array $user ): array {
 		$accounts = array(
 			array(
 				'name'              => $user['name'],
 				'network'           => 'facebook',
 				'remote_account_id' => $user['id'],
 				'token'             => $user['access_token'],
+				'expires_in'         => $this->expire_date($user['token_expires_in']),
 			),
 		);
 		foreach ( $user['pages'] as $page ) {
@@ -82,6 +86,7 @@ class Accounts_Manager {
 				'network'           => 'linkedin',
 				'remote_account_id' => $user['id'],
 				'token'             => $user['access_token'],
+				'expires_in'         => $this->expire_date($user['token_expires_in']),
 			),
 		);
 		foreach ( $user['organizations'] as $organization ) {
@@ -108,6 +113,7 @@ class Accounts_Manager {
 				'network'           => 'x',
 				'remote_account_id' => $user['id'],
 				'token'             => $user['access_token'],
+				'expires_in'         => $this->expire_date($user['token_expires_in']),
 			),
 		);
 	}
@@ -119,7 +125,23 @@ class Accounts_Manager {
 				'network'           => 'instagram',
 				'remote_account_id' => $data['id'],
 				'token'             => $data['access_token'],
+				'expires_in'             => $this->expire_date($data['token_expires_in']),
 			),
 		);
+	}
+
+	/**
+	 * @param int $token_expires_in
+	 * @return string
+	 * @throws \Exception
+	 */
+	private function expire_date(int $token_expires_in): string
+	{
+		$date = Date::now();
+		$days = round($token_expires_in / (60 * 60 * 24));
+
+		$expire_date = $date->add(\DateInterval::createFromDateString("$days days"));
+
+		return $expire_date->format('Y-m-d h:i:s');
 	}
 }

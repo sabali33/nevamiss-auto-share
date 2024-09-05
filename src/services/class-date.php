@@ -108,4 +108,9 @@ class Date implements Date_Interface {
 	public function diff( Date $date ): \DateInterval|bool {
 		return $this->date->diff( $date->date_time() );
 	}
+
+	public function add(\DateInterval $date_interval)
+	{
+		return $this->date->add($date_interval);
+	}
 }
