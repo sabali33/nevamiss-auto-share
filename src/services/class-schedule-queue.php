@@ -344,7 +344,7 @@ class Schedule_Queue {
 	 */
 	private function hour_minute( Date $date, Date $end_date ): array {
 
-		$time_difference = $end_date->diff( $date );
+		$time_difference = $date->diff( $end_date );
 
 		$time_units        = array();
 		$time_units['day'] = $time_difference->d;
