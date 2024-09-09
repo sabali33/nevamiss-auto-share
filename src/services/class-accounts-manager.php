@@ -78,7 +78,10 @@ class Accounts_Manager {
 		return $accounts;
 	}
 
-	private function prepare_linkedin_accounts( array $user ): array {
+	/**
+	 * @throws \Exception
+	 */
+	private function prepare_linkedin_accounts(array $user ): array {
 
 		$accounts = array(
 			array(
@@ -106,7 +109,10 @@ class Accounts_Manager {
 		return $accounts;
 	}
 
-	private function prepare_x_accounts( array $user ): array {
+	/**
+	 * @throws \Exception
+	 */
+	private function prepare_x_accounts(array $user ): array {
 		return array(
 			array(
 				'name'              => $user['name'],
@@ -118,7 +124,10 @@ class Accounts_Manager {
 		);
 	}
 
-	public function prepare_instagram_accounts( array $data ): array {
+	/**
+	 * @throws \Exception
+	 */
+	public function prepare_instagram_accounts(array $data ): array {
 		return array(
 			array(
 				'name'              => $data['name'],
