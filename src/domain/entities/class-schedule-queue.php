@@ -56,4 +56,9 @@ class Schedule_Queue {
 	public function post_count_to_share(): int {
 		return count( $this->all_posts_ids() ) - count( $this->shared_posts_ids() );
 	}
+
+	public function has_cycle_started()
+	{
+		return !empty($this->shared_posts_ids());
+	}
 }

@@ -42,6 +42,34 @@ class PostMeta {
 
 /***/ }),
 
+/***/ "./resources/js/request.ts":
+/*!*********************************!*\
+  !*** ./resources/js/request.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+class Request {
+  constructor(requestClient) {
+    this.requestClient = requestClient;
+  }
+  async get(url, options) {
+    this.requestClient.get(url, options);
+  }
+  async post(url, options) {
+    this.requestClient.post(url, options);
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new Request((jquery__WEBPACK_IMPORTED_MODULE_0___default())));
+
+/***/ }),
+
 /***/ "./resources/js/schedule-forms/index.ts":
 /*!**********************************************!*\
   !*** ./resources/js/schedule-forms/index.ts ***!
@@ -244,6 +272,49 @@ class Settings {
     });
   }
 }
+
+/***/ }),
+
+/***/ "./resources/js/sort.ts":
+/*!******************************!*\
+  !*** ./resources/js/sort.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   sortElements: () => (/* binding */ sortElements)
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./request */ "./resources/js/request.ts");
+
+
+const sortElements = selector => {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(selector).sortable({
+    placeholder: 'sortable-placeholder',
+    update: function (event, ui) {
+      const sortedIDs = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).sortable('toArray', {
+        attribute: 'data-schedule-post-id'
+      });
+      const scheduleId = jquery__WEBPACK_IMPORTED_MODULE_0___default()(ui.item).closest('.schedule-overview-wrap').data('schedule-id');
+      const {
+        ajax_url: ajaxUrl,
+        nonce
+      } = window.nevamiss;
+      _request__WEBPACK_IMPORTED_MODULE_1__["default"].post(ajaxUrl, {
+        action: 'nevamiss_sort_queue_posts',
+        data: sortedIDs,
+        scheduleId,
+        nonce
+      }).then(data => {
+        console.log(data);
+      }).catch(err => {
+        console.log(err);
+      });
+    }
+  });
+};
 
 /***/ }),
 
@@ -2957,6 +3028,16 @@ if (typeof Object.assign !== "function") {
 }
 
 
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/***/ ((module) => {
+
+module.exports = window["jQuery"];
+
 /***/ })
 
 /******/ 	});
@@ -3035,6 +3116,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _schedule_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schedule-forms */ "./resources/js/schedule-forms/index.ts");
 /* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings */ "./resources/js/settings.ts");
 /* harmony import */ var _post_meta__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./post-meta */ "./resources/js/post-meta.ts");
+/* harmony import */ var _sort__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sort */ "./resources/js/sort.ts");
+
 
 
 
@@ -3042,6 +3125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   _schedule_forms__WEBPACK_IMPORTED_MODULE_0__["default"].init();
   _settings__WEBPACK_IMPORTED_MODULE_1__.Settings.init();
   _post_meta__WEBPACK_IMPORTED_MODULE_2__.PostMeta.init();
+  (0,_sort__WEBPACK_IMPORTED_MODULE_3__.sortElements)('.wp-posts-list');
 });
 /******/ })()
 ;

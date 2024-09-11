@@ -96,13 +96,14 @@ class WP_Cron_Service implements Cron_Interface {
 		return wp_clear_scheduled_hook( self::RECURRING_EVENT_HOOK_NAME, array( $schedule_id ) );
 	}
 
-	public function all( int $schedule_id ): array {
+	public function schedule_crons( int $schedule_id ): array {
 		$key = md5( serialize( array( $schedule_id ) ) );
 
 		$crons = array_filter(
 			get_option( 'cron' ),
 			function ( $cron ) use ( $key ) {
-				return isset( $cron[ self::RECURRING_EVENT_HOOK_NAME ][ $key ] );
+				return isset( $cron[ self::RECURRING_EVENT_HOOK_NAME ][ $key ] ) ||
+					isset( $cron[ self::NEVAMISS_SCHEDULE_SINGLE_EVENTS ][$key]);
 			}
 		);
 

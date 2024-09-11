@@ -1,3 +1,4 @@
+
 const jQuery = window.jQuery;
 export class PostMeta {
     public static init(){

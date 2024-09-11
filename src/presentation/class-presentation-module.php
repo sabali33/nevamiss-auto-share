@@ -32,6 +32,7 @@ use Nevamiss\Presentation\Tabs\Tab_Collection_Interface;
 use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Presentation\Tabs\Upgrade_Tab;
 use Nevamiss\Services\Form_Validator;
+use Nevamiss\Services\Network_Post_Aggregator;
 use Nevamiss\Services\Schedule_Queue;
 use Nevamiss\Services\Settings;
 use Nevamiss\Services\Network_Post_Provider;
@@ -78,7 +79,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 
-			Auto_Share_Page::class             => fn (): Auto_Share_Page => new Auto_Share_Page( array() ),
+			Auto_Share_Page::class             => fn (ContainerInterface $container): Auto_Share_Page => new Auto_Share_Page( $container->get(Network_Post_Aggregator::class) ),
 
 			Post_Meta::class                   => function ( ContainerInterface $container ) {
 				return new Post_Meta(

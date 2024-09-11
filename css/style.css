@@ -96,3 +96,47 @@ Style Network accounts
     padding: 3px;
     border-radius: 3px;
 }
+
+/** Overview post **/
+
+.schedule-overview{
+    display: flex;
+    column-gap: 5px;
+    padding: 15px;
+}
+.upcoming-overview .schedule-overview-wrap{
+    margin-top: 2rem;
+}
+.schedule-overview-wrap ul {
+    margin: 0;
+}
+.post-overview{
+    background: #FFFFFF;
+    padding: 4rem;
+}
+.post-overview h3 {
+    font-size: 40px;
+}
+.post-overview .summary {
+    display: flex;
+    column-gap: 4rem;
+}
+.post-overview .summary > div {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+.schedule-overview-wrap ul.wp-posts-list li {
+    border: dashed 1px #0a4b78;
+}
+.schedule-overview-wrap li {
+    padding: 10px;
+    background: #ece8e8;
+    margin-bottom: 1rem;
+}
+.schedule-overview-wrap ul.schedule-times{
+    width: 300px;
+}
+.schedule-overview-wrap h4 i {
+    font-weight: normal;
+    font-size: 12px;
+}
