@@ -23,7 +23,13 @@ class Assets {
 
 		wp_localize_script('nevamiss-scripts', 'nevamiss', array(
 			'ajax_url' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('nevamiss_general_nonce')
+			'nonce' => wp_create_nonce('nevamiss_general_nonce'),
+			'messages' => [
+				'sort_pending_text' => esc_html__('Sorting...', 'nevamiss'),
+				'sort_success_text' => esc_html__('Sorted', 'nevamiss'),
+				'sort_failure_text' => esc_html__('Failed to sort', 'nevamiss'),
+			]
+
 		));
 	}
 

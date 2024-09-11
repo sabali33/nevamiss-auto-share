@@ -8,10 +8,10 @@ class Request {
     constructor(private requestClient: RequestClientType) {
     }
     public async  get (url:string, options: object) {
-        this.requestClient.get(url, options)
+        return this.requestClient.get(url, options)
     }
     public async  post (url:string, options: object) {
-        this.requestClient.post(url, options)
+        return this.requestClient.post(url, options)
     }
 }
 export default new Request(jQuery)

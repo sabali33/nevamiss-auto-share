@@ -1,5 +1,5 @@
 
-export interface Window {
+export interface window {
     nevamiss: {
         ajax_url: any;
     };

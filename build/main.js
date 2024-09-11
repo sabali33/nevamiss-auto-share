@@ -60,10 +60,10 @@ class Request {
     this.requestClient = requestClient;
   }
   async get(url, options) {
-    this.requestClient.get(url, options);
+    return this.requestClient.get(url, options);
   }
   async post(url, options) {
-    this.requestClient.post(url, options);
+    return this.requestClient.post(url, options);
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new Request((jquery__WEBPACK_IMPORTED_MODULE_0___default())));
@@ -297,23 +297,32 @@ const sortElements = selector => {
       const sortedIDs = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).sortable('toArray', {
         attribute: 'data-schedule-post-id'
       });
-      const scheduleId = jquery__WEBPACK_IMPORTED_MODULE_0___default()(ui.item).closest('.schedule-overview-wrap').data('schedule-id');
+      const scheduleElement = jquery__WEBPACK_IMPORTED_MODULE_0___default()(ui.item).closest('.schedule-overview-wrap');
+      const scheduleId = scheduleElement.data('schedule-id');
       const {
         ajax_url: ajaxUrl,
-        nonce
+        nonce,
+        messages
       } = window.nevamiss;
+      scheduleElement.prepend(`<span class="pending">${messages.sort_pending_text}</span>`);
       _request__WEBPACK_IMPORTED_MODULE_1__["default"].post(ajaxUrl, {
         action: 'nevamiss_sort_queue_posts',
         data: sortedIDs,
         scheduleId,
         nonce
       }).then(data => {
-        console.log(data);
+        scheduleElement.find('span').first().attr('class', 'message notice-success').text(messages.sort_success_text);
       }).catch(err => {
-        console.log(err);
+        scheduleElement.find('span').first().attr('class', 'message message-error').text(messages.sort_failure_text);
       });
+      emptyElementAfter(scheduleElement.find('span').first());
     }
   });
+};
+const emptyElementAfter = (element, duration = 5000) => {
+  setTimeout(() => {
+    element.remove();
+  }, duration);
 };
 
 /***/ }),

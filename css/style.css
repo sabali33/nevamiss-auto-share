@@ -140,3 +140,21 @@ Style Network accounts
     font-weight: normal;
     font-size: 12px;
 }
+.schedule-overview-wrap{
+    position: relative;
+}
+.schedule-overview-wrap > span{
+    position: absolute;
+    right: 0;
+}
+.schedule-overview-wrap .message{
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+}
+.schedule-overview-wrap .message-error{
+    background: #d71c1c;
+}
+.schedule-overview-wrap .notice-success {
+    background: forestgreen;
+}
