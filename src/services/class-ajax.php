@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Nevamiss\Services;
 
-use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
-use function Nevamiss\container;
 
 class Ajax {
 
@@ -35,7 +33,6 @@ class Ajax {
 	}
 
 	/**
-	 * @throws Not_Found_Exception
 	 * @throws \Exception
 	 */
 	public function sort_queue_posts_callback(): void
@@ -53,15 +50,17 @@ class Ajax {
 			 */
 			$queue = $this->schedule_queue->get_schedule_queue_by_schedule_id($data['schedule_id']);
 			$old_posts = $queue->all_posts_ids();
-			$remaining_posts_count = count($queue->all_posts_ids()) - count($data['posts']);
 
+			$remaining_posts_count = count($queue->all_posts_ids()) - count($data['posts']);
 			$remaining_posts = array_slice($old_posts, -1, $remaining_posts_count);
+
 			$ordered_posts =  [...$data['posts'], ...$remaining_posts];
+
 			$this->schedule_queue->update($queue->id(), ['all_posts_ids' => wp_json_encode($ordered_posts) ]);
+
 			wp_send_json_success( 'Success', 202 );
 		}catch (\Throwable $throwable){
 			wp_send_json_error( $throwable->getMessage(), 401 );
-
 		}
 		wp_die();
 	}
