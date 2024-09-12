@@ -18,8 +18,9 @@
   },
   "homepage": "https://github.com/sabali33/nevamiss-auto-share#readme",
   "devDependencies": {
+    "@types/jquery": "^3.5.30",
+    "@types/jquery-sortable": "^0.9.34",
     "@wordpress/scripts": "^28.1.0",
-    "jquery": "^3.7.1",
     "jquery-ui": "^1.14.0"
   },
   "dependencies": {

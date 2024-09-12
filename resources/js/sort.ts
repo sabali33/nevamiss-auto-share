@@ -4,7 +4,9 @@ import Request from "./request";
 export const sortElements = (selector:string) => {
     $(selector).sortable({
         placeholder: 'sortable-placeholder',
-        update: function(event, ui) {
+        // @ts-ignore
+        update: function(event: any, ui: { item: any; }) {
+            // @ts-ignore
             const sortedIDs = $(this).sortable('toArray', {
                 attribute: 'data-schedule-post-id'
             });
@@ -21,11 +23,12 @@ export const sortElements = (selector:string) => {
                 scheduleElement.find('span').first().attr('class', 'message message-error').text( messages.sort_failure_text );
             });
             emptyElementAfter(scheduleElement.find('span').first());
+
         },
     });
 }
 
-const emptyElementAfter = (element:HTMLElement, duration: number = 5000) => {
+const emptyElementAfter = (element:JQuery, duration: number = 5000) => {
 
     setTimeout(()=> {
         element.remove()
