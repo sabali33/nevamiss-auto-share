@@ -132,6 +132,9 @@ class Network_Post_Aggregator {
 	private function order_aggregate(array $aggregate): array
 	{
 		usort($aggregate, function(array $first, array $second){
+			if(empty($first['posting_times'])){
+				return -1;
+			}
 			$first_earliest_posting_time = $first['posting_times'][0];
 			$second_earliest_posting_time = $second['posting_times'][0];
 			if( $first_earliest_posting_time > $second_earliest_posting_time){
