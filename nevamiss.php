@@ -20,7 +20,6 @@ use Exception;
 use Inpsyde\Modularity\Package;
 use Inpsyde\Modularity\Properties\PluginProperties;
 use Nevamiss\Application\Application_Module;
-use Nevamiss\Application\Setup;
 use Nevamiss\Infrastructure\Infrastructure_Module;
 use Nevamiss\Networks\Media_Networks_Module;
 use Nevamiss\Presentation\Presentation_Module;
@@ -66,9 +65,7 @@ function error_notice( string $message ): void {
 
 try {
 	autoload();
-	global $wpdb;
-
-	Setup::instance( $wpdb );
+	init();
 } catch ( Exception $exception ) {
 
 	error_notice( $exception->getMessage() );

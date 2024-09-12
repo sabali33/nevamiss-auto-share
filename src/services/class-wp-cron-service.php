@@ -93,6 +93,16 @@ class WP_Cron_Service implements Cron_Interface {
 	}
 
 	public function unschedule( int $schedule_id ): int {
+		/**
+		 * @var Schedule $schedule
+		 */
+		$schedule = $this->schedule_repository->get($schedule_id);
+
+		if( $schedule->repeat_frequency() === 'none') {
+
+			return wp_clear_scheduled_hook(self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_id));
+		}
+
 		return wp_clear_scheduled_hook( self::RECURRING_EVENT_HOOK_NAME, array( $schedule_id ) );
 	}
 
@@ -230,5 +240,36 @@ class WP_Cron_Service implements Cron_Interface {
 	private function reschedule_cron( Schedule $new_schedule ): bool {
 		$this->unschedule( $new_schedule->id() );
 		return $this->create_schedule( $new_schedule );
+	}
+
+	public function unschedule_all(): void
+	{
+		/**
+		 * @var Schedule[] $schedules
+		 */
+		$schedules = $this->schedule_repository->get_all();
+		foreach ($schedules as $schedule){
+			$this->unschedule($schedule->id());
+		}
+	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	public function schedule_all(): void
+	{
+		/**
+		 * @var Schedule[] $schedules
+		 */
+		$schedules = $this->schedule_repository->get_all();
+
+		foreach ($schedules as $schedule){
+			try{
+				$this->create_schedule($schedule);
+			}catch (\Throwable $throwable){
+				do_action(Logger::GENERAL_LOGS, $throwable->getMessage());
+			}
+
+		}
 	}
 }

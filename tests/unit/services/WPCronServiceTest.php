@@ -183,26 +183,35 @@ class WPCronServiceTest extends TestCase
 
 	}
 
-	public function test_it_can_reschedule_cron()
+	#[DataProvider('frequency_types')]
+	public function test_it_can_reschedule_cron(string $repeat_frequency)
 	{
 		$scheduleMock = $this->createMock(Schedule::class);
 		$scheduleMock->method('one_time_schedule')->willReturn(['2024-07-12 3:04', '2024-10-12 3:04']);
 		$scheduleMock->method('repeat_frequency')->willReturn('daily');
 		$scheduleMock->method('id')->willReturn(3);
+
 		$newScheduleMock = $this->createMock(Schedule::class);
 		$newScheduleMock->method('one_time_schedule')->willReturn(['2024-07-13 3:04', '2024-10-14 3:04']);
 		$newScheduleMock->method('id')->willReturn(3);
+		$newScheduleMock->method('repeat_frequency')->willReturn($repeat_frequency);
 
 		$scheduleRepository = $this->createMock(Schedule_Repository::class);
-		$scheduleRepository->expects($this->once())->method('get')->willReturn($newScheduleMock);
+		$scheduleRepository->expects($this->exactly(2))->method('get')->willReturn($newScheduleMock);
+
 		$cronService = new WP_Cron_Service($scheduleRepository);
+		$hookName = $repeat_frequency === 'none' ? WP_Cron_Service::NEVAMISS_SCHEDULE_SINGLE_EVENTS : WP_Cron_Service::RECURRING_EVENT_HOOK_NAME;
 		expect('wp_clear_scheduled_hook')->once()->
-		with(WP_Cron_Service::RECURRING_EVENT_HOOK_NAME, [ $scheduleMock->id()])->
+		with($hookName, [ $scheduleMock->id()])->
 		andReturn(2);
+
 		expect('get_option')->times(2);
 		expect('wp_schedule_single_event')->times(2)->andReturn(true);
+
 		$cronService->maybe_reschedule_cron($scheduleMock);
+
 	}
+
 
 	protected function tearDown(): void
 	{

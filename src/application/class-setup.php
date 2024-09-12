@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Nevamiss\Application;
 
 use Exception;
-use Nevamiss\Application\Compatibility\Version_Dependency_Provider;
-use Nevamiss\Application\Compatibility\Versions_Dependency_Interface;
-use Nevamiss\Services\Settings;
-use function Nevamiss\error_notice;
+use Nevamiss\Services\WP_Cron_Service;
 
 class Setup {
 
@@ -16,45 +13,42 @@ class Setup {
 	private static DB $db;
 	private static ?Setup $instance = null;
 
-	public function __construct(
+	private function __construct(
 		DB $db,
-		private Versions_Dependency_Interface $versions_dependencies,
-		private ?Settings $settings
+		private WP_Cron_Service $cron_service
 	) {
 
 		static::$db = $db;
 	}
 
-	public static function instance( \wpdb $wpdb ): void {
+	public static function instance( DB $db, WP_Cron_Service $cron_service ): self {
+
 		if ( self::$instance ) {
-			return;
+			return self::$instance;
 		}
-		$db                  = new DB( $wpdb );
-		$dependency_provider = new Version_Dependency_Provider();
-		self::$instance      = new self( $db, $dependency_provider, null );
+
+		self::$instance      = new self( $db,  $cron_service );
 
 		register_activation_hook(
 			NEVAMISS_ROOT,
 			array( self::$instance, 'activate' )
 		);
+
+		return self::$instance;
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	public function activate(): bool {
+
 		// Check for required PHP version
 		$this->check_php_versions_compatibility();
 		self::$db->setup_tables();
+
+		$this->cron_service->schedule_all();
+
 		return true;
-	}
-
-	public function deactivate(): void {
-
-		if ( $this->settings->keep_records() ) {
-			return;
-		}
-		self::$db->drop_tables();
 	}
 
 	/**
@@ -64,7 +58,7 @@ class Setup {
 	private function check_php_versions_compatibility(): void {
 
 		if ( version_compare(
-			$this->versions_dependencies->php_version(),
+			PHP_VERSION,
 			self::MINIMUM_PHP_VERSION,
 			'<'
 		) ) {
