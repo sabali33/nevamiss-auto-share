@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks\Clients;
+namespace Nevamiss\Infrastructure\Networks\Clients;
 
 trait Request_Parameter_Trait {
 	private function auth_header( string $access_token ): array {

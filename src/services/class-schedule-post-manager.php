@@ -11,7 +11,7 @@ use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Infrastructure\Networks\Contracts\Network_Clients_Interface;
 
 class Schedule_Post_Manager {
 

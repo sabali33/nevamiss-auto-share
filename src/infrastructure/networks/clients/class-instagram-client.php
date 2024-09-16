@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks\Clients;
+namespace Nevamiss\Infrastructure\Networks\Clients;
 
 use Nevamiss\Domain\Entities\Network_Account;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Infrastructure\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Http_Request;
 
 class Instagram_Client implements Network_Clients_Interface {

@@ -11,9 +11,8 @@ use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
-use Nevamiss\Infrastructure\Url_Shortner\URL_Shortner_Interface;
+use Nevamiss\Infrastructure\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Infrastructure\Url_Shortner\Url_Shortner_Response;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
 
 class Network_Post_Provider {
 

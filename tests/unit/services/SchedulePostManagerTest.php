@@ -10,7 +10,7 @@ use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Domain\Repositories\Task_Repository;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Infrastructure\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Logger;
 use Nevamiss\Services\Network_Post_Manager;
 use Nevamiss\Services\Network_Post_Provider;
@@ -19,15 +19,11 @@ use Nevamiss\Services\Settings;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use function Brain\Monkey\Actions\expectDone;
 use function Brain\Monkey\Functions\expect;
-use function Brain\Monkey\Functions\stubs;
 use function Brain\Monkey\Functions\stubTranslationFunctions;
-use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\setUp;
 use function Brain\Monkey\tearDown;
 use function PHPUnit\Framework\once;
-use function PHPUnit\Framework\throwException;
 
 #[CoversClass(Schedule_Post_Manager::class)]
 class SchedulePostManagerTest extends TestCase

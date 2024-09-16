@@ -2,10 +2,9 @@
 
 namespace Nevamiss\Presentation\Pages;
 
-use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Infrastructure\networks\Media_Network_Collection;
 use Nevamiss\Presentation\Tabs\Bulk_Delete_Interface;
 use Nevamiss\Presentation\Tabs\General_Tab;
-use Nevamiss\Presentation\Tabs\Network_Accounts_Tab;
 use Nevamiss\Presentation\Tabs\Tab_Collection;
 use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Services\Settings;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks;
+namespace Nevamiss\Infrastructure\Networks;
 
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Infrastructure\Networks\contracts\Network_Clients_Interface;
 
 class Media_Network_Collection {
 

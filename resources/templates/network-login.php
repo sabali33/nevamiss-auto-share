@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Infrastructure\networks\contracts\Network_Clients_Interface;
 use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
 
 /**

@@ -6,13 +6,12 @@ use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Factory\Factory;
-use Nevamiss\Domain\Repositories\Command_Query;
 use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
+use Nevamiss\Infrastructure\Networks\Media_Network_Collection;
 use Nevamiss\Infrastructure\Url_Shortner\Shortner_Collection;
-use Nevamiss\Networks\Media_Network_Collection;
 use Nevamiss\Presentation\Pages\Auto_Share_Page;
 use Nevamiss\Presentation\Pages\Schedule_Form;
 use Nevamiss\Presentation\Pages\Schedule_View_Page;
@@ -34,9 +33,9 @@ use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Presentation\Tabs\Upgrade_Tab;
 use Nevamiss\Services\Form_Validator;
 use Nevamiss\Services\Network_Post_Aggregator;
+use Nevamiss\Services\Network_Post_Provider;
 use Nevamiss\Services\Schedule_Queue;
 use Nevamiss\Services\Settings;
-use Nevamiss\Services\Network_Post_Provider;
 use Psr\Container\ContainerInterface;
 
 class Presentation_Module implements ServiceModule, ExecutableModule {

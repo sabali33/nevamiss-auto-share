@@ -21,7 +21,6 @@ use Inpsyde\Modularity\Package;
 use Inpsyde\Modularity\Properties\PluginProperties;
 use Nevamiss\Application\Application_Module;
 use Nevamiss\Infrastructure\Infrastructure_Module;
-use Nevamiss\Networks\Media_Networks_Module;
 use Nevamiss\Presentation\Presentation_Module;
 use Nevamiss\Service\Factory_Module;
 use Nevamiss\Service\Repositories_Module;
@@ -87,7 +86,6 @@ function plugin(): Package {
 		addModule( new Presentation_Module() )->
 		addModule( new Services_Module() )->
 		addModule( new Factory_Module() )->
-		addModule( new Media_Networks_Module() )->
 		addModule(new Infrastructure_Module());
 	}
 

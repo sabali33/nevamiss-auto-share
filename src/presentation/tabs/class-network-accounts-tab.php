@@ -6,7 +6,7 @@ namespace Nevamiss\Presentation\Tabs;
 
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
-use Nevamiss\Networks\Media_Network_Collection;
+use Nevamiss\Infrastructure\networks\Media_Network_Collection;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Tabs\Tab;
 use Nevamiss\Presentation\Pages\Tables\Network_Accounts_Table_List;

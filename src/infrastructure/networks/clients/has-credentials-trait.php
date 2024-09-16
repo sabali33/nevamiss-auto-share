@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks\Clients;
+namespace Nevamiss\Infrastructure\Networks\Clients;
 
 use Exception;
 

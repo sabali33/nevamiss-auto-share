@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Nevamiss\Tests\Unit\Services;
 
 use Nevamiss\Domain\Entities\Network_Account;
-use Nevamiss\Networks\Contracts\Network_Clients_Interface;
+use Nevamiss\Infrastructure\Networks\Contracts\Network_Clients_Interface;
 use Nevamiss\Services\Network_Post_Manager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

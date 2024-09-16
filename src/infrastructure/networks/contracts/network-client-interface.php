@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks\Contracts;
+namespace Nevamiss\Infrastructure\Networks\Contracts;
 
 use Nevamiss\Domain\Entities\Network_Account;
 

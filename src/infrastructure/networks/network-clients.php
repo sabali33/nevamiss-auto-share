@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks;
+namespace Nevamiss\Infrastructure\Networks;
 
 interface Network_Clients {
 

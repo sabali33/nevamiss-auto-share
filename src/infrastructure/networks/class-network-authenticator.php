@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Nevamiss\Networks;
+namespace Nevamiss\Infrastructure\Networks;
 
-use Nevamiss\Networks\Clients\Facebook_Client;
-use Nevamiss\Networks\Clients\Instagram_Client;
-use Nevamiss\Networks\Clients\Linkedin_Client;
-use Nevamiss\Networks\Clients\X_Client;
+use Nevamiss\Infrastructure\Networks\Clients\Facebook_Client;
+use Nevamiss\Infrastructure\Networks\Clients\Instagram_Client;
+use Nevamiss\Infrastructure\Networks\Clients\Linkedin_Client;
+use Nevamiss\Infrastructure\Networks\Clients\X_Client;
 use Nevamiss\Services\Accounts_Manager;
 
 class Network_Authenticator {
