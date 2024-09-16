@@ -61,7 +61,7 @@ class Schedules_Page extends Page {
 	public function bulk_delete(): void {
 
 		if ( ! isset( $_REQUEST['bulk_action'] ) && ! isset( $_REQUEST['bulk_action2'] ) ) {
-			$this->redirect( $_REQUEST );
+			$this->redirect( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			exit;
 		}
 
@@ -70,7 +70,7 @@ class Schedules_Page extends Page {
 			if ( isset( $_REQUEST['s'] ) ) {
 				$this->redirect(
 					array(
-						's' => $_REQUEST['s'],
+						's' => $_REQUEST['s'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					)
 				);
 				exit;

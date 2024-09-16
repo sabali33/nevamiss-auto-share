@@ -6,6 +6,7 @@ use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Command_Query;
 use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
@@ -79,7 +80,9 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 
-			Auto_Share_Page::class             => fn (ContainerInterface $container): Auto_Share_Page => new Auto_Share_Page( $container->get(Network_Post_Aggregator::class) ),
+			Auto_Share_Page::class             => fn (ContainerInterface $container): Auto_Share_Page => new Auto_Share_Page(
+				$container->get(Network_Post_Aggregator::class)
+			),
 
 			Post_Meta::class                   => function ( ContainerInterface $container ) {
 				return new Post_Meta(

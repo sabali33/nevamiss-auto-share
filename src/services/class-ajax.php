@@ -13,7 +13,7 @@ class Ajax {
 	}
 
 	public function instant_posting_callback(): void {
-		if ( ! $this->authorized('nevamiss-instant-share-action', $_GET) ) {
+		if ( ! $this->authorized('nevamiss-instant-share-action', $_GET) ) {// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			wp_die( 'unauthorized' );
 		}
 		$post_id    = filter_input( INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT );
@@ -37,7 +37,7 @@ class Ajax {
 	 */
 	public function sort_queue_posts_callback(): void
 	{
-		if( !$this->authorized('nevamiss_general_nonce', $_POST) ){
+		if( !$this->authorized('nevamiss_general_nonce', $_POST) ){ //phpcs:ignore WordPress.Security.NonceVerification.Missing
 			wp_die('Unauthorised');
 		}
 		$data = [

@@ -69,10 +69,10 @@ class Schedules_Table_List extends \WP_List_Table {
 
 		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' .
 			/* translators: Hidden accessibility text. */
-			__( 'Select bulk action' ) .
+			esc_html__( 'Select bulk action', 'nevamiss' ) .
 			'</label>';
-		echo '<select name="bulk_action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
-		echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
+		echo '<select name="bulk_action' . esc_attr($two) . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<option value="-1">' . esc_html__( 'Bulk actions', 'nevamiss' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {
 			if ( is_array( $value ) ) {
@@ -81,19 +81,19 @@ class Schedules_Table_List extends \WP_List_Table {
 				foreach ( $value as $name => $title ) {
 					$class = ( 'edit' === $name ) ? ' class="hide-if-no-js"' : '';
 
-					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . $title . "</option>\n";
+					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . esc_html($title) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				echo "\t" . "</optgroup>\n";
 			} else {
 				$class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
 
-				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . $value . "</option>\n";
+				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . esc_html($value) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 
 		echo "</select>\n";
 
-		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		submit_button( esc_html__( 'Apply', 'nevamiss' ), 'action', '', false, array( 'id' => "doaction$two" ) );
 		echo "\n";
 	}
 	public function prepare_items(): void {
@@ -123,21 +123,21 @@ class Schedules_Table_List extends \WP_List_Table {
 	public function get_columns(): array {
 		return array(
 			'cb'                  => '<input type="checkbox" />',
-			'schedule_name'       => __( 'Name', 'nevamiss' ),
-			'start_time'          => __( 'Start Time', 'nevamiss' ),
-			'repeat_frequency'    => __( 'Repeat Frequency', 'nevamiss' ),
-			'network_accounts'    => __( 'Network Accounts', 'nevamiss' ),
-			'next_post'           => __( 'Next Post', 'nevamiss' ),
-			'last_shared_posts'   => __( 'Last Shared Posts', 'nevamiss' ),
-			'estimate_completion' => __( 'Estimated Completion date', 'nevamiss' ),
+			'schedule_name'       => esc_html__( 'Name', 'nevamiss' ),
+			'start_time'          => esc_html__( 'Start Time', 'nevamiss' ),
+			'repeat_frequency'    => esc_html__( 'Repeat Frequency', 'nevamiss' ),
+			'network_accounts'    => esc_html__( 'Network Accounts', 'nevamiss' ),
+			'next_post'           => esc_html__( 'Next Post', 'nevamiss' ),
+			'last_shared_posts'   => esc_html__( 'Last Shared Posts', 'nevamiss' ),
+			'estimate_completion' => esc_html__( 'Estimated Completion date', 'nevamiss' ),
 
 		);
 	}
 
 	protected function get_sortable_columns(): array {
 		return array(
-			'schedule_name' => array( 'schedule_name', false, __( 'Name', 'nevamiss' ), __( 'Table ordered by Name.' ), 'asc' ),
-			'created_at'    => array( 'created_at', false, __( 'Created Date', 'nevamiss' ), __( 'Table ordered by Created Date.', 'nevamiss' ) ),
+			'schedule_name' => array( 'schedule_name', false, esc_html__( 'Name', 'nevamiss' ), esc_html__( 'Table ordered by Name.', 'nevamiss' ) ),
+			'created_at'    => array( 'created_at', false, esc_html__( 'Created Date', 'nevamiss' ), esc_html__( 'Table ordered by Created Date.', 'nevamiss' ) ),
 		);
 	}
 
@@ -270,6 +270,7 @@ class Schedules_Table_List extends \WP_List_Table {
 		if ( empty( $parts ) ) {
 			$message = __( 'No time estimates, too close', 'nevamiss' );
 		}
+
 		/* translators: %s: A finish date for the schedule */
 		$message .= sprintf( __( ' ( on %s)', 'nevamiss' ), $finish_date );
 

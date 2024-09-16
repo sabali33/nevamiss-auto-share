@@ -9,6 +9,7 @@ use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Command_Query;
 use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
@@ -205,6 +206,7 @@ class Services_Module implements ServiceModule, ExecutableModule {
 					$container->get(Schedule_Repository::class),
 					$container->get(Schedule_Queue_Repository::class),
 					$container->get(WP_Cron_Service::class),
+					$container->get(Command_Query::class),
 					$container->get(Query::class),
 				);
 			}

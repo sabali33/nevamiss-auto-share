@@ -8,6 +8,7 @@ use Exception;
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Application\Post_Query\Query;
 use Nevamiss\Domain\Entities\Schedule;
+use Nevamiss\Domain\Repositories\Command_Query;
 use Nevamiss\Domain\Repositories\Schedule_Queue_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 
@@ -17,6 +18,7 @@ class Network_Post_Aggregator {
 		private Schedule_Repository $schedule_repository,
 		private Schedule_Queue_Repository $schedule_queue_repository,
 		private WP_Cron_Service $cron_service,
+		private Command_Query $command_query,
 		private Query $query
 	)
 	{
@@ -88,9 +90,11 @@ class Network_Post_Aggregator {
 
 				 if ($time_diff->d < 1) {
 					 $human_time = human_time_diff(Date::now()->timestamp(), $date->timestamp());
+					 /* translators: %s: Human readable time */
 					 return sprintf(esc_html__("Posting in %s", 'nevamiss'), $human_time);
 				 }
 				 if ($time_diff->d === 1) {
+					 /* translators: %s: Human readable time */
 					 return sprintf(esc_html__("Posting Tomorrow @ %s", 'nevamiss'), $date->format($date->time_format()));
 				 }
 
@@ -146,5 +150,21 @@ class Network_Post_Aggregator {
 			return 0;
 		});
 		return $aggregate;
+	}
+
+	public function last_posted(): array
+	{
+		$posts = $this->command_query->last_posted();
+		return array_map( function(array $schedule_posts){
+			$schedule_posts['post'] = $this->to_post(intval($schedule_posts['post_id']));
+			unset($schedule_posts['post_id']);
+			return $schedule_posts;
+		}, $posts);
+	}
+
+	private function to_post(int $post_id): array
+	{
+		$post = $this->query->post($post_id);
+		return [$post->ID, $post->post_title];
 	}
 }

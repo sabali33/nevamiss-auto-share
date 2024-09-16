@@ -6,6 +6,7 @@ namespace Nevamiss\Service;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
 use Nevamiss\Domain\Factory\Factory;
+use Nevamiss\Domain\Repositories\Command_Query;
 use Nevamiss\Domain\Repositories\Logger_Repository;
 use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
@@ -46,6 +47,10 @@ class Repositories_Module implements ServiceModule {
 				$container->get( Factory::class ),
 				$wpdb
 			),
+			Command_Query::class => function () {
+				global $wpdb;
+				return new Command_Query($wpdb);
+			}
 		);
 	}
 }

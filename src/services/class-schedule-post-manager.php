@@ -41,7 +41,7 @@ class Schedule_Post_Manager {
 			do_action( Logger::SCHEDULE_LOGS, array( 'Scheduling is paused at Settings', true ), $schedule_id );
 
 			if ( $instant_sharing ) {
-				throw new Exception( __( 'Scheduling is paused at Settings', 'nevamiss' ) );
+				throw new Exception( 'Scheduling is paused at Settings', ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 			}
 			return;
 		}
@@ -76,7 +76,7 @@ class Schedule_Post_Manager {
 			do_action( Logger::SCHEDULE_LOGS, array( $exception->getMessage(), true ), $schedule_id );
 
 			if ( $instant_sharing ) {
-				throw new Exception( $exception->getMessage() );
+				throw new Exception( $exception->getMessage() ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 			}
 		}
 	}

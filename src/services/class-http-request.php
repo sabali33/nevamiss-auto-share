@@ -68,8 +68,8 @@ class Http_Request {
 	}
 
 	/**
-	 * @param string    $body
-	 * @param $response1
+	 * @param string $body
+	 * @param $response
 	 * @return void
 	 * @throws Exception
 	 */
@@ -78,7 +78,7 @@ class Http_Request {
 			throw new Exception( esc_html( $response['message'] ) );
 		}
 		if ( ! in_array( $response['code'], array( 200, 201, 202, 204 ) ) ) {
-			throw new Exception( 'Unable to successfully make the request: ' . $body );
+			throw new Exception( 'Unable to successfully make the request: ' . $body ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 	}
 }

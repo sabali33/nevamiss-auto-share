@@ -30,7 +30,7 @@ class Url_Shortner_Manager {
 		$shortner_client = $this->collection->get( $shortner_client_name );
 
 		if ( ! $shortner_client ) {
-			throw new \Exception( __( 'The Shortner client is not registered!', 'nevamiss' ) );
+			throw new \Exception( esc_html__( 'The Shortner client is not registered!', 'nevamiss' ) );
 		}
 
 		try {

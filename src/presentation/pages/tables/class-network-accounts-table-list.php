@@ -57,12 +57,12 @@ class Network_Accounts_Table_List extends WP_List_Table {
 	public function get_columns(): array {
 		return array(
 			'cb'                => '<input type="checkbox" />',
-			'name'              => __( 'Name', 'nevamiss' ),
-			'network'           => __( 'Network', 'nevamiss' ),
-			'remote_account_id' => __( 'Remote Account ID', 'nevamiss' ),
-			'parent_remote_id'  => __( 'Parent Remote ID', 'nevamiss' ),
-			'expires_in'        => __( 'Token Expires In', 'nevamiss' ),
-			'created_at'        => __( 'Login At', 'nevamiss' ),
+			'name'              => esc_html__( 'Name', 'nevamiss' ),
+			'network'           => esc_html__( 'Network', 'nevamiss' ),
+			'remote_account_id' => esc_html__( 'Remote Account ID', 'nevamiss' ),
+			'parent_remote_id'  => esc_html__( 'Parent Remote ID', 'nevamiss' ),
+			'expires_in'        => esc_html__( 'Token Expires In', 'nevamiss' ),
+			'created_at'        => esc_html__( 'Login At', 'nevamiss' ),
 
 		);
 	}
@@ -99,7 +99,11 @@ class Network_Accounts_Table_List extends WP_List_Table {
 	public function column_parent_remote_id( Network_Account $account ): void {
 		echo esc_html( $account->parent_remote_id() );
 	}
-	public function column_created_at( Network_Account $account ): void {
+
+	/**
+	 * @throws \Exception
+	 */
+	public function column_created_at(Network_Account $account ): void {
 		$date = Date::create_from_format( $account->created_at(), 'Y-m-d H:i:s' );
 		echo esc_html( $date->format( 'dS M Y @ H:i' ) );
 	}
@@ -129,28 +133,33 @@ class Network_Accounts_Table_List extends WP_List_Table {
 		$output = '';
 
 		if($months){
+			/* translators: %s: Months count */
 			$output .= sprintf(_n('%s month', '%s months', $months, 'nevamiss'), $months);
 			$output .= ', ';
 		}
 
 		if($days){
+			/* translators: %s: Days count */
 			$output .= sprintf(_n('%s day', '%s days', $days, 'nevamiss'), $days);
 			$output .= ', ';
 		}
 
 		if($hours){
+			/* translators: %s: Hours count */
 			$output .= sprintf(_n('%s hour', '%s hours', $hours, 'nevamiss'), $hours);
 			$output .= ', ';
 		}
-
+		/* translators: %s: Minutes count */
 		$output .= sprintf(_n('%s minute', '%s minutes', $minutes, 'nevamiss'), $minutes);
 
+		/* translators: %1$s: Style class %2$s: Output string %3$s: Expire label */
 		$message = sprintf('<span class="%1$s">%3$s %2$s</span>', esc_attr($style_classes), esc_html( $output ), $expired_label ) ;
 
 		if($time_diff->invert){
+			/* translators: %1$s: Style class %2$s: Output string %3$s: Expire label */
 			$message = sprintf(__('<span class="%1$s">%3$s %2$s ago</span>', 'nevamiss'), esc_attr($style_classes), esc_html( $output ), $expired_label ) ;
 		}
-		echo $message;
+		echo $message; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	private function style_classes(\DateInterval $interval): string
@@ -169,8 +178,6 @@ class Network_Accounts_Table_List extends WP_List_Table {
 		if($interval->m === 0 && $interval->d === 1  && $interval->h < 12 ){
 			$classes .= 'expiring-danger';
 		}
-
-
 
 		return $classes;
 

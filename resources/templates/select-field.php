@@ -12,7 +12,7 @@
         <?php echo esc_html($attributes['label']); ?>
     </label>
 
-    <select <?php echo $input_attr;  ?> >
+    <select <?php echo $input_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> >
         <?php foreach( $attributes['choices'] as $key => $choice): ?>
             <?php $selected = $key === $attributes['value'] || (is_array($attributes['value']) && in_array($key, $attributes['value'])) ?
                 'selected': ''

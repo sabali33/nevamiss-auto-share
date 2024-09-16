@@ -3,6 +3,7 @@
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Application\Not_Found_Exception;
+use Nevamiss\Domain\Repositories\Command_Query;
 use Nevamiss\Services\Network_Post_Aggregator;
 
 class Auto_Share_Page extends Page {
@@ -25,5 +26,10 @@ class Auto_Share_Page extends Page {
 	public function upcoming_posts(): array
 	{
 		return $this->aggregator->upcoming_posts();
+	}
+
+	public function last_posted(): array
+	{
+		return $this->aggregator->last_posted();
 	}
 }

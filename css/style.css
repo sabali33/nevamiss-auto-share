@@ -122,7 +122,7 @@ Style Network accounts
     column-gap: 4rem;
 }
 .post-overview .summary > div {
-    max-height: 500px;
+    /*max-height: 500px;*/
     overflow-y: scroll;
 }
 .schedule-overview-wrap ul.wp-posts-list li {

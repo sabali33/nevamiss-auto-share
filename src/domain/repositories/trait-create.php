@@ -19,7 +19,7 @@ trait Create_Trait {
 		$placeholder        = array_pad( array(), count( $values ), '%s' );
 		$placeholder        = join( ',', $placeholder );
 
-		$sql                         = $this->wpdb->prepare( "INSERT INTO {$this->table_name()} ($columns) VALUES ($placeholder)", ...$values ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql                         = $this->wpdb->prepare( "INSERT INTO {$this->table_name()} ($columns) VALUES ($placeholder)", ...$values ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$this->wpdb->suppress_errors = true;
 		$this->wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
