@@ -86,4 +86,15 @@ class Settings {
 		$url_shortner_client = $this->url_shortner();
 		return $this->setting( $url_shortner_client );
 	}
+
+	public function cleanup(): void
+	{
+		foreach ([
+			'nevamiss-x-refresh-token',
+	         'nevamiss-linkedin-refresh-token',
+	         Settings_Page::GENERAL_SETTINGS
+	         ] as $key){
+			delete_option($key);
+		}
+	}
 }

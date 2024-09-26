@@ -29,6 +29,9 @@ class Uninstall {
 		if ( $this->settings->keep_records() ) {
 			return;
 		}
+
 		self::$db->drop_tables();
+
+		$this->settings->cleanup();
 	}
 }

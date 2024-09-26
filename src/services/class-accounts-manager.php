@@ -113,13 +113,14 @@ class Accounts_Manager {
 	 * @throws \Exception
 	 */
 	private function prepare_x_accounts(array $user ): array {
+
 		return array(
 			array(
 				'name'              => $user['name'],
 				'network'           => 'x',
 				'remote_account_id' => $user['id'],
 				'token'             => $user['access_token'],
-				'expires_in'         => $this->expire_date($user['token_expires_in']),
+				'expires_in'         => $user['token_expires_in'] === 'never' ? NULL : $this->expire_date(($user['token_expires_in'] * 24)),
 			),
 		);
 	}

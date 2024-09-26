@@ -48,6 +48,22 @@ class UninstallTest extends TestCase{
 		$cronMock = $this->createMock(WP_Cron_Service::class);
 
 		$dbMock->expects($this->once())->method('drop_tables');
+		$settingsMock->expects($this->once())->method('cleanup');
+
+		$setup = new Uninstall($dbMock, $settingsMock ,$cronMock);
+
+		$setup->run();
+	}
+
+	public function test_it_can_keep_records_on_plugin_delete()
+	{
+		$dbMock = $this->createMock(DB::class);
+		$settingsMock = $this->createMock(Settings::class);
+		$settingsMock->method('keep_records')->willReturn(true);
+		$cronMock = $this->createMock(WP_Cron_Service::class);
+
+		$dbMock->expects($this->never())->method('drop_tables');
+		$settingsMock->expects($this->never())->method('cleanup');
 
 		$setup = new Uninstall($dbMock, $settingsMock ,$cronMock);
 

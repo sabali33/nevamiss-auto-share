@@ -113,6 +113,10 @@ class Network_Accounts_Table_List extends WP_List_Table {
 	 */
 	public function column_expires_in(Network_Account $account ): void {
 
+		if(!$account->expires_in() && !$account->parent_remote_id()){
+			esc_html_e('No Expiry Date', 'nevamiss');
+			return;
+		}
 		if(!$account->expires_in() && $account->parent_remote_id()){
 			$account = $this->account_repository->get_by_remote_id($account->parent_remote_id());
 		}
