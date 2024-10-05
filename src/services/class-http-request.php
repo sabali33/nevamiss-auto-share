@@ -10,7 +10,7 @@ class Http_Request {
 	/**
 	 * @throws Exception
 	 */
-	public function get( string $url, array $args = array() ): array {
+	public function get( string $url, array $args = array() ): array|string {
 		$response = wp_remote_get( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
@@ -23,7 +23,7 @@ class Http_Request {
 		}
 		$this->validate_response( $body, $response['response'] );
 
-		return json_decode( $body, true );
+		return $this->process_response( $body );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class Http_Request {
 			return $headers['x-restli-id'];
 		}
 
-		return json_decode( $body, true );
+		return $this->process_response($body);
 	}
 
 	/**
@@ -80,5 +80,17 @@ class Http_Request {
 		if ( ! in_array( $response['code'], array( 200, 201, 202, 204 ) ) ) {
 			throw new Exception( 'Unable to successfully make the request: ' . $body ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
+	}
+
+	/**
+	 * @param string $body
+	 * @return mixed|string
+	 */
+	private function process_response(string $body): mixed
+	{
+		if (json_decode($body)) {
+			return json_decode($body, true);
+		}
+		return $body;
 	}
 }
