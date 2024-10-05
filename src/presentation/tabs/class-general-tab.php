@@ -69,6 +69,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 
 		$post = $settings['post'] ?? array( 'share_on_publish' => array( 'post' ) );
 
+
 		$fields = array(
 			'general'          => array(
 				'label'  => __( 'General', 'nevamiss' ),
@@ -158,25 +159,82 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'value'      => 'x',
 						'checked'    => in_array( 'x', $network_api_keys['networks_to_post'] ),
 						'sub_fields' => array(
-							array(
-								'name'        => 'x[client_id]',
-								'label'       => __( 'Client ID', 'nevamiss' ),
-								'type'        => 'text',
-								'value'       => $network_api_keys['x']['client_id'] ?? '',
-								'placeholder' => __( 'Enter Client ID', 'nevamiss' ),
-								'class'       => 'x-client-id',
+							[
+								'name'       => 'x[version]',
+								'label'      => __( 'Enable API V1', 'nevamiss' ),
+								'type'       => 'radio',
+								'value'      => 'v1',
+								'checked'    =>  'v1' === $network_api_keys['x']['version'],
 								'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
+								'sub_fields' => array(
+									array(
+										'name'        => 'x[api_key]',
+										'label'       => esc_html__( 'API Key', 'nevamiss' ),
+										'type'        => 'text',
+										'value'       => $network_api_keys['x']['api_key'] ?? '',
+										'placeholder' => esc_html__( 'Enter API Key', 'nevamiss' ),
+										'class'       => 'x-api-key',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+									),
+									array(
+										'name'        => 'x[api_secret]',
+										'label'       => __( 'API Secret', 'nevamiss' ),
+										'type'        => 'text',
+										'value'       => $network_api_keys['x']['api_secret'] ?? '',
+										'placeholder' => __( 'Enter API Secret', 'nevamiss' ),
+										'class'       => 'x-api-secret',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+									),
+									array(
+										'name'        => 'x[oauth_token]',
+										'label'       => __( 'Request Token', 'nevamiss' ),
+										'type'        => 'text',
+										'value'       => $network_api_keys['x']['oauth_token'] ?? '',
+										'placeholder' => __( 'Enter Request Token', 'nevamiss' ),
+										'class'       => 'x-request-token',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+									),
+									array(
+										'name'        => 'x[oauth_token_secret]',
+										'label'       => __( 'Request Token Secret', 'nevamiss' ),
+										'type'        => 'text',
+										'value'       => $network_api_keys['x']['oauth_token_secret'] ?? '',
+										'placeholder' => __( 'Enter Request Token Secret', 'nevamiss' ),
+										'class'       => 'x-request-token-secret',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+									),
+								)
+							],
+							[
+								'name'       => 'x[version]',
+								'label'      => __( 'Enable API V2', 'nevamiss' ),
+								'type'       => 'radio',
+								'value'      => 'v2',
+								'checked'    => 'v2' === $network_api_keys['x']['version'],
+								'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
+								'sub_fields' => array(
+									array(
+										'name'        => 'x[client_id]',
+										'label'       => __( 'Client ID', 'nevamiss' ),
+										'type'        => 'text',
+										'value'       => $network_api_keys['x']['client_id'] ?? '',
+										'placeholder' => __( 'Enter Client ID', 'nevamiss' ),
+										'class'       => 'x-client-id',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v2',
 
-							),
-							array(
-								'name'        => 'x[client_secret]',
-								'label'       => __( 'Client Secret', 'nevamiss' ),
-								'type'        => 'text',
-								'value'       => $network_api_keys['x']['client_secret'] ?? '',
-								'placeholder' => __( 'Enter Client Secret', 'nevamiss' ),
-								'class'       => 'x-client-secret',
-								'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
-							),
+									),
+									array(
+										'name'        => 'x[client_secret]',
+										'label'       => __( 'Client Secret', 'nevamiss' ),
+										'type'        => 'text',
+										'value'       => $network_api_keys['x']['client_secret'] ?? '',
+										'placeholder' => __( 'Enter Client Secret', 'nevamiss' ),
+										'class'       => 'x-client-secret',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v2',
+									),
+								)
+							],
+
 						),
 					),
 					array(
@@ -311,13 +369,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				continue;
 			}
 
-			$field_component = array();
-			foreach ( $field['sub_fields'] as $sub_field ) {
-
-				$field_component[] = $this->to_component( $sub_field );
-
-			}
-
+			$field_component = $this->render_sub_fields($field['sub_fields']);
 			$sub_field_components_wrap = \Nevamiss\component(
 				Wrapper::class,
 				array(
@@ -343,6 +395,46 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			);
 		}
 		return $section_components;
+	}
+
+	/**
+	 * @throws Not_Found_Exception
+	 */
+	private function render_sub_fields(array $sub_fields): array
+	{
+		$field_components = [];
+
+		foreach ( $sub_fields as $sub_field ) {
+
+			$field_component = $this->to_component( $sub_field );
+
+			if(isset($sub_field['sub_fields'])){
+				$sub_field_component = \Nevamiss\component(
+					Wrapper::class,
+					array(
+						'attributes' => array(
+							'class' => "sub-field-wrapper {$sub_field['value']}",
+						),
+					),
+					$this->render_sub_fields( $sub_field['sub_fields']),
+				);
+				$field_component = \Nevamiss\component(
+					Wrapper::class,
+					array(
+						'attributes' => array(
+							'class' => "",
+						),
+					),
+					[
+						$field_component,
+						$sub_field_component
+					],
+				);
+
+			}
+			$field_components[] = $field_component;
+		}
+		return $field_components;
 	}
 
 	/**
@@ -374,6 +466,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				'x'                   => array(
 					'client_id'     => '',
 					'client_secret' => '',
+					'version'       => 'v2'
 				),
 				'linkedin'            => array(
 					'client_id'     => '',

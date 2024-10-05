@@ -242,15 +242,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Settings: () => (/* binding */ Settings)
 /* harmony export */ });
+var XAPIVersionType = /*#__PURE__*/function (XAPIVersionType) {
+  XAPIVersionType["V1"] = "v1";
+  XAPIVersionType["V2"] = "v2";
+  return XAPIVersionType;
+}(XAPIVersionType || {});
 class Settings {
   static init() {
-    document.querySelectorAll('[name="networks_to_post[]"], .parent-field').forEach(element => {
+    document.querySelectorAll('[name="networks_to_post[]"], [name="x[version]"], .parent-field').forEach(element => {
       const subFieldElement = document.querySelector(`.sub-field-wrapper.${element.value}`);
+      if (!subFieldElement) {
+        return;
+      }
       this.toggleSubFields(subFieldElement, element.checked);
       element.addEventListener('change', e => {
         const target = e.target;
         const subFieldElement = document.querySelector(`.sub-field-wrapper.${target.value}`);
+        if (!subFieldElement) {
+          return;
+        }
         this.toggleSubFields(subFieldElement, target.checked);
+      });
+    });
+    document.querySelectorAll('[name="x[version]"]').forEach(element => {
+      const subFieldElement = document.querySelector(`.sub-field-wrapper.${element.value}`);
+      if (!subFieldElement) {
+        return;
+      }
+      this.toggleSubFields(subFieldElement, element.checked);
+      if (element.checked) {
+        Settings.currentXVersionSelected = element.value;
+      }
+      element.addEventListener('change', e => {
+        const target = e.target;
+        const subFieldElement = document.querySelector(`.sub-field-wrapper.${target.value}`);
+        const subFieldElementToHide = document.querySelector(`.sub-field-wrapper.${Settings.currentXVersionSelected}`);
+        if (!subFieldElement || !subFieldElementToHide) {
+          return;
+        }
+        this.toggleSubFields(subFieldElement, target.checked);
+        this.toggleSubFields(subFieldElementToHide, false);
+        Settings.currentXVersionSelected = target.value;
       });
     });
   }
@@ -293,7 +325,9 @@ __webpack_require__.r(__webpack_exports__);
 const sortElements = selector => {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(selector).sortable({
     placeholder: 'sortable-placeholder',
+    // @ts-ignore
     update: function (event, ui) {
+      // @ts-ignore
       const sortedIDs = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).sortable('toArray', {
         attribute: 'data-schedule-post-id'
       });

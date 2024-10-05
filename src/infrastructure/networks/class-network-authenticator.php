@@ -88,8 +88,8 @@ class Network_Authenticator {
 		}
 	}
 
-	private function authorize( string $network ): bool {
-		return isset( $_GET['state'] ) && wp_verify_nonce( $_GET['state'], "nevamiss-$network-secret" );
+	private function authorize( string $network, $nonce_key= 'state' ): bool {
+		return isset( $_GET[$nonce_key] ) && wp_verify_nonce( $_GET[$nonce_key], "nevamiss-$network-secret" );
 	}
 
 	private function redirect( array $data ): void {
@@ -131,10 +131,16 @@ class Network_Authenticator {
 	}
 
 	public function x_auth(): void {
+		/**
+		 * @var X_Client $x_client
+		 */
+		$x_client = $this->collection->get( 'x' );
 
-		if ( ! $this->authorize( 'x' ) ) {
-			$this->redirect( $this->unauthorize_message() );
-			exit;
+		if(!$x_client->is_version('v1')){
+			if ( ! $this->authorize( 'x' ) ) {
+				$this->redirect( $this->unauthorize_message() );
+				exit;
+			}
 		}
 
 		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -142,12 +148,8 @@ class Network_Authenticator {
 			exit;
 		}
 
-		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		/**
-		 * @var X_Client $x_client
-		 */
-		$x_client = $this->collection->get( 'x' );
+		$code = $x_client->code();
 
 		$_SESSION['code'] = $code;
 

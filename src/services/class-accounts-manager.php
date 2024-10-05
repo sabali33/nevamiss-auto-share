@@ -32,6 +32,7 @@ class Accounts_Manager {
 					array(
 						'token' => $posts_datum['token'],
 						'name'  => $posts_datum['name'],
+						'expires_in' => $posts_datum['expires_in'],
 					)
 				);
 				continue;
@@ -39,14 +40,14 @@ class Accounts_Manager {
 			$accounts[] = $this->account_repository->create( $posts_datum );
 		}
 
-		if('linkedin' === $network){
-			update_option('nevamiss-linkedin-refresh-token', $user['refresh_token']);
+		if( in_array($network, ['linkedin', 'x']) ){
+			update_option("nevamiss-$network-refresh-token", $user['refresh_token']);
 		}
 
 		do_action(
 			'nevamiss-user-network-login-complete',
 			array(
-				'expires_in' => $user['expires_in'],
+				'expires_in' => $user['token_expires_in'],
 				'account_ids' => $accounts
 			),
 			$network
