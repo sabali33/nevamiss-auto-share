@@ -9,7 +9,16 @@ use Nevamiss\Presentation\Pages\Settings_Page;
 
 class Settings {
 
-	public function update( string $key, mixed $value ) {
+	public function update( string $key, mixed $value, $section='general' ): void
+	{
+		$settings = $this->settings();
+		if(!isset($settings[$section])){
+			$settings[$settings] = [ $key => $value];
+		}
+		$settings[$section][$key] = $value;
+
+		update_option(Settings_Page::GENERAL_SETTINGS, $settings);
+
 	}
 
 	public function setting( string $key, string $section = null ): mixed {
