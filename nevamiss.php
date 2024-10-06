@@ -10,6 +10,8 @@ declare(strict_types=1);
  *  Author URI:  https://saganithemes.com
  *  Text Domain: nevamiss
  *  Domain Path: /languages
+ *  License:     GPL v2 or later
+ *  Requires    PHP: 8.0
  *  Version:     1.0.0
  */
 
