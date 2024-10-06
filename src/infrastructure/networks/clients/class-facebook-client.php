@@ -86,20 +86,20 @@ class Facebook_Client implements Network_Clients_Interface {
 			throw new \Exception( esc_html( "Facebook App ID,{$this->credentials['client_id']} could not be verified" ) );
 		}
 		// Exchange short-live token for long-live token
-		//$ll = $this->long_live_token( $token['access_token'] );
+		// $ll = $this->long_live_token( $token['access_token'] );
 		['access_token' => $access_token] = $this->long_live_token( $token['access_token'] );
 
-		$user                  = $this->get_user( $user_data['data']['user_id'], $access_token );
-		$user['access_token']  = $access_token;
-		$user['network_label'] = 'Facebook';
-		$user['token_expires_in'] = 60*60*24*60;
+		$user                     = $this->get_user( $user_data['data']['user_id'], $access_token );
+		$user['access_token']     = $access_token;
+		$user['network_label']    = 'Facebook';
+		$user['token_expires_in'] = 60 * 60 * 24 * 60;
 
-		$user['pages'] = $this->get_account(  $access_token, $user['id'] );
+		$user['pages'] = $this->get_account( $access_token, $user['id'] );
 
 		return $user;
 	}
 
-	public function get_account( string $access_token, string $user_id=null ) {
+	public function get_account( string $access_token, string $user_id = null ) {
 		return $this->user_pages( $user_id, $access_token );
 	}
 

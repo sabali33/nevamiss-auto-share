@@ -27,7 +27,7 @@ class Setup {
 			return self::$instance;
 		}
 
-		self::$instance      = new self( $db,  $cron_service );
+		self::$instance = new self( $db, $cron_service );
 
 		register_activation_hook(
 			NEVAMISS_ROOT,

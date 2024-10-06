@@ -30,11 +30,11 @@ class Infrastructure_Module implements ServiceModule, ExecutableModule {
 	public function services(): array {
 
 		return array(
-			Rebrandly::class           => fn( ContainerInterface $container ) => new Rebrandly(
+			Rebrandly::class                => fn( ContainerInterface $container ) => new Rebrandly(
 				$container->get( Http_Request::class ),
 				$container->get( Settings::class )
 			),
-			Shortner_Collection::class => function ( ContainerInterface $container ) {
+			Shortner_Collection::class      => function ( ContainerInterface $container ) {
 				$collection = new Shortner_Collection();
 
 				$shortners = apply_filters(
@@ -129,8 +129,7 @@ class Infrastructure_Module implements ServiceModule, ExecutableModule {
 	 * @param ContainerInterface $container
 	 * @return bool
 	 */
-	public function run(ContainerInterface $container): bool
-	{
+	public function run( ContainerInterface $container ): bool {
 		/**
 		 * @var Network_Authenticator $network_authenticator
 		 */

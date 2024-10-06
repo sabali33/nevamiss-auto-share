@@ -16,8 +16,7 @@ class Uninstall {
 		DB $db,
 		private Settings $settings,
 		private WP_Cron_Service $cron_service,
-	)
-	{
+	) {
 		static::$db = $db;
 	}
 	public function deactivate(): void {

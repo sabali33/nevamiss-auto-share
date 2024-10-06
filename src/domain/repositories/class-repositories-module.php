@@ -47,10 +47,10 @@ class Repositories_Module implements ServiceModule {
 				$container->get( Factory::class ),
 				$wpdb
 			),
-			Command_Query::class => function () {
+			Command_Query::class              => function () {
 				global $wpdb;
-				return new Command_Query($wpdb);
-			}
+				return new Command_Query( $wpdb );
+			},
 		);
 	}
 }

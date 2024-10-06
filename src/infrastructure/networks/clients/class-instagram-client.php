@@ -59,16 +59,16 @@ class Instagram_Client implements Network_Clients_Interface {
 			)
 		);
 
-		$long_live_access_token = $this->long_live_access_token( $access_token['access_token'] );
-		$data                   = array( 'access_token' => $long_live_access_token['access_token'] );
-		$data                   = array_merge( $data, $this->get_account( $long_live_access_token['access_token'], (string)$access_token['user_id'] ) );
-		$data['network_label']  = 'Instagram';
-		$data['token_expires_in']  = $long_live_access_token['expires_in'];
+		$long_live_access_token   = $this->long_live_access_token( $access_token['access_token'] );
+		$data                     = array( 'access_token' => $long_live_access_token['access_token'] );
+		$data                     = array_merge( $data, $this->get_account( $long_live_access_token['access_token'], (string) $access_token['user_id'] ) );
+		$data['network_label']    = 'Instagram';
+		$data['token_expires_in'] = $long_live_access_token['expires_in'];
 
 		return $data;
 	}
 
-	public function get_account( string $access_token, string $user_id=null ) {
+	public function get_account( string $access_token, string $user_id = null ) {
 
 		$endpoint = add_query_arg(
 			array(

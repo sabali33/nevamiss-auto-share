@@ -15,14 +15,14 @@ trait Bulk_Delete_Trait {
 			return;
 		}
 
-		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST[ 'model_name' ] ) ) {
+		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST['model_name'] ) ) {
 			return;
 		}
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], "bulk-$model_name" ) ) {
 			return;
 		}
-		$translated_model_name = str_replace('-', '_', $model_name);
+		$translated_model_name = str_replace( '-', '_', $model_name );
 
 		[$translated_model_name => $models] = filter_input_array(
 			INPUT_GET,
@@ -33,7 +33,7 @@ trait Bulk_Delete_Trait {
 				),
 			)
 		);
-		$results                 = array(
+		$results                            = array(
 			'success' => array(),
 			'error'   => array(),
 		);
@@ -43,13 +43,13 @@ trait Bulk_Delete_Trait {
 				/**
 				 * @var Network_Account|Stats $model
 				 */
-				$model = $this->table_list->repository()->get($model_id);
+				$model = $this->table_list->repository()->get( $model_id );
 
-				$deleted = match(get_class($model)){
-					Network_Account::class => $this->delete_network_accounts($model, $model_id),
-					Stats::class => $this->delete_stats($model_id)
+				$deleted = match ( get_class( $model ) ) {
+					Network_Account::class => $this->delete_network_accounts( $model, $model_id ),
+					Stats::class => $this->delete_stats( $model_id )
 				};
-				
+
 				$results['success'][ $model_id ] = $deleted;
 
 			} catch ( \Exception $exception ) {
@@ -78,37 +78,36 @@ trait Bulk_Delete_Trait {
 
 	/**
 	 * @param Network_Account|Stats $model
-	 * @param mixed $model_id
+	 * @param mixed                 $model_id
 	 * @return bool|string
 	 * @throws \Exception
 	 */
-	private function delete_network_accounts(Network_Account|Stats $model, mixed $model_id): string|bool
-	{
-		if ($model->parent_remote_id()) {
-			$deleted = $this->table_list->repository()->delete($model_id);
+	private function delete_network_accounts( Network_Account|Stats $model, mixed $model_id ): string|bool {
+		if ( $model->parent_remote_id() ) {
+			$deleted = $this->table_list->repository()->delete( $model_id );
 		} else {
-			$children_accounts = $this->table_list->repository()->get_all([
-				'where' => [
-					'parent_remote_id' => $model->remote_account_id()
-				]
-			]);
+			$children_accounts = $this->table_list->repository()->get_all(
+				array(
+					'where' => array(
+						'parent_remote_id' => $model->remote_account_id(),
+					),
+				)
+			);
 
-			$all_accounts = [$model, ...$children_accounts];
-			$deleted = '';
+			$all_accounts = array( $model, ...$children_accounts );
+			$deleted      = '';
 
 			/**
 			 * @var Network_Account $account
 			 */
-			foreach ($all_accounts as $account) {
-				$deleted .= $this->table_list->repository()->delete($account->id());
+			foreach ( $all_accounts as $account ) {
+				$deleted .= $this->table_list->repository()->delete( $account->id() );
 			}
-
 		}
 		return $deleted;
 	}
 
-	private function delete_stats(int $model_id)
-	{
-		return $this->table_list->repository()->delete($model_id);
+	private function delete_stats( int $model_id ) {
+		return $this->table_list->repository()->delete( $model_id );
 	}
 }

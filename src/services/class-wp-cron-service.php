@@ -96,11 +96,11 @@ class WP_Cron_Service implements Cron_Interface {
 		/**
 		 * @var Schedule $schedule
 		 */
-		$schedule = $this->schedule_repository->get($schedule_id);
+		$schedule = $this->schedule_repository->get( $schedule_id );
 
-		if( $schedule->repeat_frequency() === 'none') {
+		if ( $schedule->repeat_frequency() === 'none' ) {
 
-			return wp_clear_scheduled_hook(self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_id));
+			return wp_clear_scheduled_hook( self::NEVAMISS_SCHEDULE_SINGLE_EVENTS, array( $schedule_id ) );
 		}
 
 		return wp_clear_scheduled_hook( self::RECURRING_EVENT_HOOK_NAME, array( $schedule_id ) );
@@ -113,7 +113,7 @@ class WP_Cron_Service implements Cron_Interface {
 			get_option( 'cron' ),
 			function ( $cron ) use ( $key ) {
 				return isset( $cron[ self::RECURRING_EVENT_HOOK_NAME ][ $key ] ) ||
-					isset( $cron[ self::NEVAMISS_SCHEDULE_SINGLE_EVENTS ][$key]);
+					isset( $cron[ self::NEVAMISS_SCHEDULE_SINGLE_EVENTS ][ $key ] );
 			}
 		);
 
@@ -242,34 +242,31 @@ class WP_Cron_Service implements Cron_Interface {
 		return $this->create_schedule( $new_schedule );
 	}
 
-	public function unschedule_all(): void
-	{
+	public function unschedule_all(): void {
 		/**
 		 * @var Schedule[] $schedules
 		 */
 		$schedules = $this->schedule_repository->get_all();
-		foreach ($schedules as $schedule){
-			$this->unschedule($schedule->id());
+		foreach ( $schedules as $schedule ) {
+			$this->unschedule( $schedule->id() );
 		}
 	}
 
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	public function schedule_all(): void
-	{
+	public function schedule_all(): void {
 		/**
 		 * @var Schedule[] $schedules
 		 */
 		$schedules = $this->schedule_repository->get_all();
 
-		foreach ($schedules as $schedule){
-			try{
-				$this->create_schedule($schedule);
-			}catch (\Throwable $throwable){
-				do_action(Logger::GENERAL_LOGS, $throwable->getMessage());
+		foreach ( $schedules as $schedule ) {
+			try {
+				$this->create_schedule( $schedule );
+			} catch ( \Throwable $throwable ) {
+				do_action( Logger::GENERAL_LOGS, $throwable->getMessage() );
 			}
-
 		}
 	}
 }

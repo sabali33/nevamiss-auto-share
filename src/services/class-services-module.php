@@ -112,11 +112,11 @@ class Services_Module implements ServiceModule, ExecutableModule {
 		 * @var Ajax $ajax
 		 */
 
-		$ajax = $container->get(Ajax::class);
+		$ajax = $container->get( Ajax::class );
 
 		add_action( 'wp_ajax_nevamiss_instant_share', array( $ajax, 'instant_posting_callback' ) );
 
-		add_action( 'wp_ajax_nevamiss_sort_queue_posts', array( $ajax, 'sort_queue_posts_callback') );
+		add_action( 'wp_ajax_nevamiss_sort_queue_posts', array( $ajax, 'sort_queue_posts_callback' ) );
 
 		/**
 		 * @var Logger $logger
@@ -195,20 +195,20 @@ class Services_Module implements ServiceModule, ExecutableModule {
 				return new Accounts_Manager( $container->get( Network_Account_Repository::class ) );
 			},
 			Stats_Manager::class               => fn( ContainerInterface $container ) => new Stats_Manager( $container->get( Posts_Stats_Repository::class ) ),
-			Ajax::class                        => fn( ContainerInterface $container ) => new Ajax( $container->get( Post_Meta::class ), $container->get(Schedule_Queue_Repository::class) ),
+			Ajax::class                        => fn( ContainerInterface $container ) => new Ajax( $container->get( Post_Meta::class ), $container->get( Schedule_Queue_Repository::class ) ),
 			Url_Shortner_Manager::class        => fn( ContainerInterface $container ) => new Url_Shortner_Manager(
 				$container->get( Settings::class ),
 				$container->get( Shortner_Collection::class )
 			),
-			Network_Post_Aggregator::class => function (ContainerInterface $container) {
+			Network_Post_Aggregator::class     => function ( ContainerInterface $container ) {
 				return new Network_Post_Aggregator(
-					$container->get(Schedule_Repository::class),
-					$container->get(Schedule_Queue_Repository::class),
-					$container->get(WP_Cron_Service::class),
-					$container->get(Command_Query::class),
-					$container->get(Query::class),
+					$container->get( Schedule_Repository::class ),
+					$container->get( Schedule_Queue_Repository::class ),
+					$container->get( WP_Cron_Service::class ),
+					$container->get( Command_Query::class ),
+					$container->get( Query::class ),
 				);
-			}
+			},
 		);
 	}
 }

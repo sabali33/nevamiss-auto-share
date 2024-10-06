@@ -13,24 +13,28 @@ class Assets {
 		}
 
 		['dependencies' => $deps, 'version' => $version ] = require NEVAMISS_PATH . '/build/main.asset.php';
-		wp_enqueue_script('jquery-ui-sortable');
-		wp_register_script( 'nevamiss-scripts', NEVAMISS_URL . 'build/main.js', [...$deps, 'jquery-ui-sortable'], $version, true );
+		wp_enqueue_script( 'jquery-ui-sortable' );
+		wp_register_script( 'nevamiss-scripts', NEVAMISS_URL . 'build/main.js', array( ...$deps, 'jquery-ui-sortable' ), $version, true );
 		wp_register_style( 'nevamiss-flatpickr-style', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), 20240608 );
 		wp_register_style( 'nevamiss-style', NEVAMISS_URL . 'css/style.css', array(), fileatime( NEVAMISS_PATH . '/css/style.css' ) );
 		wp_enqueue_script( 'nevamiss-scripts' );
 		wp_enqueue_style( 'nevamiss-flatpickr-style' );
 		wp_enqueue_style( 'nevamiss-style' );
 
-		wp_localize_script('nevamiss-scripts', 'nevamiss', array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('nevamiss_general_nonce'),
-			'messages' => [
-				'sort_pending_text' => esc_html__('Sorting...', 'nevamiss'),
-				'sort_success_text' => esc_html__('Sorted', 'nevamiss'),
-				'sort_failure_text' => esc_html__('Failed to sort', 'nevamiss'),
-			]
+		wp_localize_script(
+			'nevamiss-scripts',
+			'nevamiss',
+			array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'nevamiss_general_nonce' ),
+				'messages' => array(
+					'sort_pending_text' => esc_html__( 'Sorting...', 'nevamiss' ),
+					'sort_success_text' => esc_html__( 'Sorted', 'nevamiss' ),
+					'sort_failure_text' => esc_html__( 'Failed to sort', 'nevamiss' ),
+				),
 
-		));
+			)
+		);
 	}
 
 	private function is_page( string $page ): bool {

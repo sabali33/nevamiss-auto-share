@@ -15,5 +15,4 @@ interface Tab_Interface {
 	public function render();
 
 	public function link( string $active_tab ): Component;
-
 }

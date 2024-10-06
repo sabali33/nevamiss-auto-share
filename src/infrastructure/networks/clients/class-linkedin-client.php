@@ -103,12 +103,12 @@ class Linkedin_Client implements Network_Clients_Interface {
 
 		$access_token = $response['access_token'];
 
-		$user                  = $this->get_account( $access_token );
-		$user['organizations'] = $this->user_organizations( $access_token );
-		$user['network_label'] = 'Linkedin';
-		$user['access_token']  = $access_token;
-		$user['token_expires_in']  = $response['expires_in'];
-		$user['refresh_token']  = $response['refresh_token'];
+		$user                     = $this->get_account( $access_token );
+		$user['organizations']    = $this->user_organizations( $access_token );
+		$user['network_label']    = 'Linkedin';
+		$user['access_token']     = $access_token;
+		$user['token_expires_in'] = $response['expires_in'];
+		$user['refresh_token']    = $response['refresh_token'];
 
 		return $user;
 	}
@@ -116,7 +116,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function get_account( string $access_token, string $user_id=null ): array|string {
+	public function get_account( string $access_token, string $user_id = null ): array|string {
 
 		$response = $this->request->get(
 			$this->root_api . "/me?oauth2_access_token={$access_token}",
@@ -270,7 +270,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 	 * @throws Exception
 	 */
 	private function upload_media( string $image_url, mixed $upload_url, Network_Account $account ): void {
-		$url                     = file_get_contents( $image_url );
+		$url                     = $this->request->get( $image_url );
 		['headers' => $headers]  = $this->auth_header( $account->token() );
 		$headers['Content-Type'] = 'application/binary';
 		$headers['Accept']       = 'application/json';
@@ -342,8 +342,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 	 * @param string $refresh_token Refresh token received from initial authorization
 	 * @return void
 	 */
-	public function refresh_token(string $refresh_token)
-	{
+	public function refresh_token( string $refresh_token ) {
 		$token_url = $this->root . 'oauth/v2/accessToken';
 		$body      = sprintf(
 			'grant_type=refresh_token&refresh_token=%1$s&client_id=%2$s&client_secret=%3$s',

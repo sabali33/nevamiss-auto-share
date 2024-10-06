@@ -11,8 +11,8 @@ use Nevamiss\Infrastructure\networks\clients\Request_Parameter_Trait;
 use Nevamiss\Services\Http_Request;
 use Throwable;
 
-class X_Api_V2_Strategy implements X_Api_Version_Strategy
-{
+class X_Api_V2_Strategy implements X_Api_Version_Strategy {
+
 	private string $client_id;
 	private string $client_secret;
 	private string $root_auth;
@@ -21,22 +21,21 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 
 	use Has_Credentials_Trait;
 	use Request_Parameter_Trait;
-	public function __construct(private Http_Request $request, array $api_credentials)
-	{
-		$this->client_id = $api_credentials['client_id'];
+
+	public function __construct( private Http_Request $request, array $api_credentials ) {
+		$this->client_id     = $api_credentials['client_id'];
 		$this->client_secret = $api_credentials['client_secret'];
-		$this->root_auth       = 'https://twitter.com/i/oauth2/authorize';
-		$this->root_api        = 'https://api.twitter.com/2';
+		$this->root_auth     = 'https://twitter.com/i/oauth2/authorize';
+		$this->root_api      = 'https://api.twitter.com/2';
 	}
 
 	/**
 	 * @param array|string $code
-	 * @param string $callback_url
+	 * @param string       $callback_url
 	 * @return array
 	 * @throws Exception
 	 */
-	public function auth(array|string $code, string $callback_url)
-	{
+	public function auth( array|string $code, string $callback_url ) {
 		$access_token_endpoint = "{$this->root_api}/oauth2/token";
 
 		$code_challenge = get_transient( 'nevamiss-x-code-challenge' );
@@ -70,7 +69,7 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 			$this->get_accounts( $response['access_token'] ),
 			array(
 				'token_expires_in' => $response['expires_in'],
-				'refresh_token' => $response['refresh_token']
+				'refresh_token'    => $response['refresh_token'],
 			)
 		);
 	}
@@ -80,8 +79,7 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 	 * @throws Exception
 	 * @throws Throwable
 	 */
-	public function auth_link(string $callback_url):string
-	{
+	public function auth_link( string $callback_url ): string {
 		$this->has_credentials( $this->client_id, $this->client_secret );
 		$code_challenge = $this->challenge_code();
 		set_transient( 'nevamiss-x-code-challenge', $code_challenge, 60 * 60 );
@@ -100,9 +98,8 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 		);
 	}
 
-	public function verified_code(): string
-	{
-		return filter_input(INPUT_GET, 'code');
+	public function verified_code(): string {
+		return filter_input( INPUT_GET, 'code' );
 	}
 
 	/**
@@ -128,13 +125,12 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 	}
 
 	/**
-	 * @param string $access_token
+	 * @param string      $access_token
 	 * @param string|null $user_id
 	 * @return mixed
 	 * @throws Exception
 	 */
-	public function get_accounts(string $access_token, string $user_id = null): array
-	{
+	public function get_accounts( string $access_token, string $user_id = null ): array {
 		$args = $this->auth_header( $access_token );
 
 		$url = "$this->root_api/users/me";
@@ -153,13 +149,12 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 	}
 
 	/**
-	 * @param array $data
+	 * @param array           $data
 	 * @param Network_Account $account
 	 * @return mixed
 	 * @throws Exception
 	 */
-	public function post(array $data, Network_Account $account): mixed
-	{
+	public function post( array $data, Network_Account $account ): mixed {
 		$args = $this->auth_header( $account->token() );
 
 		$args['headers']['Accept'] = 'application/json';
@@ -181,13 +176,12 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 	 * @return array|string
 	 * @throws Exception
 	 */
-	public function refresh_token(string $refresh_token, string $basic): array|string
-	{
-		$data = [
-			'grant_type' => 'refresh_token',
-			'client_id' => $this->client_id,
-			'refresh_token' => $refresh_token
-		];
+	public function refresh_token( string $refresh_token, string $basic ): array|string {
+		$data = array(
+			'grant_type'    => 'refresh_token',
+			'client_id'     => $this->client_id,
+			'refresh_token' => $refresh_token,
+		);
 
 		return $this->request->post(
 			'https://api.x.com/2/oauth2/token',
@@ -196,9 +190,8 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy
 					'Content-Type'  => 'application/x-www-form-urlencoded',
 					'Authorization' => "Basic $basic",
 				),
-				'body' => $data
+				'body'    => $data,
 			)
 		);
-
 	}
 }

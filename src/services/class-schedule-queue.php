@@ -233,7 +233,7 @@ class Schedule_Queue {
 
 		if ( ! $queue ) {
 			/* translators: %s: Schedule name */
-			throw new Exception( sprintf(esc_html__("No queues found for this schedule(%s)", 'nevamiss'), $schedule->name()) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new Exception( sprintf( esc_html__( 'No queues found for this schedule(%s)', 'nevamiss' ), $schedule->name() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		$posts_count = (int) $schedule->query_args()['posts_per_page'];
@@ -406,7 +406,7 @@ class Schedule_Queue {
 	/**
 	 * @throws Exception
 	 */
-	private function estimate_weekly_schedule(Schedule $schedule, int $posts_count ): array {
+	private function estimate_weekly_schedule( Schedule $schedule, int $posts_count ): array {
 		$time_units = array();
 		$date       = Date::create_from_format( $schedule->start_date() );
 
@@ -449,7 +449,7 @@ class Schedule_Queue {
 	/**
 	 * @throws Exception
 	 */
-	private function estimate_daily_schedule(Schedule $schedule, int $posts_count ): array {
+	private function estimate_daily_schedule( Schedule $schedule, int $posts_count ): array {
 		$time_units = array();
 		$date       = Date::create_from_format( $schedule->start_date() );
 

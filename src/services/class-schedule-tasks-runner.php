@@ -95,7 +95,7 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 			);
 
 			if ( doing_action( 'admin_post_nevamiss_schedule_share' ) ) {
-				throw new Exception( esc_html($throwable->getMessage()) );
+				throw new Exception( esc_html( $throwable->getMessage() ) );
 			}
 			do_action( Logger::SCHEDULE_LOGS, array( $throwable->getMessage() ), $schedule_id );
 

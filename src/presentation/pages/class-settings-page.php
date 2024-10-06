@@ -165,16 +165,14 @@ class Settings_Page extends Page {
 		wp_redirect( $url );
 	}
 
-	public function bulk_delete()
-	{
-		$model_name = filter_input(INPUT_GET, 'model_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+	public function bulk_delete() {
+		$model_name = filter_input( INPUT_GET, 'model_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		/**
 		 * @var Tab_Interface & Bulk_Delete_Interface $tab
 		 */
-		$tab = $this->tab_collection->get($model_name);
+		$tab = $this->tab_collection->get( $model_name );
 
-		$tab->bulk_delete($model_name);
-
+		$tab->bulk_delete( $model_name );
 	}
 }

@@ -25,7 +25,7 @@ class Application_Module implements ServiceModule, ExecutableModule {
 				global $wpdb;
 				return new DB( $wpdb );
 			},
-			Uninstall::class                       => static fn( ContainerInterface $container ) => new Uninstall(
+			Uninstall::class                   => static fn( ContainerInterface $container ) => new Uninstall(
 				$container->get( DB::class ),
 				$container->get( Settings::class ),
 				$container->get( WP_Cron_Service::class ),
@@ -40,7 +40,7 @@ class Application_Module implements ServiceModule, ExecutableModule {
 	 * @throws ContainerExceptionInterface
 	 * @throws NotFoundExceptionInterface
 	 */
-	public function run(ContainerInterface $container ): bool {
+	public function run( ContainerInterface $container ): bool {
 		/**
 		 * @var Uninstall $shutdown
 		 */
@@ -48,11 +48,11 @@ class Application_Module implements ServiceModule, ExecutableModule {
 
 		\register_deactivation_hook(
 			NEVAMISS_ROOT,
-			array( $shutdown , 'deactivate' )
+			array( $shutdown, 'deactivate' )
 		);
 
 		$file = plugin_basename( NEVAMISS_ROOT );
-		add_action("uninstall_$file", array( $shutdown, 'run'));
+		add_action( "uninstall_$file", array( $shutdown, 'run' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $container->get( Assets::class ), 'enqueue_script' ) );
 

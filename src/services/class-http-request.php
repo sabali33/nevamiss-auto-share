@@ -49,7 +49,7 @@ class Http_Request {
 			return $headers['x-restli-id'];
 		}
 
-		return $this->process_response($body);
+		return $this->process_response( $body );
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Http_Request {
 	}
 
 	/**
-	 * @param string $body
+	 * @param string   $body
 	 * @param $response
 	 * @return void
 	 * @throws Exception
@@ -86,10 +86,9 @@ class Http_Request {
 	 * @param string $body
 	 * @return mixed|string
 	 */
-	private function process_response(string $body): mixed
-	{
-		if (json_decode($body)) {
-			return json_decode($body, true);
+	private function process_response( string $body ): mixed {
+		if ( json_decode( $body ) ) {
+			return json_decode( $body, true );
 		}
 		return $body;
 	}

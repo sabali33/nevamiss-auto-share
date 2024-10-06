@@ -69,7 +69,6 @@ class General_Tab implements Tab_Interface, Section_Interface {
 
 		$post = $settings['post'] ?? array( 'share_on_publish' => array( 'post' ) );
 
-
 		$fields = array(
 			'general'          => array(
 				'label'  => __( 'General', 'nevamiss' ),
@@ -159,13 +158,13 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'value'      => 'x',
 						'checked'    => in_array( 'x', $network_api_keys['networks_to_post'] ),
 						'sub_fields' => array(
-							[
+							array(
 								'name'       => 'x[version]',
 								'label'      => __( 'Enable API V1', 'nevamiss' ),
 								'type'       => 'radio',
 								'value'      => 'v1',
-								'checked'    =>  'v1' === $network_api_keys['x']['version'],
-								'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
+								'checked'    => 'v1' === $network_api_keys['x']['version'],
+								'disabled'   => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
 								'sub_fields' => array(
 									array(
 										'name'        => 'x[api_key]',
@@ -203,15 +202,15 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'class'       => 'x-request-token-secret',
 										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
 									),
-								)
-							],
-							[
+								),
+							),
+							array(
 								'name'       => 'x[version]',
 								'label'      => __( 'Enable API V2', 'nevamiss' ),
 								'type'       => 'radio',
 								'value'      => 'v2',
 								'checked'    => 'v2' === $network_api_keys['x']['version'],
-								'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
+								'disabled'   => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
 								'sub_fields' => array(
 									array(
 										'name'        => 'x[client_id]',
@@ -232,8 +231,8 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'class'       => 'x-client-secret',
 										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v2',
 									),
-								)
-							],
+								),
+							),
 
 						),
 					),
@@ -369,7 +368,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				continue;
 			}
 
-			$field_component = $this->render_sub_fields($field['sub_fields']);
+			$field_component           = $this->render_sub_fields( $field['sub_fields'] );
 			$sub_field_components_wrap = \Nevamiss\component(
 				Wrapper::class,
 				array(
@@ -400,15 +399,14 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	private function render_sub_fields(array $sub_fields): array
-	{
-		$field_components = [];
+	private function render_sub_fields( array $sub_fields ): array {
+		$field_components = array();
 
 		foreach ( $sub_fields as $sub_field ) {
 
 			$field_component = $this->to_component( $sub_field );
 
-			if(isset($sub_field['sub_fields'])){
+			if ( isset( $sub_field['sub_fields'] ) ) {
 				$sub_field_component = \Nevamiss\component(
 					Wrapper::class,
 					array(
@@ -416,19 +414,19 @@ class General_Tab implements Tab_Interface, Section_Interface {
 							'class' => "sub-field-wrapper {$sub_field['value']}",
 						),
 					),
-					$this->render_sub_fields( $sub_field['sub_fields']),
+					$this->render_sub_fields( $sub_field['sub_fields'] ),
 				);
-				$field_component = \Nevamiss\component(
+				$field_component     = \Nevamiss\component(
 					Wrapper::class,
 					array(
 						'attributes' => array(
-							'class' => "",
+							'class' => '',
 						),
 					),
-					[
+					array(
 						$field_component,
-						$sub_field_component
-					],
+						$sub_field_component,
+					),
 				);
 
 			}
@@ -466,7 +464,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				'x'                   => array(
 					'client_id'     => '',
 					'client_secret' => '',
-					'version'       => 'v2'
+					'version'       => 'v2',
 				),
 				'linkedin'            => array(
 					'client_id'     => '',

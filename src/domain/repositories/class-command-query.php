@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Nevamiss\Domain\Repositories;
 
 class Command_Query {
-	public function __construct(private \wpdb $wpdb)
-	{
+	public function __construct( private \wpdb $wpdb ) {
 	}
 
-	public function last_posted(): array
-	{
-		$stats_table_name = "{$this->wpdb->prefix}nevamiss_stats";
+	public function last_posted(): array {
+		$stats_table_name    = "{$this->wpdb->prefix}nevamiss_stats";
 		$schedule_table_name = "{$this->wpdb->prefix}nevamiss_schedules";
 
 		$sql = "
@@ -30,6 +28,6 @@ class Command_Query {
 				ORDER BY 
 			    	stats.posted_on DESC LIMIT 5";
 
-		return $this->wpdb->get_results($sql, ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 }

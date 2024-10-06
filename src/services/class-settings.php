@@ -9,16 +9,14 @@ use Nevamiss\Presentation\Pages\Settings_Page;
 
 class Settings {
 
-	public function update( string $key, mixed $value, $section='general' ): void
-	{
+	public function update( string $key, mixed $value, $section = 'general' ): void {
 		$settings = $this->settings();
-		if(!isset($settings[$section])){
-			$settings[$settings] = [ $key => $value];
+		if ( ! isset( $settings[ $section ] ) ) {
+			$settings[ $settings ] = array( $key => $value );
 		}
-		$settings[$section][$key] = $value;
+		$settings[ $section ][ $key ] = $value;
 
-		update_option(Settings_Page::GENERAL_SETTINGS, $settings);
-
+		update_option( Settings_Page::GENERAL_SETTINGS, $settings );
 	}
 
 	public function setting( string $key, string $section = null ): mixed {
@@ -96,14 +94,13 @@ class Settings {
 		return $this->setting( $url_shortner_client );
 	}
 
-	public function cleanup(): void
-	{
-		foreach ([
+	public function cleanup(): void {
+		foreach ( array(
 			'nevamiss-x-refresh-token',
-	         'nevamiss-linkedin-refresh-token',
-	         Settings_Page::GENERAL_SETTINGS
-	         ] as $key){
-			delete_option($key);
+			'nevamiss-linkedin-refresh-token',
+			Settings_Page::GENERAL_SETTINGS,
+		) as $key ) {
+			delete_option( $key );
 		}
 	}
 }

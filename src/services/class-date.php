@@ -109,13 +109,11 @@ class Date implements Date_Interface {
 		return $this->date->diff( $date->date_time() );
 	}
 
-	public function add(\DateInterval $date_interval)
-	{
-		return $this->date->add($date_interval);
+	public function add( \DateInterval $date_interval ) {
+		return $this->date->add( $date_interval );
 	}
 
-	public function full_wp_date_format()
-	{
+	public function full_wp_date_format() {
 		return "{$this->date_format()} @ {$this->time_format()}";
 	}
 }

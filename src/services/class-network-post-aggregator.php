@@ -20,54 +20,51 @@ class Network_Post_Aggregator {
 		private WP_Cron_Service $cron_service,
 		private Command_Query $command_query,
 		private Query $query
-	)
-	{
+	) {
 	}
 
 	/**
 	 * @throws Not_Found_Exception
 	 * @throws Exception
 	 */
-	public function upcoming_posts(): array
-	{
-		$schedules = $this->schedule_repository->get_all();
-		$aggregate = $this->extract_data($schedules);
-		$ordered_data = $this->order_aggregate($aggregate);
+	public function upcoming_posts(): array {
+		$schedules    = $this->schedule_repository->get_all();
+		$aggregate    = $this->extract_data( $schedules );
+		$ordered_data = $this->order_aggregate( $aggregate );
 
-		return $this->format_posting_times($ordered_data);
+		return $this->format_posting_times( $ordered_data );
 	}
 
 	/**
 	 * @throws Not_Found_Exception
 	 */
-	private function queued_posts(int $schedule_id, int $posts_count ): array
-	{
+	private function queued_posts( int $schedule_id, int $posts_count ): array {
 		/**
 		 * @var \Nevamiss\Domain\Entities\Schedule_Queue $queue
 		 */
-		$queue = $this->schedule_queue_repository->get_schedule_queue_by_schedule_id($schedule_id);
+		$queue     = $this->schedule_queue_repository->get_schedule_queue_by_schedule_id( $schedule_id );
 		$posts_ids = $queue->all_posts_ids();
 
-		if(count($posts_ids) <= $posts_count ){
-			return $this->to_posts($posts_ids);
+		if ( count( $posts_ids ) <= $posts_count ) {
+			return $this->to_posts( $posts_ids );
 		}
-		$posts_ids = array_slice($posts_ids, 0, $posts_count, true);
+		$posts_ids = array_slice( $posts_ids, 0, $posts_count, true );
 
-		return $this->to_posts($posts_ids);
+		return $this->to_posts( $posts_ids );
 	}
 
-	private function posting_on(int $schedule_id): array
-	{
-		return $this->cron_service->schedule_crons($schedule_id);
-
+	private function posting_on( int $schedule_id ): array {
+		return $this->cron_service->schedule_crons( $schedule_id );
 	}
 
-	private function to_posts(array $posts_ids): array
-	{
-		return array_map(function($post_id){
-			$post = $this->query->post($post_id);
-			return [$post->ID, $post->post_title];
-		}, $posts_ids);
+	private function to_posts( array $posts_ids ): array {
+		return array_map(
+			function ( $post_id ) {
+				$post = $this->query->post( $post_id );
+				return array( $post->ID, $post->post_title );
+			},
+			$posts_ids
+		);
 	}
 
 	/**
@@ -75,36 +72,39 @@ class Network_Post_Aggregator {
 	 * @return array|string[]
 	 * @throws Exception
 	 */
-	private function format_posting_times(array $upcoming_data): array
-	{
+	private function format_posting_times( array $upcoming_data ): array {
 		return array_map(/**
 		 * @throws Exception
-		 */ function(array $data){
+		 */            function ( array $data ) {
 
-			 $posting_times = array_map( function ($post_time) {
-				 $date_string = Date::timestamp_to_date($post_time);
+						$posting_times = array_map(
+							function ( $post_time ) {
+								$date_string = Date::timestamp_to_date( $post_time );
 
-				 $date = Date::create_from_format($date_string, 'Y-m-d H:i:s');
+								$date = Date::create_from_format( $date_string, 'Y-m-d H:i:s' );
 
-				 $time_diff = Date::now()->diff($date);
+								$time_diff = Date::now()->diff( $date );
 
-				 if ($time_diff->d < 1) {
-					 $human_time = human_time_diff(Date::now()->timestamp(), $date->timestamp());
-					 /* translators: %s: Human readable time */
-					 return sprintf(esc_html__("Posting in %s", 'nevamiss'), $human_time);
-				 }
-				 if ($time_diff->d === 1) {
-					 /* translators: %s: Human readable time */
-					 return sprintf(esc_html__("Posting Tomorrow @ %s", 'nevamiss'), $date->format($date->time_format()));
-				 }
+								if ( $time_diff->d < 1 ) {
+										$human_time = human_time_diff( Date::now()->timestamp(), $date->timestamp() );
+										/* translators: %s: Human readable time */
+										return sprintf( esc_html__( 'Posting in %s', 'nevamiss' ), $human_time );
+								}
+								if ( $time_diff->d === 1 ) {
+										/* translators: %s: Human readable time */
+										return sprintf( esc_html__( 'Posting Tomorrow @ %s', 'nevamiss' ), $date->format( $date->time_format() ) );
+								}
 
-				 return $date->format($date->full_wp_date_format());
-			 }, $data['posting_times']);
+								return $date->format( $date->full_wp_date_format() );
+							},
+							$data['posting_times']
+						);
 
-			 $data['posting_times'] = $posting_times;
-			 return $data;
-
-		}, $upcoming_data);
+						$data['posting_times'] = $posting_times;
+						return $data;
+            },
+			$upcoming_data
+		);
 	}
 
 	/**
@@ -112,59 +112,61 @@ class Network_Post_Aggregator {
 	 * @return array
 	 * @throws Not_Found_Exception
 	 */
-	private function extract_data(array $schedules): array
-	{
-		$aggregate = [];
+	private function extract_data( array $schedules ): array {
+		$aggregate = array();
 
 		/**
 		 * @var Schedule $schedule
 		 */
-		foreach ($schedules as $schedule) {
-			$posting_times = $this->posting_on($schedule->id());
+		foreach ( $schedules as $schedule ) {
+			$posting_times = $this->posting_on( $schedule->id() );
 
-			$aggregate[] = [
-				'posts' => $this->queued_posts($schedule->id(), count($posting_times)),
+			$aggregate[] = array(
+				'posts'         => $this->queued_posts( $schedule->id(), count( $posting_times ) ),
 				'posting_times' => $posting_times,
 				'schedule_name' => $schedule->name(),
-				'id' => $schedule->id()
-			];
+				'id'            => $schedule->id(),
+			);
 
 		}
 		return $aggregate;
 	}
 
-	private function order_aggregate(array $aggregate): array
-	{
-		usort($aggregate, function(array $first, array $second){
-			if(empty($first['posting_times'])){
-				return -1;
+	private function order_aggregate( array $aggregate ): array {
+		usort(
+			$aggregate,
+			function ( array $first, array $second ) {
+				if ( empty( $first['posting_times'] ) ) {
+					return -1;
+				}
+				$first_earliest_posting_time  = $first['posting_times'][0];
+				$second_earliest_posting_time = $second['posting_times'][0];
+				if ( $first_earliest_posting_time > $second_earliest_posting_time ) {
+					return 1;
+				}
+				if ( $first_earliest_posting_time < $second_earliest_posting_time ) {
+					return -1;
+				}
+				return 0;
 			}
-			$first_earliest_posting_time = $first['posting_times'][0];
-			$second_earliest_posting_time = $second['posting_times'][0];
-			if( $first_earliest_posting_time > $second_earliest_posting_time){
-				return 1;
-			}
-			if($first_earliest_posting_time < $second_earliest_posting_time){
-				return -1;
-			}
-			return 0;
-		});
+		);
 		return $aggregate;
 	}
 
-	public function last_posted(): array
-	{
+	public function last_posted(): array {
 		$posts = $this->command_query->last_posted();
-		return array_map( function(array $schedule_posts){
-			$schedule_posts['post'] = $this->to_post(intval($schedule_posts['post_id']));
-			unset($schedule_posts['post_id']);
-			return $schedule_posts;
-		}, $posts);
+		return array_map(
+			function ( array $schedule_posts ) {
+				$schedule_posts['post'] = $this->to_post( intval( $schedule_posts['post_id'] ) );
+				unset( $schedule_posts['post_id'] );
+				return $schedule_posts;
+			},
+			$posts
+		);
 	}
 
-	private function to_post(int $post_id): array
-	{
-		$post = $this->query->post($post_id);
-		return [$post->ID, $post->post_title];
+	private function to_post( int $post_id ): array {
+		$post = $this->query->post( $post_id );
+		return array( $post->ID, $post->post_title );
 	}
 }

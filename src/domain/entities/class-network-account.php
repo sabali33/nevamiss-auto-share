@@ -49,8 +49,7 @@ class Network_Account {
 		return $this->account['created_at'];
 	}
 
-	public function expires_in()
-	{
+	public function expires_in() {
 		return $this->account['expires_in'] ?? null;
 	}
 }
