@@ -79,8 +79,8 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				);
 			},
 
-			Auto_Share_Page::class             => fn (ContainerInterface $container): Auto_Share_Page => new Auto_Share_Page(
-				$container->get(Network_Post_Aggregator::class)
+			Auto_Share_Page::class             => fn ( ContainerInterface $container ): Auto_Share_Page => new Auto_Share_Page(
+				$container->get( Network_Post_Aggregator::class )
 			),
 
 			Post_Meta::class                   => function ( ContainerInterface $container ) {
@@ -95,6 +95,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$container->get( Schedule_Repository::class ),
 				$container->get( Posts_Stats_Repository::class ),
 				$container->get( Schedule_Queue::class ),
+				$container->get(Network_Account_Repository::class)
 			),
 			Logs_Table_List::class             => fn( ContainerInterface $container ) => new Logs_Table_List( $container->get( Logger_Repository::class ) ),
 			Tab_Collection_Interface::class    => function ( ContainerInterface $container ) {

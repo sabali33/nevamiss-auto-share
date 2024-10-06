@@ -38,7 +38,7 @@ class Network_Account_Repository implements
 		'remote_account_id',
 		'token',
 		'network',
-		'expires_in'
+		'expires_in',
 	);
 
 	public function get_by_remote_id( string|int $remote_account_id ): Network_Account|false {
@@ -63,5 +63,11 @@ class Network_Account_Repository implements
 
 	private function table_name(): string {
 		return "{$this->wpdb->prefix}nevamiss_network_accounts";
+	}
+
+	public function get_by_ids(string $ids): array
+	{
+		$sql = $this->wpdb->prepare("SELECT name, network FROM {$this->table_name()} WHERE id IN (%s)", $ids);
+		return $this->wpdb->get_results($sql, ARRAY_A);
 	}
 }

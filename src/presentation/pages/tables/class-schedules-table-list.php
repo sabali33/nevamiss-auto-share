@@ -7,6 +7,7 @@ namespace Nevamiss\Presentation\Pages\Tables;
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Entities\Schedule;
 use Nevamiss\Domain\Entities\Stats;
+use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\Date;
@@ -19,6 +20,7 @@ class Schedules_Table_List extends \WP_List_Table {
 		private Schedule_Repository $schedule_repository,
 		private Posts_Stats_Repository $stats_repository,
 		private Schedule_Queue_Service $queue_service,
+		private Network_Account_Repository $account_repository,
 		$args = array()
 	) {
 		parent::__construct(
@@ -71,7 +73,7 @@ class Schedules_Table_List extends \WP_List_Table {
 			/* translators: Hidden accessibility text. */
 			esc_html__( 'Select bulk action', 'nevamiss' ) .
 			'</label>';
-		echo '<select name="bulk_action' . esc_attr($two) . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<select name="bulk_action' . esc_attr( $two ) . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
 		echo '<option value="-1">' . esc_html__( 'Bulk actions', 'nevamiss' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {
@@ -81,13 +83,13 @@ class Schedules_Table_List extends \WP_List_Table {
 				foreach ( $value as $name => $title ) {
 					$class = ( 'edit' === $name ) ? ' class="hide-if-no-js"' : '';
 
-					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . esc_html($title) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . esc_html( $title ) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				echo "\t" . "</optgroup>\n";
 			} else {
 				$class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
 
-				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . esc_html($value) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . esc_html( $value ) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 
@@ -194,9 +196,18 @@ class Schedules_Table_List extends \WP_List_Table {
 	public function column_repeat_frequency( Schedule $schedule ): void {
 		echo esc_html( $schedule->repeat_frequency() );
 	}
+	public function column_network_accounts( Schedule $schedule ): void {
+		$account_ids = join(',', $schedule->network_accounts());
+		$accounts = $this->account_repository->get_by_ids( $account_ids );
+
+		if(empty($accounts)){
+			return;
+		}
+		$format_accounts = $this->format_accounts($accounts);
+		echo esc_html( $format_accounts );
+	}
 
 	/**
-	 * @throws Not_Found_Exception
 	 */
 	public function column_next_post( Schedule $schedule ): void {
 		try {
@@ -343,5 +354,13 @@ class Schedules_Table_List extends \WP_List_Table {
 			'minute' => _n( '%s minute', '%s minutes', $value, 'nevamiss' ),
 		);
 		return $units[ $unit ] ?? '';
+	}
+
+	private function format_accounts(array $accounts): string
+	{
+		return array_reduce($accounts, function(string $acc, array $account){
+			$acc .= '- '. join(',', $account);
+			return $acc;
+		}, '');
 	}
 }
