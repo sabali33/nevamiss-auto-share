@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset name="Compatibility Check">
+    <description>Check compatibility with specific WordPress and PHP versions</description>
+
+    <!-- Check all files in these directories -->
+    <file>src/</file>
+    <!-- Exclude certain files or directories (optional) -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+
+    <!-- Specify the PHPCompatibilityWP standard -->
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Specify the target PHP version -->
+    <config name="testVersion" value="8.0"/>
+
+</ruleset>

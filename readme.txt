@@ -8,6 +8,7 @@ Tags: Social Share,Facebook Share, Post, X Share, Schedules
 Tested up to: 6.6
 Stable tag: 1.0.0
 Requires PHP: 8.0
+Requires at least: 5.6
 
 This plugin allows site users to auto-share their site content to authorized social media accounts.
 
