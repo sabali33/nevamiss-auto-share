@@ -1,9 +1,0 @@
-{
-  "redefinable-internals": [
-    "class_exists",
-    "version_compare",
-    "error_log",
-    "sleep",
-    "join"
-  ]
-}
