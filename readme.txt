@@ -68,6 +68,7 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 = What are the next features coming up? =
 
 - We intend to integrate AI to suggest captions for posts.
+
 - Create a UI interface where site managers can post custom content based on a category of posts.
 
 == External services ==
@@ -131,3 +132,21 @@ The plugin reaches out to the supported social media networks APIs in the follow
 - When a user authenticates via their social media account to grant access.
 - When posting content on behalf of the user (through schedules).
 - When a user manually decides to instantly share a WordPress post to authorized social media accounts.
+- Create a UI interface where site managers can post custom content based on a category of posts.
+
+== Changelog ==
+
+= 1.0.0 =
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+
+Initial release
+
+== Screenshots ==
+1. What has been shared and coming to share are displayed at screenshot-1.(png|jpg|jpeg|gif).
+2. A list of created schedules are displayed in screenshot-2.(png|jpg|jpeg|gif)
+3. A list of authorized accounts are displayed in screenshot-3.(png|jpg|jpeg|gif)
+4. A list of database logs are displayed in screenshot-4.(png|jpg|jpeg|gif)
+
