@@ -8,6 +8,7 @@ Tags: Social Share,Facebook Share, Post, X Share, Schedules
 Tested up to: 6.6
 Stable tag: 1.0.0
 Requires PHP: 8.0
+Requires at least: 5.6
 
 This plugin allows site users to auto-share their site content to authorized social media accounts.
 
@@ -68,3 +69,19 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 
 - We intend to integrate AI to suggest captions for posts.
 - Create a UI interface where site managers can post custom content based on a category of posts.
+
+== Changelog ==
+
+= 1.0.0 =
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+
+Initial release
+
+== Screenshots ==
+1. What has been shared and coming to share are displayed at screenshot-1.(png|jpg|jpeg|gif).
+2. A list of created schedules are displayed in screenshot-2.(png|jpg|jpeg|gif)
+3. A list of authorized accounts are displayed in screenshot-3.(png|jpg|jpeg|gif)
+4. A list of database logs are displayed in screenshot-4.(png|jpg|jpeg|gif)
