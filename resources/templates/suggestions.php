@@ -20,7 +20,7 @@ $this->maybe_process_form();
 		<form action="" method="post">
             <?php echo wp_nonce_field('nevamiss-suggestion-form-action'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <p>
-                <label for="full-name"><?php esc_html_e('Your name(<i>optional</i>)', 'nevamiss') ?></label>
+                <label for="full-name"><?php printf('%s(<i>%s</i>)', __('Your name','nevamiss'), __('Optional','nevamiss')); ?></label>
                 <input type="text" name="fullname" id="full-name">
             </p>
             <p>
