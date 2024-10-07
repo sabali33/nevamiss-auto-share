@@ -9,6 +9,7 @@ use Nevamiss\Infrastructure\Networks\Clients\Instagram_Client;
 use Nevamiss\Infrastructure\Networks\Clients\Linkedin_Client;
 use Nevamiss\Infrastructure\Networks\Clients\X_Client;
 use Nevamiss\Services\Accounts_Manager;
+use function Nevamiss\sanitize_text_input_field;
 
 class Network_Authenticator {
 	public function __construct(
@@ -22,7 +23,7 @@ class Network_Authenticator {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
-		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$code = sanitize_text_input_field('code');
 		/**
 		 * @var Facebook_Client $facebook_client
 		 */
@@ -53,17 +54,20 @@ class Network_Authenticator {
 			exit;
 		}
 
-		if ( isset( $_GET['error'] ) && isset( $_GET['error_reason'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$error = sanitize_text_input_field('error');
+		$error_reason = sanitize_text_input_field('error_reason');
+
+		if ( $error && $error_reason  ) {
 			$this->redirect(
 				array(
 					'status'  => 'error',
-					'message' => new \Exception( $_GET['error_description'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'message' => new \Exception( sanitize_text_input_field('error_description') ),
 				)
 			);
 			exit;
 		}
 
-		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$code = sanitize_text_input_field('code');
 
 		/**
 		 * @var Linkedin_Client $linkedin_client
@@ -89,7 +93,8 @@ class Network_Authenticator {
 	}
 
 	private function authorize( string $network, $nonce_key = 'state' ): bool {
-		return isset( $_GET[ $nonce_key ] ) && wp_verify_nonce( $_GET[ $nonce_key ], "nevamiss-$network-secret" );
+		$nonce = sanitize_text_input_field($nonce_key);
+		return wp_verify_nonce( $nonce, "nevamiss-$network-secret" );
 	}
 
 	private function redirect( array $data ): void {
@@ -142,15 +147,15 @@ class Network_Authenticator {
 				exit;
 			}
 		}
+		$error = sanitize_text_input_field('error');
+		$error_description = sanitize_text_input_field('error_description');
 
-		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->redirect( $this->error_message( new \Exception( $_GET['error_description'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( $error ) {
+			$this->redirect( $this->error_message( new \Exception( $error_description ) ) );
 			exit;
 		}
 
 		$code = $x_client->code();
-
-		$_SESSION['code'] = $code;
 
 		try {
 			$data = $x_client->auth( $code );
@@ -175,11 +180,15 @@ class Network_Authenticator {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
-		if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->redirect( $this->error_message( new \Exception( $_GET['error_description'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		$error = sanitize_text_input_field('error');
+		$error_description = sanitize_text_input_field('error_description');
+
+		if ( $error ) {
+			$this->redirect( $this->error_message( new \Exception( $error_description ) ) );
 			exit;
 		}
-		$code = $_GET['code']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$code = sanitize_text_input_field('code');
 		/**
 		 * @var Instagram_Client $instagram_client
 		 */
