@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Pages;
 
+use function Nevamiss\sanitize_text_input_field;
+
 trait Notices_Trait {
 
 	public function notices(): void {
@@ -14,12 +16,12 @@ trait Notices_Trait {
 		if ( ! isset( $query_args['message'] ) ) {
 			return;
 		}
-		$decoded_message = rawurldecode( $_REQUEST['message'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$decoded_message = rawurldecode( sanitize_text_input_field('message') );
 
 		wp_admin_notice(
 			stripslashes( $decoded_message ),
 			array(
-				'type'               => $_GET['status'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'type'               => sanitize_text_input_field('status'),
 				'dismissible'        => false,
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)

@@ -6,11 +6,13 @@ namespace Nevamiss\Presentation\Tabs;
 
 use Nevamiss\Domain\Entities\Network_Account;
 use Nevamiss\Domain\Entities\Stats;
+use function Nevamiss\sanitize_text_input_field;
 
 
 trait Bulk_Delete_Trait {
 
 	public function bulk_delete( string $model_name ): void {
+
 		if ( ! isset( $_REQUEST['action'] ) && ! isset( $_REQUEST['action2'] ) ) {
 			return;
 		}
@@ -19,7 +21,9 @@ trait Bulk_Delete_Trait {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], "bulk-$model_name" ) ) {
+		$nonce = sanitize_text_input_field('_wpnonce');
+
+		if ( ! wp_verify_nonce( $nonce, "bulk-$model_name" ) ) {
 			return;
 		}
 		$translated_model_name = str_replace( '-', '_', $model_name );

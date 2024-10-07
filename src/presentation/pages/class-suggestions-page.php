@@ -3,6 +3,7 @@
 namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
+use function Nevamiss\sanitize_text_input_field;
 
 class Suggestions_Page extends Page {
 
@@ -55,8 +56,7 @@ class Suggestions_Page extends Page {
 	}
 
 	private function authorize(): bool {
-		return isset( $_POST['_wpnonce'] ) &&
-			wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss-suggestion-form-action' );
+		return wp_verify_nonce( sanitize_text_input_field('_wpnonce', 'post'), 'nevamiss-suggestion-form-action' );
 	}
 
 	private function redirect( array $data ): void {

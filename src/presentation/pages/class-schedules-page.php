@@ -4,6 +4,7 @@ namespace Nevamiss\Presentation\Pages;
 
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Presentation\Pages\Tables\Schedules_Table_List;
+use function Nevamiss\sanitize_text_input_field;
 
 class Schedules_Page extends Page {
 
@@ -42,13 +43,16 @@ class Schedules_Page extends Page {
 		) {
 			return;
 		}
-		if ( ! ( isset( $_GET['message'] ) && $_GET['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		$message = sanitize_text_input_field('message');
+		if ( ! $message ) {
 			return;
 		}
+
 		wp_admin_notice(
-			$_GET['message'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$message,
 			array(
-				'type'               => $_GET['type'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'type'               => sanitize_text_input_field('type'),
 				'dismissible'        => false,
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)
@@ -70,7 +74,7 @@ class Schedules_Page extends Page {
 			if ( isset( $_REQUEST['s'] ) ) {
 				$this->redirect(
 					array(
-						's' => $_REQUEST['s'], // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						's' => sanitize_text_input_field('s'),
 					)
 				);
 				exit;
@@ -79,7 +83,7 @@ class Schedules_Page extends Page {
 			exit;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-schedules' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_input_field('_wpnonce'), 'bulk-schedules' ) ) {
 			$this->redirect(
 				array(
 					'type'    => 'error',

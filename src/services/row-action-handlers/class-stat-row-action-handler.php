@@ -9,6 +9,7 @@ use Nevamiss\Domain\Repositories\Posts_Stats_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\Schedule_Post_Manager;
 use Nevamiss\Services\WP_Cron_Service;
+use function Nevamiss\sanitize_text_input_field;
 
 class Stats_Row_Action_Handler {
 
@@ -28,7 +29,7 @@ class Stats_Row_Action_Handler {
 			wp_die( 'Unauthorized' );
 		}
 
-		$stat_id = (int) sanitize_text_field( $_GET['entry_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$stat_id = (int) sanitize_text_input_field('entry_id' );
 
 		try {
 			$this->stats_repository->delete( $stat_id );

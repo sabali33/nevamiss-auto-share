@@ -5,12 +5,13 @@ declare(strict_types=1);
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Tabs\General_Tab;
+use function Nevamiss\sanitize_text_input_field;
 
 /**
  * @var General_Tab $this
  */
 
-$current_section = $_GET['section']?? 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$current_section = sanitize_text_input_field('section') ?? 'general';
 
 ?>
 

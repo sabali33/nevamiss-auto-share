@@ -9,6 +9,7 @@ use Nevamiss\Domain\Repositories\Network_Account_Repository;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\Schedule_Post_Manager;
 use Nevamiss\Services\WP_Cron_Service;
+use function Nevamiss\sanitize_text_input_field;
 
 class Accounts_Row_Action_Handler {
 	use Row_Action_Trail;
@@ -27,7 +28,8 @@ class Accounts_Row_Action_Handler {
 		if ( ! $authorized ) {
 			wp_die( 'Unauthorized' );
 		}
-		$account_id = (int) sanitize_text_field( $_GET['account_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		$account_id = (int) sanitize_text_input_field( 'account_id' );
 
 		try {
 			$this->account_repository->delete( $account_id );

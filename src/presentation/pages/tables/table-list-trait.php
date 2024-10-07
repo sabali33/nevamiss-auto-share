@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Pages\Tables;
 
+use function Nevamiss\sanitize_text_input_field;
+
 trait Table_List_Trait {
 
 	/**
@@ -97,11 +99,11 @@ trait Table_List_Trait {
 		);
 
 		if ( isset( $_REQUEST['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$args['orderby'] = $_REQUEST['orderby']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['orderby'] = sanitize_text_input_field('orderby');
 		}
 
 		if ( isset( $_REQUEST['order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$args['order'] = $_REQUEST['order']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['order'] = sanitize_text_input_field('order');
 		}
 		return array( $per_page, $args );
 	}

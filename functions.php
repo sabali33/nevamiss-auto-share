@@ -15,6 +15,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
+use function PHPUnit\Framework\isNull;
 
 /**
  * @throws Throwable
@@ -50,4 +51,16 @@ function init(): void
 	$db = new DB($wpdb);
 	$cron = new WP_Cron_Service(new Schedule_Repository( new Factory(),$wpdb));
 	Setup::instance($db, $cron);
+}
+
+function sanitize_text_input_field(string $field, string $method = 'get'): ?string
+{
+	$method_constant =  $method === 'get' ?  : INPUT_POST;
+	$value = filter_input($method_constant, $field);
+
+	if(isNull($value)){
+		return null;
+	}
+	return wp_unslash(sanitize_text_field($value));
+
 }

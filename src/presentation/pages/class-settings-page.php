@@ -8,6 +8,7 @@ use Nevamiss\Presentation\Tabs\General_Tab;
 use Nevamiss\Presentation\Tabs\Tab_Collection;
 use Nevamiss\Presentation\Tabs\Tab_Interface;
 use Nevamiss\Services\Settings;
+use function Nevamiss\sanitize_text_input_field;
 
 class Settings_Page extends Page {
 	public const TEMPLE_PATH = 'templates/settings';
@@ -70,7 +71,7 @@ class Settings_Page extends Page {
 		}
 
 		$data     = $this->extract_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$section  = sanitize_text_field( $_POST['section'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$section  = sanitize_text_input_field( 'section', 'post' );
 		$settings = get_option( self::GENERAL_SETTINGS );
 
 		if ( ! $settings ) {
@@ -93,8 +94,8 @@ class Settings_Page extends Page {
 		exit;
 	}
 	private function authorized(): bool {
-		return isset( $_POST['_wpnonce'] ) &&
-			wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss-general-settings-action' );
+		$nonce = sanitize_text_input_field('_wpnonce', 'post');
+		return wp_verify_nonce( $nonce, 'nevamiss-general-settings-action' );
 	}
 	private function extract_data( array $post_data ): array {
 		$schema        = apply_filters(
@@ -115,7 +116,7 @@ class Settings_Page extends Page {
 				continue;
 			}
 			if ( is_string( $post_data[ $key ] ) ) {
-				$sanitize_data[ $key ] = sanitize_text_field( $post_data[ $key ] );
+				$sanitize_data[ $key ] = sanitize_text_input_field( $post_data[ $key ] );
 				continue;
 			}
 			$sanitize_data[ $key ] = filter_var_array(

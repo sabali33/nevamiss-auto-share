@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Nevamiss\Presentation\Pages\Settings_Page;
+use function Nevamiss\sanitize_text_input_field;
 
 /**
  * @var Settings_Page $this
@@ -12,7 +13,7 @@ use Nevamiss\Presentation\Pages\Settings_Page;
 
 <?php
 
-$active_tab = $_GET['tab'] ?? 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$active_tab = sanitize_text_input_field('tab') ?? 'general';
 $tabs = $this->tabs();
 
 ?>

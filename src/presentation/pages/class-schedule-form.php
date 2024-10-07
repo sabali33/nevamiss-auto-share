@@ -20,6 +20,7 @@ use Nevamiss\Presentation\Components\Renderable;
 use Nevamiss\Presentation\Components\Wrapper;
 use Nevamiss\Presentation\Utils;
 use Nevamiss\Services\Form_Validator;
+use function Nevamiss\sanitize_text_input_field;
 
 class Schedule_Form extends Page {
 
@@ -49,9 +50,8 @@ class Schedule_Form extends Page {
 			null,
 			true
 		);
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->schedule = ( isset( $_REQUEST['schedule_id'] ) && $_REQUEST['schedule_id'] ) ?
-		$this->schedule_repository->get( (int) $_REQUEST['schedule_id'] ) : null; // // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$schedule_id = sanitize_text_input_field('schedule_id');
+		$this->schedule = $schedule_id ? $this->schedule_repository->get( (int) $schedule_id ) : null;
 	}
 
 	public function factory(): Factory {
@@ -318,7 +318,7 @@ class Schedule_Form extends Page {
 			'page'   => 'edit-schedule',
 			'status' => 'error',
 		);
-		$schedule_id   = $_POST['schedule_id'] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$schedule_id   = sanitize_text_input_field('schedule_id', 'post') ?? null;
 		if ( $schedule_id ) {
 			$error_message['schedule_id'] = $schedule_id;
 		}
@@ -858,15 +858,15 @@ class Schedule_Form extends Page {
 
 	private function sort_posts(): array {
 		$criteria = array(
-			'newest'        => __( 'Newest', 'nevamiss' ),
-			'post_title'    => __( 'Title', 'nevamiss' ),
-			'oldest'        => __( 'Oldest', 'nevamiss' ),
-			'modified_date' => __( 'Modified Date', 'nevamiss' ),
-			'comment_count' => __( 'Comments Count', 'nevamiss' ),
-			'rand'          => __( 'Random', 'nevamiss' ),
+			'newest'        => esc_html__( 'Newest', 'nevamiss' ),
+			'post_title'    => esc_html__( 'Title', 'nevamiss' ),
+			'oldest'        => esc_html__( 'Oldest', 'nevamiss' ),
+			'modified_date' => esc_html__( 'Modified Date', 'nevamiss' ),
+			'comment_count' => esc_html__( 'Comments Count', 'nevamiss' ),
+			'rand'          => esc_html__( 'Random', 'nevamiss' ),
 		);
 		if ( $this->schedule() ) {
-			$criteria['queue_order'] = __( 'Keep as ordered in queue', 'nevamiss' );
+			$criteria['queue_order'] = esc_html__( 'Keep as ordered in queue', 'nevamiss' );
 		}
 		return $criteria;
 	}
@@ -896,17 +896,7 @@ class Schedule_Form extends Page {
 	 * @return bool
 	 */
 	private function is_authorized(): bool {
-		return isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'nevamiss_create_schedule' );
-	}
-
-	/**
-	 * @return array
-	 */
-	private function error_message(): array {
-		return array(
-			'type'               => 'error',
-			'dismissible'        => false,
-			'additional_classes' => array( 'inline', 'notice-alt' ),
-		);
+		$nonce = sanitize_text_input_field('_wpnonce', 'post');
+		return wp_verify_nonce( $nonce, 'nevamiss_create_schedule' );
 	}
 }

@@ -8,6 +8,7 @@ use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\Schedule_Post_Manager;
 use Nevamiss\Services\WP_Cron_Service;
+use function Nevamiss\sanitize_text_input_field;
 
 class Schedule_Row_Action_Handler {
 
@@ -34,7 +35,7 @@ class Schedule_Row_Action_Handler {
 			wp_die( 'Unauthorized' );
 		}
 
-		$schedule_id = (int) sanitize_text_field( $_GET['schedule_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$schedule_id = (int) sanitize_text_input_field( 'schedule_id' );
 
 		try {
 			$this->post_manager->run( $schedule_id );
@@ -68,7 +69,7 @@ class Schedule_Row_Action_Handler {
 		if ( ! $this->authorize() ) {
 			wp_die( 'Unauthorized' );
 		}
-		$schedule_id = (int) sanitize_text_field( $_GET['schedule_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$schedule_id = (int) sanitize_text_input_field( 'schedule_id' );
 
 		try {
 			$this->cron_service->unschedule( $schedule_id );
@@ -100,7 +101,7 @@ class Schedule_Row_Action_Handler {
 		if ( ! $authorized ) {
 			wp_die( 'Unauthorized' );
 		}
-		$schedule_id = sanitize_text_field( $_GET['schedule_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$schedule_id = sanitize_text_input_field( 'schedule_id' );
 
 		$this->cron_service->unschedule( intval( $schedule_id ) );
 
