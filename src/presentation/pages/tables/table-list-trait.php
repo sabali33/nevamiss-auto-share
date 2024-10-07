@@ -81,7 +81,7 @@ trait Table_List_Trait {
 	 * @return array|string
 	 */
 	private function search_text(): string|array {
-		return isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset( $_REQUEST['s'] ) ? trim( sanitize_text_input_field( 's' ) ) : '';
 	}
 	/**
 	 * @return array
