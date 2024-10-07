@@ -81,7 +81,8 @@ trait Table_List_Trait {
 	 * @return array|string
 	 */
 	private function search_text(): string|array {
-		return isset( $_REQUEST['s'] ) ? trim( sanitize_text_input_field( 's' ) ) : '';
+		$search_text = sanitize_text_input_field( 's' );
+		return trim($search_text) ?: '';
 	}
 	/**
 	 * @return array
