@@ -44,12 +44,6 @@ It requires configuration and authorization of the supported social media networ
 
 - Rebrandly
 
-== Screenshots ==
-
-1. This screenshot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Screenshots are stored in the /assets directory.
-2. This is the second screenshot
-
-
 == Frequently Asked Questions ==
 
 = Do I need API keys for each network? =
