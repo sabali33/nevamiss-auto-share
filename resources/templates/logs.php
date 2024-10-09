@@ -22,7 +22,7 @@ use Nevamiss\Presentation\Tabs\Logs_Tab;
 	<?php $this->table_list()->views();?>
 	<form action="">
 
-		<?php $this->table_list()->search_box( __( 'Search Logs' ), 'nevamiss-logs' ); ?>
+		<?php $this->table_list()->search_box( __( 'Search Logs', 'nevamiss' ), 'nevamiss-logs' ); ?>
 		<input type="hidden" name="page" value="nevamiss-settings">
 		<input type="hidden" name="tab" value="<?php echo esc_attr($this->slug()) ?>">
 

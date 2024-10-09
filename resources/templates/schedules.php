@@ -25,7 +25,7 @@ use Nevamiss\Presentation\Pages\Schedules_Page;
     <?php $this->table_list->views(); ?>
 
     <form action="<?php echo esc_url(admin_url('admin-post.php?action=nevamiss_schedules_delete_action')); ?>">
-        <?php $this->table_list->search_box( __( 'Search Schedules' ), 'schedules' ); ?>
+        <?php $this->table_list->search_box( __( 'Search Schedules', 'nevamiss' ), 'schedules' ); ?>
 
         <input type="hidden" name="action" value="nevamiss_schedules_delete_action">
 

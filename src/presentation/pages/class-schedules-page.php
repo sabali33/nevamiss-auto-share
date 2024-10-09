@@ -32,7 +32,7 @@ class Schedules_Page extends Page {
 		printf(
 			'<a href="%1$s" class="page-title-action">%2$s</a>',
 			esc_url( admin_url( '?page=edit-schedule' ) ),
-			esc_html__( 'Add Schedule' )
+			esc_html__( 'Add Schedule', 'nevamiss' )
 		);
 	}
 

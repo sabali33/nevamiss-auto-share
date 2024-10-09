@@ -617,7 +617,7 @@ class Schedule_Form extends Page {
 					'name'         => 'one_time_schedule[]',
 					'type'         => 'date',
 					'class'        => 'datetime date-time',
-					'label'        => __( 'Select Date' ),
+					'label'        => __( 'Select Date', 'nevamiss' ),
 					'value'        => '',
 					'has_multiple' => true,
 				),
@@ -630,7 +630,7 @@ class Schedule_Form extends Page {
 				'name'  => 'one_time_schedule[]',
 				'type'  => 'date',
 				'class' => 'datetime date-time',
-				'label' => __( 'Select Date' ),
+				'label' => __( 'Select Date', 'nevamiss' ),
 				'value' => $value,
 			);
 		}

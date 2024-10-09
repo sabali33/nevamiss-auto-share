@@ -23,7 +23,7 @@ use Nevamiss\Presentation\Tabs\Stats_Tab;
 
 	<form action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
 
-		<?php $this->table_list()->search_box( __( 'Search Accounts' ), 'stats' ); ?>
+		<?php $this->table_list()->search_box( __( 'Search Accounts', 'nevamiss' ), 'stats' ); ?>
 		<input type="hidden" name="page" value="nevamiss-settings">
 		<input type="hidden" name="tab" value="<?php echo esc_attr($this->slug()) ?>">
         <input type="hidden" name="model_name" value="stats">
