@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Presentation\Pages\Settings_Page;
 use function Nevamiss\sanitize_text_input_field;
 

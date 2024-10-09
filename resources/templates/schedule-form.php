@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Presentation\Components\Input_Fields\Input;
 use Nevamiss\Presentation\Pages\Schedule_Form;
 

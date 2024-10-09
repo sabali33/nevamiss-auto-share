@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Infrastructure\networks\contracts\Network_Clients_Interface;
 use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
 

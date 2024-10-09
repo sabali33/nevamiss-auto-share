@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  *
  * @var array{choices:array, value:mixed, label: string, id:string} $attributes

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Tabs\General_Tab;
