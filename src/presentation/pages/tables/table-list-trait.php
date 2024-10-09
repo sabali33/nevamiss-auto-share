@@ -82,9 +82,11 @@ trait Table_List_Trait {
 	 */
 	private function search_text(): string|array {
 		$search_text = sanitize_text_input_field( 's' );
-		return trim($search_text) ?: '';
+		return $search_text ? trim($search_text) : '';
 	}
+
 	/**
+	 * @param array $parameters
 	 * @return array
 	 */
 	private function query_args( array $parameters ): array {
