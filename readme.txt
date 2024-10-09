@@ -75,3 +75,31 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 
 - We intend to integrate AI to suggest captions for posts.
 - Create a UI interface where site managers can post custom content based on a category of posts.
+
+== Third Party Services ==
+
+This plugin depends on APIs of third parties and for this reason we seek to make it clear which services
+and provide links to where their terms of usage can be found. They include:
+= Rebrandly =
+API link: https://api.rebrandly.com/v1/links.
+The terms of usage can be found [here](https://www.rebrandly.com/terms-conditions)
+
+= X =
+APIs links: https://api.linkedin.com/v2, https://upload.twitter.com/1.1, https://api.twitter.com/2, https://twitter.com/i/oauth2/authorize.
+The terms of services for a developer and non-developer are [developer](https://developer.x.com/en/developer-terms/agreement-and-policy),
+[general x user](https://x.com/en/tos). And here is X privacy [policy](https://x.com/en/privacy)
+
+= Facebook =
+API links: https://graph.facebook.com/
+Terms of using this APIs can be read [here](https://developers.facebook.com/terms/dfc_platform_terms/).
+A link to Facebook policy is [here](https://developers.facebook.com/devpolicy/)
+
+= Instagram =
+API links: https://www.instagram.com/oauth/authorize, https://api.instagram.com/oauth/access_token, https://graph.instagram.com
+Terms of using this APIs can be read [here](https://developers.facebook.com/terms/dfc_platform_terms/).
+A link to Meta policy is [here](https://developers.facebook.com/devpolicy/) and Instagram terms of use, this [link](https://privacycenter.instagram.com/policy)
+
+= LinkedIn =
+API links: https://www.linkedin.com/, https://api.linkedin.com/, https://graph.instagram.com
+Terms of using this APIs can be read [here](https://www.linkedin.com/legal/l/api-terms-of-use).
+A link to LinkedIn policy is [here](https://www.linkedin.com/legal/privacy-policy)
