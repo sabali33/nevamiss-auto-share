@@ -15,7 +15,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
-use function PHPUnit\Framework\isNull;
 
 /**
  * @throws Throwable
@@ -55,12 +54,13 @@ function init(): void
 
 function sanitize_text_input_field(string $field, string $method = 'get'): ?string
 {
-	$method_constant =  $method === 'get' ?  : INPUT_POST;
-	$value = filter_input($method_constant, $field);
+	$method_variable =  $method === 'get'  ?  $_GET: $_POST;
+	$value = $method_variable[$field] ?? null;
 
-	if(isNull($value)){
+	if(is_null($value)){
 		return null;
 	}
-	return wp_unslash(sanitize_text_field($value));
+
+	return \wp_unslash(sanitize_text_field($value));
 
 }

@@ -14,7 +14,6 @@ use Nevamiss\Presentation\Pages\Schedule_Form;
 use Nevamiss\Services\Form_Validator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use function Brain\Monkey\Functions\expect;
@@ -24,6 +23,7 @@ use function Brain\Monkey\Functions\stubTranslationFunctions;
 use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\setUp;
 use function Brain\Monkey\tearDown;
+use function Nevamiss\sanitize_text_input_field;
 
 #[CoversClass(Schedule_Form::class)]
 class ScheduleFormTest extends TestCase {
@@ -47,12 +47,14 @@ class ScheduleFormTest extends TestCase {
 		$formValidatorMock = $this->createMock(Form_Validator::class);
 		$factoryMock = $this->createMock(Factory::class);
 		stubTranslationFunctions();
-
+		$_POST['_wpnonce'] = '437ruerher';
 		stubs([
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
+			'is_null' => false,
 		]);
+		when('wp_unslash')->returnArg();
+		when('Nevamiss\sanitize_text_input_field')->justReturn('437ruerher');
 
-		$_POST['_wpnonce'] = '437ruerher';
 		$form = new \ReflectionClass(Schedule_Form::class);
 		$method = $form->getMethod ('is_authorized');
 		$method->setAccessible(true);
@@ -157,6 +159,7 @@ class ScheduleFormTest extends TestCase {
 				'network_accounts' => '[2,3]'
 			]
 		);
+		when('wp_unslash')->returnArg();
 
 		$scheduleRepositoryMock = $this->createMock(Schedule_Repository::class);
 		$scheduleRepositoryMock->method('allowed_data')->willReturn($allowedData);
@@ -176,6 +179,8 @@ class ScheduleFormTest extends TestCase {
 		$formValidatorMock->method('sanitize_date')->willReturnArgument(0);
 		$formValidatorMock->method('sanitize_assoc_array_of_numbers')->willReturnArgument(0);
 		$formValidatorMock->method('sanitize_number')->willReturnArgument(0);
+		when('wp_unslash')->returnArg();
+		when('sanitize_text_field')->returnArg();
 
 		$factoryMock = $this->createMock(Factory::class);
 		stubTranslationFunctions();
@@ -201,7 +206,8 @@ class ScheduleFormTest extends TestCase {
 	public function test_it_can_update_existing_schedule()
 	{
 		$this->setSchedulePostData();
-		$_POST['schedule_id'] = 1;
+		$_POST['schedule_id'] = '1';
+
 		$allowedData = [
 			'schedule_name' => 'daily',
 			'repeat_frequency' => 'daily',
@@ -229,6 +235,7 @@ class ScheduleFormTest extends TestCase {
 			'network_accounts',
 			'query_args'
 		]);
+
 		$networkAccountRepoMock = $this->createMock(Network_Account_Repository::class);
 
 		$formValidatorMock = $this->createMock(Form_Validator::class);
@@ -237,6 +244,8 @@ class ScheduleFormTest extends TestCase {
 		$formValidatorMock->method('sanitize_date')->willReturnArgument(0);
 		$formValidatorMock->method('sanitize_assoc_array_of_numbers')->willReturnArgument(0);
 		$formValidatorMock->method('sanitize_number')->willReturnArgument(0);
+		when('wp_unslash')->returnArg();
+		when('sanitize_text_field')->returnArg();
 
 		$factoryMock = $this->createMock(Factory::class);
 		stubTranslationFunctions();
@@ -247,6 +256,7 @@ class ScheduleFormTest extends TestCase {
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-schedules',
 			'wp_verify_nonce' => true,
 			'wp_redirect' => function(){ throw new \Exception('Exiting'); },
+			'is_null' => false
 		]);
 
 		$form = new Schedule_Form($scheduleRepositoryMock, $networkAccountRepoMock, $formValidatorMock, $factoryMock);
@@ -363,6 +373,8 @@ class ScheduleFormTest extends TestCase {
 		$formValidatorMock->method('sanitize_date')->willReturnArgument(0);
 		$formValidatorMock->method('sanitize_assoc_array_of_numbers')->willReturnArgument(0);
 		$formValidatorMock->method('sanitize_number')->willReturnArgument(0);
+		when('wp_unslash')->returnArg();
+		when('sanitize_text_field')->returnArg();
 
 		$factoryMock = $this->createMock(Factory::class);
 		stubTranslationFunctions();

@@ -13,4 +13,4 @@ if (!file_exists($vendor . 'autoload.php')) {
 require_once $vendor . 'antecedent/patchwork/Patchwork.php';
 require_once $vendor . 'autoload.php';
 unset($vendor);
-
+require_once './functions.php';

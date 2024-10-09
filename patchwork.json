@@ -4,6 +4,8 @@
     "version_compare",
     "error_log",
     "sleep",
-    "join"
+    "join",
+    "is_null",
+    "filter_input"
   ]
 }

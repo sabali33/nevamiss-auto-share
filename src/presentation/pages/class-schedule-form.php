@@ -319,6 +319,7 @@ class Schedule_Form extends Page {
 			'status' => 'error',
 		);
 		$schedule_id   = sanitize_text_input_field('schedule_id', 'post') ?? null;
+
 		if ( $schedule_id ) {
 			$error_message['schedule_id'] = $schedule_id;
 		}
@@ -897,6 +898,6 @@ class Schedule_Form extends Page {
 	 */
 	private function is_authorized(): bool {
 		$nonce = sanitize_text_input_field('_wpnonce', 'post');
-		return wp_verify_nonce( $nonce, 'nevamiss_create_schedule' );
+		return $nonce && wp_verify_nonce( $nonce, 'nevamiss_create_schedule' );
 	}
 }
