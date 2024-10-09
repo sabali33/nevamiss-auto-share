@@ -95,12 +95,7 @@ class Network_Post_Provider {
 			$wp_rewrite = new \WP_Rewrite();
 		}
 
-		$default_share_format = <<< SHARE_FORMAT
-            %TITLE%
-            %LINK%
-            %EXCERPT%
-            %TAGS%
-        SHARE_FORMAT;
+		$default_share_format = "%TITLE% \n %LINK% \n %EXCERPT% \n %TAGS%";
 
 		$share_format = $share_format ?? $default_share_format; // $this->settings->setting('post_share_format');
 
