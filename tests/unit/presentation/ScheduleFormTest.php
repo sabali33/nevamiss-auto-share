@@ -148,15 +148,15 @@ class ScheduleFormTest extends TestCase {
 			'repeat_frequency' => 'daily',
 			'start_date' => '2024-14-11',
 			'daily_times' => ['hours' => [15], 'minutes' => [30]],
-			'network_accounts' => [2,3],
-			'query_args' => ['per_page'],
+			'network_accounts' => [2,3,4],
+			'query_args' => ['per_page' => 2, 'post_type' => 'post'],
 		];
 		$formatedData = array_merge(
 			$allowedData,
 			[
 				'daily_times' => '[{"hour":15,"minute":30}]',
-				'query_args' =>'["per_page"]',
-				'network_accounts' => '[2,3]'
+				'query_args' => wp_json_encode(['per_page' => 2, 'post_type' => 'post']),
+				'network_accounts' => '[2,3,4]'
 			]
 		);
 		when('wp_unslash')->returnArg();
@@ -213,15 +213,15 @@ class ScheduleFormTest extends TestCase {
 			'repeat_frequency' => 'daily',
 			'start_date' => '2024-14-11',
 			'daily_times' => ['hours' => [15], 'minutes' => [30]],
-			'network_accounts' => [2,3],
-			'query_args' => ['per_page'],
+			'network_accounts' => [2,3,4],
+			'query_args' => ['per_page' => 2, 'post_type' => 'post'],
 		];
 		$formatedData = array_merge(
 			$allowedData,
 			[
 				'daily_times' => '[{"hour":15,"minute":30}]',
-				'query_args' =>'["per_page"]',
-				'network_accounts' => '[2,3]'
+				'query_args' => wp_json_encode(['per_page' => 2, 'post_type' => 'post']),
+				'network_accounts' => '[2,3,4]'
 			]
 		);
 
@@ -318,7 +318,7 @@ class ScheduleFormTest extends TestCase {
 		$_POST['schedule_name'] = 'daily';
 		$_POST['repeat_frequency'] = 'daily';
 		$_POST['start_date'] = '2024-14-11';
-		$_POST['daily_times'] = [['hours' => [15], 'minutes' => [30]]];
+		$_POST['daily_times'] = ['hours' => [15], 'minutes' => [30]];
 		$_POST['network_accounts'] = [2,3,4];
 		$_POST['query_args'] = ['per_page' => 2, 'post_type' => 'post'];
 		$_POST['_wpnonce'] = '437ruerher';
@@ -328,7 +328,7 @@ class ScheduleFormTest extends TestCase {
 		$_POST['start_date'] = '2024-14-11';
 		$_POST['repeat_frequency'] = 'weekly';
 		$_POST['schedule_name'] = 'weekly';
-		$_POST['weekly_times'] = [['days' => ['monday'], 'hours' => [15], 'minutes' => [30]]];
+		$_POST['weekly_times'] = ['days' => ['monday'], 'hours' => [15], 'minutes' => [30]];
 		$_POST['daily_times'] = [['hours' => [15], 'minutes' => [30]]];
 		$_POST['network_accounts'] = [2,3,4];
 		$_POST['query_args'] = ['per_page' => 2, 'post_type' => 'post'];
@@ -343,20 +343,20 @@ class ScheduleFormTest extends TestCase {
 			'repeat_frequency' => 'weekly',
 			'start_date' => '2024-14-11',
 			'weekly_times' => ['days' => ['monday'], 'hours' => [15], 'minutes' => [30]],
-			'network_accounts' => [2,3],
-			'query_args' => ['per_page'],
+			'network_accounts' => [2,3,4],
+			'query_args' => ['per_page' => 2, 'post_type' => 'post'],
 		];
 		$formatedData = array_merge(
 			$allowedData,
 			[
 				'weekly_times' => '[{"day":"monday","hour":15,"minute":30}]',
-				'query_args' =>'["per_page"]',
-				'network_accounts' => '[2,3]'
+				'query_args' => wp_json_encode(['per_page' => 2, 'post_type' => 'post']),
+				'network_accounts' => '[2,3,4]'
 			]
 		);
 
 		$scheduleRepositoryMock = $this->createMock(Schedule_Repository::class);
-		$scheduleRepositoryMock->method('allowed_data')->willReturn($allowedData);
+
 		$scheduleRepositoryMock->method('allow_columns')->willReturn([
 			'schedule_name',
 			'repeat_frequency',
