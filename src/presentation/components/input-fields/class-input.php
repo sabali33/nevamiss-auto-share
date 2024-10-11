@@ -45,13 +45,11 @@ class Input implements Renderable {
 		$label = $attributes['label'] ?? '';
 
 		return $input_attributes['type'] === 'hidden' ? "<input $attributes_str />" :
-			<<<INPUT
-		        <p>
-		            <label>
-		                <span>$label</span>
-		                <input $attributes_str />
-		            </label>
-				</p>
-		INPUT;
+			"<p>
+	            <label>
+	                <span>$label</span>
+	                <input $attributes_str />
+	            </label>
+			</p>";
 	}
 }

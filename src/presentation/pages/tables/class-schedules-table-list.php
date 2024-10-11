@@ -217,12 +217,12 @@ class Schedules_Table_List extends \WP_List_Table {
 			$posts = $this->queue_service->schedule_posts( $schedule );
 
 			foreach ( $posts as $post ) {
-				echo $this->link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo wp_kses_post($this->link(
 					array(
-						'url'       => $post['link'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							'label' => $post['post_title'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						'url'       => $post['link'],
+						'label' => $post['post_title'],
 					)
-				) . PHP_EOL;
+				)) . PHP_EOL;
 			}
 		} catch ( \Exception $exception ) {
 			printf( '<i class="danger">%s</i>', esc_html( $exception->getMessage() ) );

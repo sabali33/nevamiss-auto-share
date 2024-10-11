@@ -171,7 +171,11 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 		add_action(
 			'admin_post_nevamiss_schedules_delete_action',
 			static function () use ( $container ) {
-				call_user_func( array( $container->get( Schedules_Page::class ), 'bulk_delete' ) );
+				/**
+				 * @var Schedules_Page $schedules_page
+				 */
+				$schedules_page = $container->get( Schedules_Page::class );
+				call_user_func( array( $schedules_page , 'bulk_delete' ) );
 			}
 		);
 
@@ -184,6 +188,31 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				call_user_func( array( $container->get( Settings_Page::class ), 'bulk_delete' ) );
 			}
 		);
+
+		add_filter('wp_kses_allowed_html', function(array $allowed_tags, string $context){
+			if('post' === $context){
+				$allowed_tags['select'] = array(
+					'name' => true,
+					'class' => true,
+					'multiple' => true,
+					'id' => true
+				);
+				$allowed_tags['option'] = array( 'value' => true, 'selected' => true);
+				$allowed_tags['input'] = array(
+					'value' => true,
+					'name' => true,
+					'class' => true,
+					'type' => true,
+					'min' => true,
+					'max' => true,
+					'step' => true
+				);
+				$allowed_tags['div']['data-repeat-frequency'] = true;
+			}
+
+
+			return $allowed_tags;
+		}, 10,2);
 
 		return true;
 	}

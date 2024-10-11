@@ -32,7 +32,7 @@ class Schedules_Page extends Page {
 		printf(
 			'<a href="%1$s" class="page-title-action">%2$s</a>',
 			esc_url( admin_url( '?page=edit-schedule' ) ),
-			esc_html__( 'Add Schedule' )
+			esc_html__( 'Add Schedule', 'nevamiss' )
 		);
 	}
 
@@ -65,7 +65,8 @@ class Schedules_Page extends Page {
 	public function bulk_delete(): void {
 
 		if ( ! isset( $_REQUEST['bulk_action'] ) && ! isset( $_REQUEST['bulk_action2'] ) ) {
-			$this->redirect( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$sanitized_request = array_map( 'Nevamiss\sanitize_text_input_field', $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Inputs are sanitized later
+			$this->redirect( $sanitized_request );
 			exit;
 		}
 

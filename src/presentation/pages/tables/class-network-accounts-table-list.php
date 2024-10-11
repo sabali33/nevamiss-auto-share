@@ -157,13 +157,38 @@ class Network_Accounts_Table_List extends WP_List_Table {
 		$output .= sprintf( _n( '%s minute', '%s minutes', $minutes, 'nevamiss' ), $minutes );
 
 		/* translators: %1$s: Style class %2$s: Output string %3$s: Expire label */
-		$message = sprintf( '<span class="%1$s">%3$s %2$s</span>', esc_attr( $style_classes ), esc_html( $output ), $expired_label );
+		$message = wp_kses(
+			sprintf(
+				'<span class="%1$s">%3$s %2$s</span>',
+				esc_attr( $style_classes ),
+				esc_html( $output ),
+				$expired_label
+			),
+			array(
+				'span' => array(
+					'class' => array()
+				)
+			)
+		);
 
 		if ( $time_diff->invert ) {
-			/* translators: %1$s: Style class %2$s: Output string %3$s: Expire label */
-			$message = sprintf( __( '<span class="%1$s">%3$s %2$s ago</span>', 'nevamiss' ), esc_attr( $style_classes ), esc_html( $output ), $expired_label );
+
+			$message = sprintf(
+				wp_kses(
+				/* translators: %1$s: Style class %2$s: Output string %3$s: Expire label */
+					__( '<span class="%1$s">%3$s %2$s ago</span>', 'nevamiss' ),
+					array(
+						'span' => array(
+							'class' => array()
+						)
+					)
+				),
+				esc_attr( $style_classes ),
+				esc_html( $output ),
+				$expired_label
+			);
 		}
-		echo $message; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $message; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped
 	}
 
 	private function style_classes( \DateInterval $interval ): string {

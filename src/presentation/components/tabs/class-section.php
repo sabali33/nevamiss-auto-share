@@ -20,11 +20,8 @@ class Section implements Renderable {
 		] = $attributes;
 
 		$active_section_class = $active_section === $section ? 'current' : '';
-		return <<<TAB
-
-	<a href="?page=nevamiss-settings&tab=$slug&section=$section" class="$active_section_class">
-        $label
-    </a>
-TAB;
+		return "<a href=\"?page=nevamiss-settings&tab=$slug&section=$section\" class=\"$active_section_class\">
+	        $label
+	    </a>";
 	}
 }

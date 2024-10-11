@@ -15,7 +15,7 @@ class Assets {
 		['dependencies' => $deps, 'version' => $version ] = require NEVAMISS_PATH . '/build/main.asset.php';
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_register_script( 'nevamiss-scripts', NEVAMISS_URL . 'build/main.js', array( ...$deps, 'jquery-ui-sortable' ), $version, true );
-		wp_register_style( 'nevamiss-flatpickr-style', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), 20240608 );
+		wp_register_style( 'nevamiss-flatpickr-style', NEVAMISS_URL . 'css/flatpickr.min.css', array(), 20240608 );
 		wp_register_style( 'nevamiss-style', NEVAMISS_URL . 'css/style.css', array(), fileatime( NEVAMISS_PATH . '/css/style.css' ) );
 		wp_enqueue_script( 'nevamiss-scripts' );
 		wp_enqueue_style( 'nevamiss-flatpickr-style' );

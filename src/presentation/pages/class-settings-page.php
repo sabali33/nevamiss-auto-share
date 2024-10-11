@@ -167,7 +167,7 @@ class Settings_Page extends Page {
 	}
 
 	public function bulk_delete() {
-		$model_name = filter_input( INPUT_GET, 'model_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$model_name = sanitize_text_input_field(  'model_name' );
 
 		/**
 		 * @var Tab_Interface & Bulk_Delete_Interface $tab

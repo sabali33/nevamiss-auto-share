@@ -27,8 +27,7 @@
     },
 
     "autoload": {
-        "classmap": ["./src"],
-        "files": ["./functions.php"]
+        "classmap": ["./src"]
     },
     "autoload-dev": {
       "Nevamiss\\Tests\\": "./tests"

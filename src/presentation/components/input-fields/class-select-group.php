@@ -26,10 +26,8 @@ class Select_Group_Field extends Select_Field {
 		);
 		$fields     = join( "\n", $fields_arr );
 
-		return <<<DOUBLE_SELECT
-            <div class="double-select-fields">
+		return "<div class=\"double-select-fields\">
                     $fields
-            </div>
-    DOUBLE_SELECT;
+            </div>";
 	}
 }

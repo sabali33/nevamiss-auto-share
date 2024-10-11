@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Presentation\Tabs\Upgrade_Tab;
 
 /**
@@ -12,7 +14,7 @@ use Nevamiss\Presentation\Tabs\Upgrade_Tab;
 
 <div class="premium-features-wrap">
     <h2>
-		<?php esc_html_e('** Premium Features **'); ?>
+		<?php esc_html_e('** Premium Features **', 'nevamiss'); ?>
     </h2>
     <ul class="premium-feature-list">
 		<?php foreach ($this->premium_feature_list() as $feature) : ?>

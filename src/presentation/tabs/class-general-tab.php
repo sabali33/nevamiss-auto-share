@@ -126,7 +126,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'label'       => __( 'App ID', 'nevamiss' ),
 								'type'        => 'text',
 								'value'       => $network_api_keys['facebook']['client_id'] ?? '',
-								'placeholder' => __( 'Enter App ID', 'Nevamiss' ),
+								'placeholder' => __( 'Enter App ID', 'nevamiss' ),
 								'class'       => 'facebook-app-id',
 								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'] ),
 

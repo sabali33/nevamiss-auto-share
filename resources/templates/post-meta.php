@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Presentation\Post_Meta\Post_Meta;
 
 
@@ -15,8 +17,19 @@ use Nevamiss\Presentation\Post_Meta\Post_Meta;
 $accounts = $this->accounts();
 if(empty($accounts)){
 	$logins_page = admin_url('admin.php?page=nevamiss-settings&tab=network-accounts');
-	/* translators: %s: A link to the login page */
-	printf(__('No Accounts created yet. <a href="%s">Login to create one</a>', 'nevamiss'), esc_url($logins_page)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+	printf(
+        wp_kses(
+        /* translators: %s: A link to the login page */
+            __('No Accounts created yet. <a href="%s">Login to create one</a>', 'nevamiss'),
+            [
+                'a' => array(
+                    'href' => array()
+                )
+            ]
+        ),
+        esc_url($logins_page)
+    );
 }
 
 ?>
@@ -34,9 +47,9 @@ if(empty($accounts)){
             admin_url('admin-ajax.php')
         ));
 	    /* translators: %1$s: Account name %2$s: Network */
-        $title = sprintf(__('Share to this post %1$s(%2$s)', 'nevamiss'),  $account->name(), $account->network());
+        $title = sprintf(esc_html__('Share to this post %1$s(%2$s)', 'nevamiss'),  $account->name(), $account->network());
 
-        echo "<li> <a href='$url' title='$title' class='nevamiss-instant-share-link'>$title</a></li>";  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post("<li> <a href='$url' title='$title' class='nevamiss-instant-share-link'>$title</a></li>");
     }
 
 ?>

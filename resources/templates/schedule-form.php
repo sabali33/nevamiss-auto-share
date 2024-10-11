@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Presentation\Components\Input_Fields\Input;
 use Nevamiss\Presentation\Pages\Schedule_Form;
 
@@ -30,8 +34,9 @@ $schedule_id = $this->schedule() ? $this->schedule()->id() : null;
         <?php endif; ?>
 
         <?php foreach ($this->fields() as $field): ?>
-            <?php echo $this->render_field($field)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo wp_kses_post($this->render_field($field)->render());  ?>
         <?php endforeach; ?>
+
         <input type="submit" class="button button-primary" value="<?php echo esc_attr($button_label); ?>">
     </form>
 </div>

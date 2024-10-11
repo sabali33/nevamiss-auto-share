@@ -45,6 +45,7 @@ function autoload(): void {
 	}
 
 	require_once NEVAMISS_PATH . '/vendor/autoload.php';
+	require_once NEVAMISS_PATH . '/functions.php';
 }
 
 function error_notice( string $message ): void {

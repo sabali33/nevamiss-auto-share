@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Presentation\Pages\Settings_Page;
 use function Nevamiss\sanitize_text_input_field;
 
@@ -27,7 +29,17 @@ $tabs = $this->tabs();
 
         <?php
             foreach ($tabs as $tab){
-                echo $tab->link($active_tab)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+                echo wp_kses(
+                        $tab->link($active_tab)->render(),
+                        array(
+                                'a' => array(
+                                    'href' => true,
+                                    'title' => true,
+                                    'class' => true
+                                )
+                        )
+                );
             }
         ?>
     </h2>

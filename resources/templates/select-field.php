@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  *
  * @var array{choices:array, value:mixed, label: string, id:string} $attributes
@@ -15,7 +19,7 @@
     <select <?php echo $input_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> >
         <?php foreach( $attributes['choices'] as $key => $choice): ?>
             <?php $selected = $key === $attributes['value'] || (is_array($attributes['value']) && in_array($key, $attributes['value'])) ?
-                'selected': ''
+                'selected': '';
             ?>
             <option
                 value="<?php echo esc_attr($key); ?>"

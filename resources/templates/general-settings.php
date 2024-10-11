@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Tabs\General_Tab;
@@ -22,7 +24,7 @@ $current_section = sanitize_text_input_field('section') ?? 'general';
 	 */
 	try {
 		foreach ($this->section_tabs($current_section) as $section_tab) {
-			echo "<li>{$section_tab->render()}</li>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo wp_kses_post("<li>{$section_tab->render()}</li>");
 		}
 	} catch (Not_Found_Exception $e) {
         $this->redirect([
@@ -45,7 +47,7 @@ $current_section = sanitize_text_input_field('section') ?? 'general';
      * @var Component $field
      */
         foreach ($this->render_sections($current_section) as $field){
-            echo $field->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post($field->render());
         }
     ?>
         <input type="submit" class="button button-primary" value="<?php esc_attr_e('Save', 'nevamiss'); ?>">

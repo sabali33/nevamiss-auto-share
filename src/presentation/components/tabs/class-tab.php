@@ -18,11 +18,9 @@ class Tab implements Renderable {
 			'active_tab' => $active_tab
 		]                 = $attributes;
 		$active_tab_class = $active_tab === $slug ? 'nav-tab-active' : '';
-		return <<<TAB
 
-	<a href="?page=nevamiss-settings&tab=$slug" class="nav-tab $active_tab_class">
-        $label
-    </a>
-TAB;
+		return "<a href=\"?page=nevamiss-settings&tab=$slug\" class=\"nav-tab $active_tab_class\">
+	        $label
+	    </a>";
 	}
 }
