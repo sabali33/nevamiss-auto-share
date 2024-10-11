@@ -31,7 +31,7 @@ class ScheduleForms<O extends typeof flatpickr> {
                     this.maybeToggleNegatedWrappers(this.negatedWrappers, value);
 
                 })
-            document.querySelector('.schedule-form').addEventListener(
+            document.querySelector('.schedule-form')?.addEventListener(
                 'click',
                 (event) =>{
 
@@ -46,18 +46,18 @@ class ScheduleForms<O extends typeof flatpickr> {
                     const wrapper = target.closest('.sub-field-wrapper');
 
                     if(target.classList.contains('remove')){
-                        wrapper.remove();
+                        wrapper?.remove();
                         return;
                     }
 
-                    const cloneWrapper = wrapper.cloneNode(true) as HTMLElement;
+                    const cloneWrapper = wrapper?.cloneNode(true) as HTMLElement;
 
                     const updatedCloneWrapper = this.updateElementsIds(cloneWrapper);
 
-                    wrapper.insertAdjacentHTML('beforeend', '<button class="remove"> X </button>');
-                    wrapper.insertAdjacentElement('afterend', updatedCloneWrapper);
+                    wrapper?.insertAdjacentHTML('beforeend', '<button class="remove"> X </button>');
+                    wrapper?.insertAdjacentElement('afterend', updatedCloneWrapper);
 
-                    wrapper.querySelector('button').remove();
+                    wrapper?.querySelector('button').remove();
                     this.attachDateToField()
             })
 

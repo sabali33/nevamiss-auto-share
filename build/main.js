@@ -100,7 +100,7 @@ class ScheduleForms {
       this.toggleWrappers(document.querySelectorAll(`.sub-field-wrapper.active`), document.querySelectorAll(`[data-repeat-frequency=${value}]`));
       this.maybeToggleNegatedWrappers(this.negatedWrappers, value);
     });
-    document.querySelector('.schedule-form').addEventListener('click', event => {
+    document.querySelector('.schedule-form')?.addEventListener('click', event => {
       const target = event.target;
       if (target.tagName.toLowerCase() !== 'button') {
         return;
@@ -108,14 +108,14 @@ class ScheduleForms {
       event.preventDefault();
       const wrapper = target.closest('.sub-field-wrapper');
       if (target.classList.contains('remove')) {
-        wrapper.remove();
+        wrapper?.remove();
         return;
       }
-      const cloneWrapper = wrapper.cloneNode(true);
+      const cloneWrapper = wrapper?.cloneNode(true);
       const updatedCloneWrapper = this.updateElementsIds(cloneWrapper);
-      wrapper.insertAdjacentHTML('beforeend', '<button class="remove"> X </button>');
-      wrapper.insertAdjacentElement('afterend', updatedCloneWrapper);
-      wrapper.querySelector('button').remove();
+      wrapper?.insertAdjacentHTML('beforeend', '<button class="remove"> X </button>');
+      wrapper?.insertAdjacentElement('afterend', updatedCloneWrapper);
+      wrapper?.querySelector('button').remove();
       this.attachDateToField();
     });
   }
