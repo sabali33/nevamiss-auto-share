@@ -54,7 +54,7 @@ function init(): void
 
 function sanitize_text_input_field(string $field, string $method = 'get'): ?string
 {
-	$method_variable =  $method === 'get'  ?  $_GET: $_POST;
+	$method_variable =  $method === 'get'  ?  $_GET: $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 	$value = $method_variable[$field] ?? null;
 
 	if(is_null($value)){
