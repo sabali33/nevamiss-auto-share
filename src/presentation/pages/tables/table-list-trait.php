@@ -34,7 +34,7 @@ trait Table_List_Trait {
 		$class      = isset( $action['class'] ) ? esc_attr( $action['class'] ) : '';
 		$title_attr = isset( $action['label'] ) ? esc_attr( $title ) : '';
 		$url        = esc_url( $action['url'] );
-		return "<span class='$class'><a href='{$url}' title='$title_attr' class='$class'> $title</a></span>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return "<span class='$class'><a href='{$url}' title='$title_attr' class='$class'> $title</a></span>";
 	}
 	protected function _bulk_actions(): array {
 		return array(

@@ -29,7 +29,17 @@ $tabs = $this->tabs();
 
         <?php
             foreach ($tabs as $tab){
-                echo $tab->link($active_tab)->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+                echo wp_kses(
+                        $tab->link($active_tab)->render(),
+                        array(
+                                'a' => array(
+                                    'href' => true,
+                                    'title' => true,
+                                    'class' => true
+                                )
+                        )
+                );
             }
         ?>
     </h2>

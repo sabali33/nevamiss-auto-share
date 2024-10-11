@@ -64,7 +64,7 @@ class Wrapper implements Renderable {
 	private function parse_attributes( array $attributes ): string {
 		$html_attr = '';
 		foreach ( $attributes as $key => $value ) {
-			$html_attr .= sprintf( "%s='%s'", $key, $value );
+			$html_attr .= sprintf( "%s='%s' ", $key, $value );
 		}
 		return $html_attr;
 	}

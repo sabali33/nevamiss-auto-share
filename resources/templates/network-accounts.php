@@ -20,7 +20,7 @@ use Nevamiss\presentation\Tabs\Network_Accounts_Tab;
 
 	</p>
     <p>
-        <?php echo $this->login_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+        <?php echo wp_kses_post($this->login_links()); ?>
     </p>
 	<hr class="wp-header-end">
 	<?php $this->table_list()->prepare_items(); ?>
