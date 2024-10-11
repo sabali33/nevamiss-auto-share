@@ -33,12 +33,9 @@ class TextArea implements Renderable {
 		$value = $attributes['value'] ?? '';
 		$id    = $attributes['id'] ?? '';
 
-		return <<<TEXTAREA
-            <label for="$id">
+		return "<label for=\"$id\">
                 <span>$label</span>
             </label>
-            <textarea $attributes_str >$value</textarea>
-            
-        TEXTAREA;
+            <textarea $attributes_str >$value</textarea>";
 	}
 }
