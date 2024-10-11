@@ -10,6 +10,7 @@ use Nevamiss\Infrastructure\networks\clients\Has_Credentials_Trait;
 use Nevamiss\Infrastructure\networks\clients\Request_Parameter_Trait;
 use Nevamiss\Services\Http_Request;
 use Throwable;
+use function Nevamiss\sanitize_text_input_field;
 
 class X_Api_V2_Strategy implements X_Api_Version_Strategy {
 
@@ -99,7 +100,7 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy {
 	}
 
 	public function verified_code(): string {
-		return filter_input( INPUT_GET, 'code' );
+		return sanitize_text_input_field(  'code' );
 	}
 
 	/**
