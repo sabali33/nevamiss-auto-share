@@ -202,6 +202,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 					'value' => true,
 					'name' => true,
 					'class' => true,
+					'checked' => true,
 					'type' => true,
 					'min' => true,
 					'max' => true,
