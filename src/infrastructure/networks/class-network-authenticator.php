@@ -23,7 +23,7 @@ class Network_Authenticator {
 			$this->redirect( $this->unauthorize_message() );
 			exit;
 		}
-		$code = sanitize_text_input_field('code');
+		$code = sanitize_text_input_field( 'code' );
 		/**
 		 * @var Facebook_Client $facebook_client
 		 */
@@ -54,20 +54,20 @@ class Network_Authenticator {
 			exit;
 		}
 
-		$error = sanitize_text_input_field('error');
-		$error_reason = sanitize_text_input_field('error_reason');
+		$error        = sanitize_text_input_field( 'error' );
+		$error_reason = sanitize_text_input_field( 'error_reason' );
 
-		if ( $error && $error_reason  ) {
+		if ( $error && $error_reason ) {
 			$this->redirect(
 				array(
 					'status'  => 'error',
-					'message' => new \Exception( sanitize_text_input_field('error_description') ),
+					'message' => new \Exception( sanitize_text_input_field( 'error_description' ) ),
 				)
 			);
 			exit;
 		}
 
-		$code = sanitize_text_input_field('code');
+		$code = sanitize_text_input_field( 'code' );
 
 		/**
 		 * @var Linkedin_Client $linkedin_client
@@ -93,7 +93,7 @@ class Network_Authenticator {
 	}
 
 	private function authorize( string $network, $nonce_key = 'state' ): bool {
-		$nonce = sanitize_text_input_field($nonce_key);
+		$nonce = sanitize_text_input_field( $nonce_key );
 		return (bool) wp_verify_nonce( $nonce, "nevamiss-$network-secret" );
 	}
 
@@ -147,8 +147,8 @@ class Network_Authenticator {
 				exit;
 			}
 		}
-		$error = sanitize_text_input_field('error');
-		$error_description = sanitize_text_input_field('error_description');
+		$error             = sanitize_text_input_field( 'error' );
+		$error_description = sanitize_text_input_field( 'error_description' );
 
 		if ( $error ) {
 			$this->redirect( $this->error_message( new \Exception( $error_description ) ) );
@@ -181,14 +181,14 @@ class Network_Authenticator {
 			exit;
 		}
 
-		$error = sanitize_text_input_field('error');
-		$error_description = sanitize_text_input_field('error_description');
+		$error             = sanitize_text_input_field( 'error' );
+		$error_description = sanitize_text_input_field( 'error_description' );
 
 		if ( $error ) {
 			$this->redirect( $this->error_message( new \Exception( $error_description ) ) );
 			exit;
 		}
-		$code = sanitize_text_input_field('code');
+		$code = sanitize_text_input_field( 'code' );
 		/**
 		 * @var Instagram_Client $instagram_client
 		 */

@@ -29,7 +29,7 @@ class Stats_Row_Action_Handler {
 			wp_die( 'Unauthorized' );
 		}
 
-		$stat_id = (int) sanitize_text_input_field('entry_id' );
+		$stat_id = (int) sanitize_text_input_field( 'entry_id' );
 
 		try {
 			$this->stats_repository->delete( $stat_id );

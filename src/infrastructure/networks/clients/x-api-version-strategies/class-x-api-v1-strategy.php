@@ -95,7 +95,7 @@ class X_Api_V1_Strategy implements X_Api_Version_Strategy {
 	public function verified_code(): array {
 		return array(
 			'oauth_token'    => sanitize_text_input_field( 'oauth_token' ),
-			'oauth_verifier' => sanitize_text_input_field(  'oauth_verifier' ),
+			'oauth_verifier' => sanitize_text_input_field( 'oauth_verifier' ),
 		);
 	}
 

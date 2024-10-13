@@ -32,7 +32,7 @@ class Accounts_Manager {
 					array(
 						'token'      => $posts_datum['token'],
 						'name'       => $posts_datum['name'],
-						'expires_in' => $posts_datum['expires_in']??null,
+						'expires_in' => $posts_datum['expires_in'] ?? null,
 					)
 				);
 				continue;

@@ -21,7 +21,7 @@ trait Bulk_Delete_Trait {
 			return;
 		}
 
-		$nonce = sanitize_text_input_field('_wpnonce');
+		$nonce = sanitize_text_input_field( '_wpnonce' );
 
 		if ( ! wp_verify_nonce( $nonce, "bulk-$model_name" ) ) {
 			return;

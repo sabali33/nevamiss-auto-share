@@ -65,7 +65,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 			)
 		);
 
-		$network_api_keys = array_replace_recursive(  $this->default_values(), $settings['network_api_keys'] ?? array() );
+		$network_api_keys = array_replace_recursive( $this->default_values(), $settings['network_api_keys'] ?? array() );
 
 		$post = $settings['post'] ?? array( 'share_on_publish' => array( 'post' ) );
 

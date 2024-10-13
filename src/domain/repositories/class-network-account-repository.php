@@ -65,9 +65,8 @@ class Network_Account_Repository implements
 		return "{$this->wpdb->prefix}nevamiss_network_accounts";
 	}
 
-	public function get_by_ids(string $ids): array
-	{
-		$sql = $this->wpdb->prepare("SELECT name, network FROM {$this->table_name()} WHERE id IN (%s)", $ids); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return $this->wpdb->get_results($sql, ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	public function get_by_ids( string $ids ): array {
+		$sql = $this->wpdb->prepare( "SELECT name, network FROM {$this->table_name()} WHERE id IN (%s)", $ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return $this->wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 }

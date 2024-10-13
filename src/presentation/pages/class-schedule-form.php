@@ -50,7 +50,7 @@ class Schedule_Form extends Page {
 			null,
 			true
 		);
-		$schedule_id = sanitize_text_input_field('schedule_id');
+		$schedule_id    = sanitize_text_input_field( 'schedule_id' );
 		$this->schedule = $schedule_id ? $this->schedule_repository->get( (int) $schedule_id ) : null;
 	}
 
@@ -131,8 +131,8 @@ class Schedule_Form extends Page {
 						Wrapper::class,
 						array(
 							'attributes' => array(
-								'class'                 => esc_attr("sub-field-wrapper{$selected_class} $key"),
-								'data-repeat-frequency' => esc_attr($parent_value),
+								'class'                 => esc_attr( "sub-field-wrapper{$selected_class} $key" ),
+								'data-repeat-frequency' => esc_attr( $parent_value ),
 							),
 
 						),
@@ -318,7 +318,7 @@ class Schedule_Form extends Page {
 			'page'   => 'edit-schedule',
 			'status' => 'error',
 		);
-		$schedule_id   = sanitize_text_input_field('schedule_id', 'post') ?? null;
+		$schedule_id   = sanitize_text_input_field( 'schedule_id', 'post' ) ?? null;
 
 		if ( $schedule_id ) {
 			$error_message['schedule_id'] = $schedule_id;
@@ -464,7 +464,7 @@ class Schedule_Form extends Page {
 		return $data;
 	}
 
-	private function sanitize_validate(array $data ): array {
+	private function sanitize_validate( array $data ): array {
 		$validated_data = array();
 
 		foreach ( $this->schedule_repository->allow_columns() as $key ) {
@@ -491,7 +491,7 @@ class Schedule_Form extends Page {
 		return $validated_data;
 	}
 
-	private function sanitize_validation_func(string $field, ): \Closure {
+	private function sanitize_validation_func( string $field, ): \Closure {
 		return array(
 			'schedule_name'     => function ( ?string $schedule_name ) {
 
@@ -521,7 +521,7 @@ class Schedule_Form extends Page {
 				if ( ! $weekly_times ) {
 					return null;
 				}
-				return $this->sanitize_weekly_data($weekly_times);
+				return $this->sanitize_weekly_data( $weekly_times );
 			},
 			'monthly_times'     => function ( ?array $monthly_times ) {
 				if ( ! $monthly_times ) {
@@ -879,7 +879,7 @@ class Schedule_Form extends Page {
 	 * @return bool
 	 */
 	private function is_authorized(): bool {
-		$nonce = sanitize_text_input_field('_wpnonce', 'post');
+		$nonce = sanitize_text_input_field( '_wpnonce', 'post' );
 		return $nonce && wp_verify_nonce( $nonce, 'nevamiss_create_schedule' );
 	}
 
@@ -887,25 +887,23 @@ class Schedule_Form extends Page {
 	 * @param array $weekly_times
 	 * @return array
 	 */
-	function sanitize_weekly_data(array $weekly_times): array
-	{
-		$weekly_times['days'] = $this->validator->sanitize_array_of_string($weekly_times['days']);
+	function sanitize_weekly_data( array $weekly_times ): array {
+		$weekly_times['days'] = $this->validator->sanitize_array_of_string( $weekly_times['days'] );
 
 		$weekly_times['hours'] = array_map(
-			function ($hour) {
-				return $this->validator->sanitize_number($hour);
+			function ( $hour ) {
+				return $this->validator->sanitize_number( $hour );
 			},
 			$weekly_times['hours']
 		);
 
 		$weekly_times['minutes'] = array_map(
-			function ($minute) {
-				return $this->validator->sanitize_number($minute);
+			function ( $minute ) {
+				return $this->validator->sanitize_number( $minute );
 			},
 			$weekly_times['minutes']
 		);
 
 		return $weekly_times;
-
 	}
 }
