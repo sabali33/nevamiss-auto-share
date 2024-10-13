@@ -16,11 +16,12 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
+defined( 'ABSPATH' ) || die( 'Not authorized' );
+
 /**
  * @throws Throwable
  */
-function container(): ContainerInterface
-{
+function container(): ContainerInterface {
 	return plugin()->container();
 }
 
@@ -29,8 +30,8 @@ function container(): ContainerInterface
  * @throws NotFoundExceptionInterface
  * @throws Throwable
  */
-function factory(): Factory{
-	return container()->get(Factory::class);
+function factory(): Factory {
+	return container()->get( Factory::class );
 }
 
 /**
@@ -39,28 +40,24 @@ function factory(): Factory{
  * @throws Throwable
  * @throws ContainerExceptionInterface
  */
-function component(string $class, array $attributes, array $inner_components=[]): Component
-{
-	return \Nevamiss\factory()->component($class, $attributes, $inner_components);
+function component( string $class, array $attributes, array $inner_components = array() ): Component {
+	return \Nevamiss\factory()->component( $class, $attributes, $inner_components );
 }
 
-function init(): void
-{
+function init(): void {
 	global $wpdb;
-	$db = new DB($wpdb);
-	$cron = new WP_Cron_Service(new Schedule_Repository( new Factory(),$wpdb));
-	Setup::instance($db, $cron);
+	$db   = new DB( $wpdb );
+	$cron = new WP_Cron_Service( new Schedule_Repository( new Factory(), $wpdb ) );
+	Setup::instance( $db, $cron );
 }
 
-function sanitize_text_input_field(string $field, string $method = 'get'): ?string
-{
-	$method_variable =  $method === 'get'  ?  $_GET: $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
-	$value = $method_variable[$field] ?? null;
+function sanitize_text_input_field( string $field, string $method = 'get' ): ?string {
+	$method_variable = $method === 'get' ? $_GET : $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
+	$value           = $method_variable[ $field ] ?? null;
 
-	if(is_null($value)){
+	if ( is_null( $value ) ) {
 		return null;
 	}
 
-	return \wp_unslash(sanitize_text_field($value));
-
+	return \wp_unslash( sanitize_text_field( $value ) );
 }

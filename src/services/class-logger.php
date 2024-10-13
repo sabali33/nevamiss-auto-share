@@ -69,18 +69,6 @@ class Logger implements Logger_Interface {
 	public function log_to_file( array $messages ): void {
 		$encoded_data = wp_json_encode( $messages );
 
-		if ( class_exists( \Monolog\Logger::class ) ) {
-
-			do_action(
-				'wonolog.log.debug',
-				array(
-					'message' => $encoded_data,
-					'level'   => 'DEBUG',
-				)
-			);
-			return;
-		}
-
 		error_log( $encoded_data );
 	}
 }
