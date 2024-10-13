@@ -41,11 +41,11 @@ class X_Client implements Network_Clients_Interface {
 	public function __construct( private Http_Request $request, private Settings $settings, array $api_credentials ) {
 
 		$this->redirect_url = admin_url( 'admin-post.php?action=x' );
-
-		$this->api_version_strategy = $api_credentials['version'] === 'v1' ?
+		$this->version              = $api_credentials['version'] ?? null;
+		$this->api_version_strategy = isset($api_credentials['version'] ) && $api_credentials['version'] === 'v1' ?
 			factory()->new( X_Api_V1_Strategy::class, $this->request, $this->settings, $api_credentials ) :
 			factory()->new( X_Api_V2_Strategy::class, $this->request, $api_credentials );
-		$this->version              = $api_credentials['version'];
+
 	}
 
 	public function code() {
