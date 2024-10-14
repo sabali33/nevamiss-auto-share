@@ -23,7 +23,6 @@ use function Brain\Monkey\Functions\stubTranslationFunctions;
 use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\setUp;
 use function Brain\Monkey\tearDown;
-use function Nevamiss\sanitize_text_input_field;
 
 #[CoversClass(Schedule_Form::class)]
 class ScheduleFormTest extends TestCase {

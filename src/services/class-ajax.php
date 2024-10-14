@@ -14,7 +14,7 @@ class Ajax {
 	}
 
 	public function instant_posting_callback(): void {
-		if ( ! $this->authorized( 'nevamiss-instant-share-action', sanitize_text_input_field('nonce', 'post') ) ) {// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $this->authorized( 'nevamiss-instant-share-action', sanitize_text_input_field( 'nonce', 'post' ) ) ) {// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			wp_die( 'unauthorized' );
 		}
 		$post_id    = filter_input( INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT );
@@ -37,8 +37,8 @@ class Ajax {
 	 * @throws \Exception
 	 */
 	public function sort_queue_posts_callback(): void {
-		if ( ! $this->authorized( 'nevamiss_general_nonce', sanitize_text_input_field('nonce', 'post') ) ) {
-			wp_send_json_error( esc_html__('Unauthorised', 'nevamiss'), 401 );
+		if ( ! $this->authorized( 'nevamiss_general_nonce', sanitize_text_input_field( 'nonce', 'post' ) ) ) {
+			wp_send_json_error( esc_html__( 'Unauthorised', 'nevamiss' ), 401 );
 			wp_die();
 		}
 
@@ -46,12 +46,15 @@ class Ajax {
 
 		$posts = filter_input( INPUT_POST, 'data', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY );
 
-		$posts_filtered = array_filter($posts, function($post){
-			return !empty($post);
-		});
+		$posts_filtered = array_filter(
+			$posts,
+			function ( $post ) {
+				return ! empty( $post );
+			}
+		);
 
-		if(empty($posts_filtered) || count($posts) !== count($posts_filtered)){
-			wp_send_json_error( esc_html__('Invalid post IDs provided', 'nevamiss'), 401 );
+		if ( empty( $posts_filtered ) || count( $posts ) !== count( $posts_filtered ) ) {
+			wp_send_json_error( esc_html__( 'Invalid post IDs provided', 'nevamiss' ), 401 );
 			wp_die();
 		}
 		try {

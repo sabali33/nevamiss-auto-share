@@ -100,7 +100,7 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy {
 	}
 
 	public function verified_code(): string {
-		return sanitize_text_input_field(  'code' );
+		return sanitize_text_input_field( 'code' );
 	}
 
 	/**

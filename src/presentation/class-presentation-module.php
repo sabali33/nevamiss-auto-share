@@ -95,7 +95,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$container->get( Schedule_Repository::class ),
 				$container->get( Posts_Stats_Repository::class ),
 				$container->get( Schedule_Queue::class ),
-				$container->get(Network_Account_Repository::class)
+				$container->get( Network_Account_Repository::class )
 			),
 			Logs_Table_List::class             => fn( ContainerInterface $container ) => new Logs_Table_List( $container->get( Logger_Repository::class ) ),
 			Tab_Collection_Interface::class    => function ( ContainerInterface $container ) {
@@ -175,7 +175,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				 * @var Schedules_Page $schedules_page
 				 */
 				$schedules_page = $container->get( Schedules_Page::class );
-				call_user_func( array( $schedules_page , 'bulk_delete' ) );
+				call_user_func( array( $schedules_page, 'bulk_delete' ) );
 			}
 		);
 
@@ -189,30 +189,38 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			}
 		);
 
-		add_filter('wp_kses_allowed_html', function(array $allowed_tags, string $context){
-			if('post' === $context){
-				$allowed_tags['select'] = array(
-					'name' => true,
-					'class' => true,
-					'multiple' => true,
-					'id' => true
-				);
-				$allowed_tags['option'] = array( 'value' => true, 'selected' => true);
-				$allowed_tags['input'] = array(
-					'value' => true,
-					'name' => true,
-					'class' => true,
-					'type' => true,
-					'min' => true,
-					'max' => true,
-					'step' => true
-				);
-				$allowed_tags['div']['data-repeat-frequency'] = true;
-			}
+		add_filter(
+			'wp_kses_allowed_html',
+			function ( array $allowed_tags, string $context ) {
+				if ( 'post' === $context ) {
+					$allowed_tags['select']                       = array(
+						'name'     => true,
+						'class'    => true,
+						'multiple' => true,
+						'id'       => true,
+					);
+					$allowed_tags['option']                       = array(
+						'value'    => true,
+						'selected' => true,
+					);
+					$allowed_tags['input']                        = array(
+						'value'   => true,
+						'name'    => true,
+						'class'   => true,
+						'checked' => true,
+						'type'    => true,
+						'min'     => true,
+						'max'     => true,
+						'step'    => true,
+					);
+					$allowed_tags['div']['data-repeat-frequency'] = true;
+				}
 
-
-			return $allowed_tags;
-		}, 10,2);
+				return $allowed_tags;
+			},
+			10,
+			2
+		);
 
 		return true;
 	}

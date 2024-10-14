@@ -56,10 +56,12 @@ class Suggestions_Page extends Page {
 	}
 
 	private function authorize(): bool {
+
 		return (bool) wp_verify_nonce(
 			sanitize_text_input_field('_wpnonce', 'post'),
 			'nevamiss-suggestion-form-action'
 		);
+
 	}
 
 	private function redirect( array $data ): void {
