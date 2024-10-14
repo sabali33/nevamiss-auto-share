@@ -82,7 +82,7 @@ trait Table_List_Trait {
 	 */
 	private function search_text(): string|array {
 		$search_text = sanitize_text_input_field( 's' );
-		return $search_text ? trim($search_text) : '';
+		return $search_text ? trim( $search_text ) : '';
 	}
 
 	/**
@@ -102,11 +102,11 @@ trait Table_List_Trait {
 		);
 
 		if ( isset( $_REQUEST['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$args['orderby'] = sanitize_text_input_field('orderby');
+			$args['orderby'] = sanitize_text_input_field( 'orderby' );
 		}
 
 		if ( isset( $_REQUEST['order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$args['order'] = sanitize_text_input_field('order');
+			$args['order'] = sanitize_text_input_field( 'order' );
 		}
 		return array( $per_page, $args );
 	}

@@ -166,8 +166,8 @@ class Network_Accounts_Table_List extends WP_List_Table {
 			),
 			array(
 				'span' => array(
-					'class' => array()
-				)
+					'class' => array(),
+				),
 			)
 		);
 
@@ -179,8 +179,8 @@ class Network_Accounts_Table_List extends WP_List_Table {
 					__( '<span class="%1$s">%3$s %2$s ago</span>', 'nevamiss' ),
 					array(
 						'span' => array(
-							'class' => array()
-						)
+							'class' => array(),
+						),
 					)
 				),
 				esc_attr( $style_classes ),

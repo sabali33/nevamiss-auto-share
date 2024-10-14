@@ -12,7 +12,7 @@ trait Row_Action_Trail {
 	 * @return bool
 	 */
 	private function authorize(): bool {
-		return isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_input_field('nonce'), $this->nonce_action );
+		return isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_input_field( 'nonce' ), $this->nonce_action );
 	}
 
 	private function redirect( array $args ): void {

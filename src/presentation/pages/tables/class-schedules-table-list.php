@@ -58,7 +58,7 @@ class Schedules_Table_List extends \WP_List_Table {
 			 *
 			 * @param array $actions An array of the available bulk actions.
 			 */
-			$this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			$this->_actions = apply_filters( "nevamiss_bulk_actions-{$this->screen->id}", $this->_actions ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 
 			$two = '';
 		} else {
@@ -197,13 +197,13 @@ class Schedules_Table_List extends \WP_List_Table {
 		echo esc_html( $schedule->repeat_frequency() );
 	}
 	public function column_network_accounts( Schedule $schedule ): void {
-		$account_ids = join(',', $schedule->network_accounts());
-		$accounts = $this->account_repository->get_by_ids( $account_ids );
+		$account_ids = join( ',', $schedule->network_accounts() );
+		$accounts    = $this->account_repository->get_by_ids( $account_ids );
 
-		if(empty($accounts)){
+		if ( empty( $accounts ) ) {
 			return;
 		}
-		$format_accounts = $this->format_accounts($accounts);
+		$format_accounts = $this->format_accounts( $accounts );
 		echo esc_html( $format_accounts );
 	}
 
@@ -217,12 +217,14 @@ class Schedules_Table_List extends \WP_List_Table {
 			$posts = $this->queue_service->schedule_posts( $schedule );
 
 			foreach ( $posts as $post ) {
-				echo wp_kses_post($this->link(
-					array(
-						'url'       => $post['link'],
-						'label' => $post['post_title'],
+				echo wp_kses_post(
+					$this->link(
+						array(
+							'url'   => $post['link'],
+							'label' => $post['post_title'],
+						)
 					)
-				)) . PHP_EOL;
+				) . PHP_EOL;
 			}
 		} catch ( \Exception $exception ) {
 			printf( '<i class="danger">%s</i>', esc_html( $exception->getMessage() ) );
@@ -289,16 +291,12 @@ class Schedules_Table_List extends \WP_List_Table {
 	}
 
 	private function format_estimate_message( $time_units ): string {
+
 		$parts = array();
 		foreach ( $time_units as $unit => $value ) {
 			if ( $value > 0 ) {
-
-				// $parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", $value, 'nevamiss' ), $value );
 				$parts[] = sprintf( $this->translate( $unit, (int) $value ), $value );
 			} elseif ( ! empty( $parts ) ) {
-				/*
-				translators: %s: A time formatting string such as month, day, hour or minute */
-				// $parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
 				$parts[] = $parts[] = sprintf( $this->translate( $unit, 0 ), 0 );
 			}
 		}
@@ -356,11 +354,14 @@ class Schedules_Table_List extends \WP_List_Table {
 		return $units[ $unit ] ?? '';
 	}
 
-	private function format_accounts(array $accounts): string
-	{
-		return array_reduce($accounts, function(string $acc, array $account){
-			$acc .= '- '. join(',', $account);
-			return $acc;
-		}, '');
+	private function format_accounts( array $accounts ): string {
+		return array_reduce(
+			$accounts,
+			function ( string $acc, array $account ) {
+				$acc .= '- ' . join( ',', $account );
+				return $acc;
+			},
+			''
+		);
 	}
 }

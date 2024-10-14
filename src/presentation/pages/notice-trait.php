@@ -9,10 +9,10 @@ use function Nevamiss\sanitize_text_input_field;
 trait Notices_Trait {
 
 	public function notices(): void {
-		$query_args = [
-			'status' => sanitize_text_input_field('status'),
-			'message' => sanitize_text_input_field('message'),
-		];
+		$query_args = array(
+			'status'  => sanitize_text_input_field( 'status' ),
+			'message' => sanitize_text_input_field( 'message' ),
+		);
 		if ( ! $query_args['status'] ) {
 			return;
 		}
@@ -20,12 +20,12 @@ trait Notices_Trait {
 			return;
 		}
 
-		$decoded_message =  wp_kses_post(stripslashes($_GET['message']) );
+		$decoded_message = wp_kses_post( stripslashes( $_GET['message'] ) );
 
 		wp_admin_notice(
 			$decoded_message,
 			array(
-				'type'               => sanitize_text_input_field('status'),
+				'type'               => sanitize_text_input_field( 'status' ),
 				'dismissible'        => false,
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)

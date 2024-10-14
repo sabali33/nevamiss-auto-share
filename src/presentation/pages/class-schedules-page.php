@@ -44,7 +44,7 @@ class Schedules_Page extends Page {
 			return;
 		}
 
-		$message = sanitize_text_input_field('message');
+		$message = sanitize_text_input_field( 'message' );
 		if ( ! $message ) {
 			return;
 		}
@@ -52,7 +52,7 @@ class Schedules_Page extends Page {
 		wp_admin_notice(
 			$message,
 			array(
-				'type'               => sanitize_text_input_field('type'),
+				'type'               => sanitize_text_input_field( 'type' ),
 				'dismissible'        => false,
 				'additional_classes' => array( 'inline', 'notice-alt' ),
 			)
@@ -75,7 +75,7 @@ class Schedules_Page extends Page {
 			if ( isset( $_REQUEST['s'] ) ) {
 				$this->redirect(
 					array(
-						's' => sanitize_text_input_field('s'),
+						's' => sanitize_text_input_field( 's' ),
 					)
 				);
 				exit;
@@ -84,7 +84,7 @@ class Schedules_Page extends Page {
 			exit;
 		}
 
-		if ( ! wp_verify_nonce( sanitize_text_input_field('_wpnonce'), 'bulk-schedules' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_input_field( '_wpnonce' ), 'bulk-schedules' ) ) {
 			$this->redirect(
 				array(
 					'type'    => 'error',

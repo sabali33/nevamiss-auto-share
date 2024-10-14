@@ -94,8 +94,8 @@ class Settings_Page extends Page {
 		exit;
 	}
 	private function authorized(): bool {
-		$nonce = sanitize_text_input_field('_wpnonce', 'post');
-		return wp_verify_nonce( $nonce, 'nevamiss-general-settings-action' );
+		$nonce = sanitize_text_input_field( '_wpnonce', 'post' );
+		return (bool) wp_verify_nonce( $nonce, 'nevamiss-general-settings-action' );
 	}
 	private function extract_data( array $post_data ): array {
 		$schema        = apply_filters(
@@ -116,12 +116,12 @@ class Settings_Page extends Page {
 				continue;
 			}
 			if ( is_string( $post_data[ $key ] ) ) {
-				$sanitize_data[ $key ] = sanitize_text_input_field( $post_data[ $key ] );
+				$sanitize_data[ $key ] = sanitize_text_input_field( $key, 'post' );
 				continue;
 			}
 			$sanitize_data[ $key ] = filter_var_array(
 				$post_data[ $key ],
-				FILTER_SANITIZE_ENCODED
+				FILTER_SANITIZE_SPECIAL_CHARS
 			);
 
 		}
@@ -167,7 +167,7 @@ class Settings_Page extends Page {
 	}
 
 	public function bulk_delete() {
-		$model_name = sanitize_text_input_field(  'model_name' );
+		$model_name = sanitize_text_input_field( 'model_name' );
 
 		/**
 		 * @var Tab_Interface & Bulk_Delete_Interface $tab
