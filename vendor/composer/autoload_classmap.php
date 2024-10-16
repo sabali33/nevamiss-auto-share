@@ -125,7 +125,7 @@ return array(
     'Nevamiss\\Presentation\\Utils' => $baseDir . '/src/presentation/class-utils.php',
     'Nevamiss\\Service\\Factory_Module' => $baseDir . '/src/domain/factory/class-factory-module.php',
     'Nevamiss\\Service\\Repositories_Module' => $baseDir . '/src/domain/repositories/class-repositories-module.php',
-    'Nevamiss\\Service\\Schedule_Collection' => $baseDir . '/src/services/Schedule_Collection.php',
+    'Nevamiss\\Service\\Schedule_Collection' => $baseDir . '/src/services/class-schedule-collection.php',
     'Nevamiss\\Services\\Accounts_Manager' => $baseDir . '/src/services/class-accounts-manager.php',
     'Nevamiss\\Services\\Ajax' => $baseDir . '/src/services/class-ajax.php',
     'Nevamiss\\Services\\Contracts\\Cron_Interface' => $baseDir . '/src/services/contracts/cron-interface.php',
