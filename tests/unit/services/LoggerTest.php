@@ -41,7 +41,8 @@ class LoggerTest extends TestCase
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
 		$post_data = ['messages' => ['Test log message'], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
-		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
+		$filesystemMock = $this->createMock(\WP_Filesystem_Base::class);
+		$logger = new Logger($loggerRepositoryLogger, $settingsMock, $filesystemMock);
 
 		$loggerRepositoryLogger->expects($this->once())->method('create')->with($post_data);
 		$logger->save($post_data);
@@ -52,8 +53,9 @@ class LoggerTest extends TestCase
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
 		$post_data = ['messages' => ['Test log message'], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
+		$filesystemMock = $this->createMock(\WP_Filesystem_Base::class);
 
-		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
+		$logger = new Logger($loggerRepositoryLogger, $settingsMock, $filesystemMock);
 
 		expect('error_log')->once();
 		expect('do_action')->with('wonolog.log.debug', [ 'message' => wp_json_encode($post_data), 'level' => 'DEBUG' ])->never();
@@ -73,7 +75,9 @@ class LoggerTest extends TestCase
 		$post_data = ['messages' => ['Test log message', true], 'schedule_id' => 3];
 		$settingsMock = $this->createMock(Settings::class);
 		$settingsMock->expects($this->once())->method('logging_option')->willReturn($logType);
-		$logger = new Logger($loggerRepositoryLogger, $settingsMock);
+		$filesystemMock = $this->createMock(\WP_Filesystem_Base::class);
+
+		$logger = new Logger($loggerRepositoryLogger, $settingsMock, $filesystemMock);
 
 		$expect_save_data = [
 			'messages' => wp_json_encode(['Test log message']),
