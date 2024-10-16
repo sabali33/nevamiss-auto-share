@@ -108,7 +108,7 @@ class Schedule_Queue {
 		$post_to_remove = array_shift( $all_posts_ids );
 
 		if ( $post_to_remove !== $post_id ) {
-			error_log( "A wrong post was shared. Expected $post_to_remove, but got $post_id" );
+			throw new \Exception( esc_html("A wrong post was shared. Expected $post_to_remove, but got $post_id") );
 		}
 
 		$shared_posts         = array( ...$shared_posts, $post_id );
@@ -131,7 +131,6 @@ class Schedule_Queue {
 		);
 
 		if ( $has_cycle_ended ) {
-
 			do_action( 'nevamiss_schedule_cycle_completed', $schedule_id );
 		}
 	}

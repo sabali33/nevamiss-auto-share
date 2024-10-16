@@ -7,7 +7,6 @@ declare(strict_types=1);
  *  Plugin URI:  https://wordpress.org/plugins/nevamiss
  *  Description: A WordPress plugin to share content to social media Networks
  *  Author:      Eliasu Abraman
- *  Author URI:  https://saganithemes.com
  *  Text Domain: nevamiss
  *  Domain Path: /languages
  *  License:     GPL v2 or later
