@@ -17,7 +17,6 @@ use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\stubs;
 use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\setUp;
-use function PHPUnit\Framework\once;
 
 #[CoversClass(Settings_Page::class)]
 class SettingsPageTest extends TestCase

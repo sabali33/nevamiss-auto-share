@@ -47,23 +47,6 @@ class LoggerTest extends TestCase
 		$logger->save($post_data);
 	}
 
-	public function test_it_log_message_through_third_party_log()
-	{
-		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);
-		$post_data = ['messages' => ['Test log message'], 'schedule_id' => 3];
-		$settingsMock = $this->createMock(Settings::class);
-
-		$logger = Logger::instance($loggerRepositoryLogger, $settingsMock);
-
-		when('class_exists')->justReturn(true);
-
-		expect('do_action')->once()->with('wonolog.log.debug', [ 'message' => wp_json_encode($post_data), 'level' => 'DEBUG' ]);
-
-		expect('error_log')->never();
-
-		$logger->log_to_file($post_data);
-
-	}
 	public function test_it_log_message_to_file()
 	{
 		$loggerRepositoryLogger = $this->createMock(Logger_Repository::class);

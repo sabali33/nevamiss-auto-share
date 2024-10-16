@@ -11,6 +11,7 @@ if (!file_exists($vendor . 'autoload.php')) {
 }
 
 define("NEVAMISS_PATH", dirname(__DIR__) . "/");
+define( 'ABSPATH',  dirname(__DIR__) . "/../../../../");
 
 require_once $vendor . 'antecedent/patchwork/Patchwork.php';
 require_once $vendor . 'autoload.php';
