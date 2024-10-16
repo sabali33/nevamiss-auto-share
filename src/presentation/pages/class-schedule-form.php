@@ -521,6 +521,7 @@ class Schedule_Form extends Page {
 				if ( ! $weekly_times ) {
 					return null;
 				}
+
 				return $this->sanitize_weekly_data( $weekly_times );
 			},
 			'monthly_times'     => function ( ?array $monthly_times ) {
@@ -887,7 +888,8 @@ class Schedule_Form extends Page {
 	 * @param array $weekly_times
 	 * @return array
 	 */
-	function sanitize_weekly_data( array $weekly_times ): array {
+	public function sanitize_weekly_data( array $weekly_times ): array {
+
 		$weekly_times['days'] = $this->validator->sanitize_array_of_string( $weekly_times['days'] );
 
 		$weekly_times['hours'] = array_map(

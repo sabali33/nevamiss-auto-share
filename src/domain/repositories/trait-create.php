@@ -17,11 +17,12 @@ trait Create_Trait {
 
 		$this->wpdb->suppress_errors = true;
 
-		$this->wpdb->insert($this->table_name(), $data);
+		$this->wpdb->insert( $this->table_name(), $data );
+
 		if ( $this->wpdb->last_error ) {
 			throw new \Exception( esc_html( $this->wpdb->last_error ) );
-
 		}
+
 		do_action( "nevamiss_created_$model_slug", $this->wpdb->insert_id );
 
 		return $this->wpdb->insert_id;

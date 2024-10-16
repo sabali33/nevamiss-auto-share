@@ -95,6 +95,7 @@ class Settings_Page extends Page {
 	}
 	private function authorized(): bool {
 		$nonce = sanitize_text_input_field( '_wpnonce', 'post' );
+
 		return (bool) wp_verify_nonce( $nonce, 'nevamiss-general-settings-action' );
 	}
 	private function extract_data( array $post_data ): array {

@@ -94,6 +94,7 @@ class Network_Authenticator {
 
 	private function authorize( string $network, $nonce_key = 'state' ): bool {
 		$nonce = sanitize_text_input_field( $nonce_key );
+
 		return (bool) wp_verify_nonce( $nonce, "nevamiss-$network-secret" );
 	}
 

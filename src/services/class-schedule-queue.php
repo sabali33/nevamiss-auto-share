@@ -279,9 +279,11 @@ class Schedule_Queue {
 		$shared_posts = $queue->shared_posts_ids();
 
 		$remaining_posts_count = count( $all_posts ) - count( $shared_posts );
+
 		$time_units = $this->schedule_estimated_completion_time( $schedule, $remaining_posts_count );
 
-		return $this->trim_trailing_zeros($time_units);
+		return $this->trim_trailing_zeros( $time_units );
+
 	}
 
 	/**
@@ -328,8 +330,10 @@ class Schedule_Queue {
 		$time_units['month'] = $months;
 
 		if ( $remaining_posts === 0 ) {
+
 			$format = "{$date->date_format()} @ {$date->time_format()}";
 			$time_units['finish_date'] = $date->format($format);
+
 			return array_merge( $time_units, $this->no_lower_time_units( $time_units ) );
 		}
 
@@ -575,16 +579,15 @@ class Schedule_Queue {
 		return $this->hour_minute( $date, $end_date );
 	}
 
-	private function trim_trailing_zeros(array $time_units)
-	{
-		if(!$time_units['minute']){
-			unset($time_units['minute']);
+	private function trim_trailing_zeros( array $time_units ): array {
+		if ( ! $time_units['minute'] ) {
+			unset( $time_units['minute'] );
 		}
-		if(!$time_units['hour']){
-			unset($time_units['hour']);
+		if ( ! $time_units['hour'] ) {
+			unset( $time_units['hour'] );
 		}
-		if(!$time_units['day'] && isset($time_units['month']) && $time_units['month']){
-			unset($time_units['day']);
+		if ( ! $time_units['day'] && isset( $time_units['month'] ) && $time_units['month'] ) {
+			unset( $time_units['day'] );
 		}
 		return $time_units;
 	}
