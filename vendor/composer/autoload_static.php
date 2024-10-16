@@ -6,10 +6,6 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit99513a915d290fd93000398b104730c7
 {
-    public static $files = array (
-        '2f775e189726e1613d6ed00ff77b1114' => __DIR__ . '/../..' . '/functions.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
@@ -152,7 +148,7 @@ class ComposerStaticInit99513a915d290fd93000398b104730c7
         'Nevamiss\\Presentation\\Utils' => __DIR__ . '/../..' . '/src/presentation/class-utils.php',
         'Nevamiss\\Service\\Factory_Module' => __DIR__ . '/../..' . '/src/domain/factory/class-factory-module.php',
         'Nevamiss\\Service\\Repositories_Module' => __DIR__ . '/../..' . '/src/domain/repositories/class-repositories-module.php',
-        'Nevamiss\\Service\\Schedule_Collection' => __DIR__ . '/../..' . '/src/services/Schedule_Collection.php',
+        'Nevamiss\\Service\\Schedule_Collection' => __DIR__ . '/../..' . '/src/services/class-schedule-collection.php',
         'Nevamiss\\Services\\Accounts_Manager' => __DIR__ . '/../..' . '/src/services/class-accounts-manager.php',
         'Nevamiss\\Services\\Ajax' => __DIR__ . '/../..' . '/src/services/class-ajax.php',
         'Nevamiss\\Services\\Contracts\\Cron_Interface' => __DIR__ . '/../..' . '/src/services/contracts/cron-interface.php',
