@@ -131,10 +131,22 @@ class Services_Module implements ServiceModule, ExecutableModule {
 	public function services(): array {
 
 		return array(
-			Logger::class                      => fn( ContainerInterface $container ): Logger => Logger::instance(
-				$container->get( Logger_Repository::class ),
-				$container->get( Settings::class ),
-			),
+			Logger::class                      => function( ContainerInterface $container ): Logger {
+
+				if ( ! function_exists( 'WP_Filesystem' ) ) {
+					require_once( ABSPATH . 'wp-admin/includes/file.php' );
+				}
+
+				WP_Filesystem();
+
+				global $wp_filesystem;
+
+				return Logger::instance(
+					$container->get( Logger_Repository::class ),
+					$container->get( Settings::class ),
+					$wp_filesystem
+				);
+			},
 			Schedule_Post_Manager::class       => fn( ContainerInterface $container ): Schedule_Post_Manager => new Schedule_Post_Manager(
 				$container->get( Schedule_Repository::class ),
 				$container->get( Factory::class ),

@@ -69,7 +69,7 @@ class Network_Accounts_Table_List extends WP_List_Table {
 
 	protected function get_sortable_columns(): array {
 		return array(
-			'name'       => array( 'name', false, esc_html__( 'Name', 'nevamiss' ), esc_html__( 'Table ordered by Name.' ), 'asc' ),
+			'name'       => array( 'name', false, esc_html__( 'Name', 'nevamiss' ), esc_html__( 'Table ordered by Name.', 'nevamiss' ), 'asc' ),
 			'created_at' => array( 'created_at', false, esc_html__( 'Created Date', 'nevamiss' ), esc_html__( 'Table ordered by Created Date.', 'nevamiss' ) ),
 			'expires_in' => array( 'expires_in', false, esc_html__( 'Expire Date', 'nevamiss' ), esc_html__( 'Table ordered by expire date', 'nevamiss' ) ),
 		);

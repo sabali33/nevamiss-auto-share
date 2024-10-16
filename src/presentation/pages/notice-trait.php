@@ -20,7 +20,7 @@ trait Notices_Trait {
 			return;
 		}
 
-		$decoded_message = wp_kses_post( stripslashes( $_GET['message'] ) );
+		$decoded_message = wp_kses_post( stripslashes( $query_args['message'] ) );
 
 		wp_admin_notice(
 			$decoded_message,
