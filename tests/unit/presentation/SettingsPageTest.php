@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\stubs;
+use function Brain\Monkey\Functions\stubTranslationFunctions;
 use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\setUp;
 
@@ -26,6 +27,7 @@ class SettingsPageTest extends TestCase
 	public static function settingsSection(): array
 	{
 		return [
+			['general'], //Section and whether setting has been saved already
 			['general'],
 			['network_api_keys'],
 			['post']
@@ -36,10 +38,19 @@ class SettingsPageTest extends TestCase
 	{
 		return [
 			['general'],
+			['general'],
 			['network-accounts'],
 			['stats'],
 			['logs'],
 			['upgrade'],
+		];
+	}
+
+	public static function settingsExists()
+	{
+		return [
+			[true],
+			[false]
 		];
 	}
 
@@ -52,7 +63,6 @@ class SettingsPageTest extends TestCase
 	#[DataProvider('settingsSection')]
 	public function test_it_can_save_settings(string $section)
 	{
-
 		$this->setSettingsFormData($section);
 
 		$expectedData = [
@@ -79,6 +89,8 @@ class SettingsPageTest extends TestCase
 		$settingsMock = $this->createMock(Settings::class);
 		$mediaCollectionMock = $this->createMock(Media_Network_Collection::class);
 		$tabCollectionMock = $this->createMock(Tab_Collection::class);
+		stubTranslationFunctions();
+
 		stubs([
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-settings',
@@ -87,6 +99,7 @@ class SettingsPageTest extends TestCase
 				throw new \Exception('Exiting');
 			},
 		]);
+
 		when('wp_unslash')->returnArg();
 		when('sanitize_text_field')->returnArg();
 		when('map_deep')->returnArg();
@@ -100,7 +113,12 @@ class SettingsPageTest extends TestCase
 
 		$settingsPage = new Settings_Page($settingsMock,$mediaCollectionMock, $tabCollectionMock);
 		$this->assertNotEmpty($_POST);
-		$settingsPage->save_form();
+		try{
+			$settingsPage->save_form();
+		}catch (\Throwable $throwable){
+			$this->assertSame('Exiting', $throwable->getMessage());
+		}
+
 	}
 	private function setSettingsFormData(string $section): void
 	{
