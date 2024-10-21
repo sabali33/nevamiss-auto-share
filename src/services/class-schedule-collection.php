@@ -15,5 +15,4 @@ class Schedule_Collection implements \IteratorAggregate {
 	public function getIterator() {
 		return new \ArrayIterator( $this->schedules );
 	}
-
 }

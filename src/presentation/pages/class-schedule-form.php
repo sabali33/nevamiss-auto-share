@@ -329,7 +329,7 @@ class Schedule_Form extends Page {
 			exit;
 		}
 
-		$validated_data = $this->sanitize_validate( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Inputs are sanitized later
+		$validated_data = $this->sanitize_validate();
 
 		if ( ! empty( $this->validator->errors() ) ) {
 
@@ -464,17 +464,16 @@ class Schedule_Form extends Page {
 		return $data;
 	}
 
-	private function sanitize_validate( array $data ): array {
+	private function sanitize_validate(  ): array {
 		$validated_data = array();
 
 		foreach ( $this->schedule_repository->allow_columns() as $key ) {
-			$datum = $data[ $key ] ?? null;
 
-			if ( $datum === null && ! $this->schedule ) {
+			if ( !isset($_POST[$key]) && ! $this->schedule ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				continue;
 			}
 
-			$validated_data[ $key ] = $this->sanitize_validation_func( $key )( $datum );
+			$validated_data[ $key ] = $this->sanitize_validation_func( $key )( $_POST[$key] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 
 		// Make sure either of the fields is not null

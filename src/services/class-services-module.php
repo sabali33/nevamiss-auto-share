@@ -131,10 +131,10 @@ class Services_Module implements ServiceModule, ExecutableModule {
 	public function services(): array {
 
 		return array(
-			Logger::class                      => function( ContainerInterface $container ): Logger {
+			Logger::class                      => function ( ContainerInterface $container ): Logger {
 
 				if ( ! function_exists( 'WP_Filesystem' ) ) {
-					require_once( ABSPATH . 'wp-admin/includes/file.php' );
+					require_once ABSPATH . 'wp-admin/includes/file.php';
 				}
 
 				WP_Filesystem();

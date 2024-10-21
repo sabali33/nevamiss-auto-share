@@ -28,14 +28,11 @@ trait Bulk_Delete_Trait {
 		}
 		$translated_model_name = str_replace( '-', '_', $model_name );
 
-		[$translated_model_name => $models] = filter_input_array(
-			INPUT_GET,
-			array(
-				$translated_model_name => array(
-					'filter' => FILTER_VALIDATE_INT,
-					'flags'  => FILTER_REQUIRE_ARRAY,
-				),
-			)
+		$models = map_deep(
+			$_GET[$translated_model_name],
+			function(mixed $model_id){
+				return (int) sanitize_text_field(wp_unslash($model_id));
+			},
 		);
 		$results                            = array(
 			'success' => array(),

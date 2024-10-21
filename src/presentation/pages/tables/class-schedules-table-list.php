@@ -142,12 +142,6 @@ class Schedules_Table_List extends \WP_List_Table {
 			'created_at'    => array( 'created_at', false, esc_html__( 'Created Date', 'nevamiss' ), esc_html__( 'Table ordered by Created Date.', 'nevamiss' ) ),
 		);
 	}
-
-	public function display_rows(): void {
-		foreach ( $this->items as  $schedule ) {
-			echo "\n\t" . $this->single_row( $schedule ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-	}
 	protected function get_default_primary_column_name(): string {
 		return 'schedule_name';
 	}
@@ -253,10 +247,12 @@ class Schedules_Table_List extends \WP_List_Table {
 
 		$posts = $this->queue_service->posts_by_ids( $post_ids );
 		foreach ( $posts as $post ) {
-			echo $this->link( //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				array(
-					'url'   => $post['link'], //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					'label' => $post['post_title'], //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo wp_kses_post(
+				$this->link(
+					array(
+						'url'   => $post['link'],
+						'label' => $post['post_title'],
+					)
 				)
 			) . PHP_EOL;
 		}

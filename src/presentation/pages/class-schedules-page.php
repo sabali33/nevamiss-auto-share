@@ -94,14 +94,11 @@ class Schedules_Page extends Page {
 			exit;
 		}
 
-		['schedules' => $schedules] = filter_input_array(
-			INPUT_GET,
-			array(
-				'schedules' => array(
-					'filter' => FILTER_VALIDATE_INT,
-					'flags'  => FILTER_REQUIRE_ARRAY,
-				),
-			)
+		$schedules = map_deep(
+			$_GET['schedules'],
+			function(mixed $schedule_id){
+				return (int) sanitize_text_field(wp_unslash($schedule_id));
+			}
 		);
 
 		foreach ( $schedules as $schedule ) {

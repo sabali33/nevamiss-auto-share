@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  * @var array{choices:array, value:mixed, label: string, id:string} $attributes
  * @var string $input_attr
  */
+
 ?>
 
 <p class="description description-wide">
@@ -16,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
         <?php echo esc_html($attributes['label']); ?>
     </label>
 
-    <select <?php echo $input_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> >
+    <?php echo wp_kses_post(wp_kses_attr('select', $input_attr, 'post', ['http', 'https'])); ?>
         <?php foreach( $attributes['choices'] as $key => $choice): ?>
             <?php $selected = $key === $attributes['value'] || (is_array($attributes['value']) && in_array($key, $attributes['value'])) ?
                 'selected': '';
