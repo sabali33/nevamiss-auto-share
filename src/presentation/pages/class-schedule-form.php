@@ -473,7 +473,7 @@ class Schedule_Form extends Page {
 				continue;
 			}
 
-			$validated_data[ $key ] = $this->sanitize_validation_func( $key )( $_POST[$key] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$validated_data[ $key ] = $this->sanitize_validation_func( $key )( wp_unslash($_POST[$key] )); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 
 		// Make sure either of the fields is not null

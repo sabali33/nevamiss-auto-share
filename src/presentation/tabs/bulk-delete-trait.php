@@ -26,14 +26,20 @@ trait Bulk_Delete_Trait {
 		if ( ! wp_verify_nonce( $nonce, "bulk-$model_name" ) ) {
 			return;
 		}
+
 		$translated_model_name = str_replace( '-', '_', $model_name );
 
+		if(!isset($_GET[$translated_model_name])){
+			return;
+		}
+
 		$models = map_deep(
-			$_GET[$translated_model_name],
+			wp_unslash($_GET[$translated_model_name]),
 			function(mixed $model_id){
-				return (int) sanitize_text_field(wp_unslash($model_id));
+				return (int) sanitize_text_field($model_id);
 			},
 		);
+
 		$results                            = array(
 			'success' => array(),
 			'error'   => array(),

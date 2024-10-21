@@ -72,12 +72,25 @@ class Settings_Page extends Page {
 
 		$data = $this->sanitize_data();
 
+		if(!$data){
+			$this->redirect(
+				array(
+					'status'  => 'error',
+					'message' => __( 'No Section set', 'nevamiss' ),
+					'section' => 'general',
+				)
+			);
+			exit;
+		}
 		$section  = sanitize_text_input_field( 'section', 'post' );
 		$settings = get_option( self::GENERAL_SETTINGS );
 
 		if ( ! $settings ) {
 			update_option( self::GENERAL_SETTINGS, array( $section => $data ) );
-			return;
+			$this->redirect(
+				$this->success_message($section)
+			);
+			exit;
 		}
 
 		$settings[ $section ] = $data;
@@ -85,11 +98,7 @@ class Settings_Page extends Page {
 		update_option( self::GENERAL_SETTINGS, $settings );
 
 		$this->redirect(
-			array(
-				'status'  => 'success',
-				'message' => __( 'Settings saved!', 'nevamiss' ),
-				'section' => $section,
-			)
+			$this->success_message($section)
 		);
 
 		exit;
@@ -98,37 +107,6 @@ class Settings_Page extends Page {
 		$nonce = sanitize_text_input_field( '_wpnonce', 'post' );
 
 		return (bool) wp_verify_nonce( $nonce, 'nevamiss-general-settings-action' );
-	}
-	private function extract_data( array $post_data ): array {
-		$schema        = apply_filters(
-			'nevamiss-settings-schema',
-			$this->post_keys( $post_data['section'] )
-		);
-		$sanitize_data = array();
-
-		foreach ( $schema as $key => $value ) {
-			['type' => $type ] = $value;
-
-			if ( ! isset( $post_data[ $key ] ) ) {
-				$sanitize_data[ $key ] = $this->translate_data_type( $type );
-				continue;
-			}
-			if ( $post_data[ $key ] === 'on' ) {
-				$sanitize_data[ $key ] = 1;
-				continue;
-			}
-			if ( is_string( $post_data[ $key ] ) ) {
-				$sanitize_data[ $key ] = sanitize_text_input_field( $key, 'post' );
-				continue;
-			}
-			$sanitize_data[ $key ] = filter_var_array(
-				$post_data[ $key ],
-				FILTER_SANITIZE_SPECIAL_CHARS
-			);
-
-		}
-
-		return $sanitize_data;
 	}
 
 	private function post_keys( mixed $section ): array {
@@ -180,10 +158,13 @@ class Settings_Page extends Page {
 	}
 
 	/**
-	 * @return array
+	 * @return array|false
 	 */
-	private function sanitize_data(): array
+	private function sanitize_data(): array|false
 	{
+		if(!isset($_POST['section'])){
+			return false;
+		}
 		$schema = apply_filters(
 			'nevamiss-settings-schema',
 			$this->post_keys(sanitize_text_field(wp_unslash($_POST['section']))) // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -207,11 +188,24 @@ class Settings_Page extends Page {
 			}
 
 			$data[$key] = map_deep(
-				$_POST[$key], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				wp_unslash($_POST[$key]), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				'sanitize_text_field',
 			);
 
 		}
 		return $data;
+	}
+
+	/**
+	 * @param string|null $section
+	 * @return array
+	 */
+	private function success_message(?string $section): array
+	{
+		return array(
+			'status' => 'success',
+			'message' => __('Settings saved!', 'nevamiss'),
+			'section' => $section,
+		);
 	}
 }
