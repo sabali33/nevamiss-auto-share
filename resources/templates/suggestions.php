@@ -18,7 +18,7 @@ use Nevamiss\Presentation\Pages\Suggestions_Page;
 
 	<div class="suggestion-form">
         <h2><?php esc_html_e('Suggestions/Feedback', 'nevamiss') ?></h2>
-		<form action="<?php echo admin_url('admin-post.php?action=nevamiss_suggestion_post') ?>" method="post">
+		<form action="<?php echo esc_url(admin_url('admin-post.php?action=nevamiss_suggestion_post')); ?>" method="post">
             <?php echo wp_kses_post(wp_nonce_field('nevamiss-suggestion-form-action')); ?>
 
             <p>

@@ -54,8 +54,8 @@ function init(): void {
 function sanitize_text_input_field( string $field, string $method = 'get' ): ?string {
 
 	return match($method){
-		'post' => isset($_POST[$field]) ? \wp_unslash( sanitize_text_field( $_POST[$field] ) ) : null,  // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
-		'request' => isset($_REQUEST[$field]) ? \wp_unslash( sanitize_text_field( $_REQUEST[$field] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
-		default => isset($_GET[$field]) ? \wp_unslash( sanitize_text_field( $_GET[$field] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+		'post' => isset($_POST[$field]) ?  sanitize_text_field( \wp_unslash($_POST[$field] ) ) : null,  // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+		'request' => isset($_REQUEST[$field]) ? sanitize_text_field( \wp_unslash( $_REQUEST[$field] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+		default => isset($_GET[$field]) ? sanitize_text_field( \wp_unslash( $_GET[$field] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
 	};
 }

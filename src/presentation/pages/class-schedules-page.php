@@ -94,10 +94,19 @@ class Schedules_Page extends Page {
 			exit;
 		}
 
+		if( !isset($_GET['schedules'])){
+			$this->redirect(
+				array(
+					'type'    => 'error',
+					'message' => esc_html__( 'No schedules found', 'nevamiss' ),
+				)
+			);
+			exit;
+		}
 		$schedules = map_deep(
-			$_GET['schedules'],
+			wp_unslash($_GET['schedules']),
 			function(mixed $schedule_id){
-				return (int) sanitize_text_field(wp_unslash($schedule_id));
+				return (int) sanitize_text_field($schedule_id);
 			}
 		);
 
