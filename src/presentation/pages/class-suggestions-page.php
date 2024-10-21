@@ -20,10 +20,8 @@ class Suggestions_Page extends Page {
 		);
 	}
 
-	public function maybe_process_form() {
-		if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			return;
-		}
+	public function maybe_process_form(): void {
+
 		if ( ! $this->authorize() ) {
 			$this->redirect(
 				array(
@@ -33,15 +31,20 @@ class Suggestions_Page extends Page {
 			);
 			exit;
 		}
-
-		$suggestion_data = $this->extract_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-		if ( empty( $suggestion_data ) ) {
+		if ( ! isset( $_POST['suggestion'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$this->redirect(
-				array(
-					'message' => __( 'A suggestion is required', 'nevamiss' ),
-					'status'  => 'error',
-				)
+				$this->suggestion_required_message()
+			);
+			exit;
+		}
+		$data = array();
+		foreach ( array( 'fullname', 'email_address', 'suggestion' ) as $key ) {
+			$data[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash($_POST[ $key ]) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
+
+		if ( !$data['suggestion'] ) {
+			$this->redirect(
+				$this->suggestion_required_message()
 			);
 			exit;
 		}
@@ -67,14 +70,14 @@ class Suggestions_Page extends Page {
 		wp_redirect( add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-suggestions' ) ) );
 	}
 
-	private function extract_data( array $post_data ): array {
-		if ( ! isset( $post_data['suggestion'] ) || ! trim( $post_data['suggestion'] ) ) {
-			return array();
-		}
-		$data = array();
-		foreach ( array( 'fullname', 'email_address', 'suggestion' ) as $key ) {
-			$data[ $key ] = isset( $post_data[ $key ] ) ? sanitize_text_field( $post_data[ $key ] ) : null;
-		}
-		return $data;
+	/**
+	 * @return array
+	 */
+	private function suggestion_required_message(): array
+	{
+		return array(
+			'message' => __('A suggestion is required', 'nevamiss'),
+			'status' => 'error',
+		);
 	}
 }

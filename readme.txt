@@ -68,7 +68,6 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 = What are the next features coming up? =
 
 - We intend to integrate AI to suggest captions for posts.
-<<<<<<< HEAD
 - Create a UI interface where site managers can post custom content based on a category of posts.
 
 == Changelog ==
@@ -86,36 +85,61 @@ Initial release
 2. A list of created schedules are displayed in screenshot-2.(png|jpg|jpeg|gif)
 3. A list of authorized accounts are displayed in screenshot-3.(png|jpg|jpeg|gif)
 4. A list of database logs are displayed in screenshot-4.(png|jpg|jpeg|gif)
-||||||| cdf05eb
-- Create a UI interface where site managers can post custom content based on a category of posts.
-=======
-- Create a UI interface where site managers can post custom content based on a category of posts.
 
 == Third Party Services ==
 
 This plugin depends on APIs of third parties and for this reason we seek to make it clear which services
 and provide links to where their terms of usage can be found. They include:
+
 = Rebrandly =
-API link: https://api.rebrandly.com/v1/links.
-The terms of usage can be found [here](https://www.rebrandly.com/terms-conditions)
+API link:
+[API link](https://api.rebrandly.com/v1/links). The API used to create short urls for posting to social media accounts.
+
+[Terms of Service](https://www.rebrandly.com/terms-conditions)
 
 = X =
-APIs links: https://api.linkedin.com/v2, https://upload.twitter.com/1.1, https://api.twitter.com/2, https://twitter.com/i/oauth2/authorize.
+APIs links:
+[API link version 2](https://api.linkedin.com/v2), An alternative version 2 api link used to authorize and posts contents
+[API link version 1](https://upload.twitter.com/1.1) X version 1 API that is used to upload media files,
+[API version 2 link](https://api.twitter.com/2) X version 2 API used to authorize and make text posts.,
+[API version 2 root link](https://api.x.com/) API version 2 link, used to authorize and posts contents.
+[API authorize link](https://twitter.com/i/oauth2/authorize) Used to create authorization link.
 The terms of services for a developer and non-developer are [developer](https://developer.x.com/en/developer-terms/agreement-and-policy),
 [general x user](https://x.com/en/tos). And here is X privacy [policy](https://x.com/en/privacy)
 
 = Facebook =
-API links: https://graph.facebook.com/
-Terms of using this APIs can be read [here](https://developers.facebook.com/terms/dfc_platform_terms/).
-A link to Facebook policy is [here](https://developers.facebook.com/devpolicy/)
+API links:
+[Facebook API link](https://graph.facebook.com/) - Used to authorize, retrieve user account(s) and post to these accounts.
+[Facebook API authorization link](https://www.facebook.com/v20.0/dialog/oauth) - Used to create authorize link.
+[Facebook API authorization link](https://graph.facebook.com/v20.0/oauth/access_token) - Used to retrieve user access token.
+[Terms of Service](https://developers.facebook.com/terms/dfc_platform_terms/),
+[Privacy Policy](https://developers.facebook.com/devpolicy/),
 
 = Instagram =
-API links: https://www.instagram.com/oauth/authorize, https://api.instagram.com/oauth/access_token, https://graph.instagram.com
-Terms of using this APIs can be read [here](https://developers.facebook.com/terms/dfc_platform_terms/).
-A link to Meta policy is [here](https://developers.facebook.com/devpolicy/) and Instagram terms of use, this [link](https://privacycenter.instagram.com/policy)
+API links: [API authorize link](https://www.instagram.com/oauth/authorize) - Use to create authorization link,
+[API access token link](https://api.instagram.com/oauth/access_token) - Used to retrieve access token after user consents to log in dialog,
+[API link](https://graph.instagram.com) - Used to retrieve accounts and posting to those accounts,
+[Refresh token link](https://graph.instagram.com/refresh_access_token) - Used to refresh expired access tokens,
+[API link](https://graph.instagram.com/v20.0/) - A version of the above API link.
+
+[Terms of Service](https://developers.facebook.com/terms/dfc_platform_terms/).
+[Privacy Policy for Devs](https://developers.facebook.com/devpolicy/)
+[Privacy Policy](https://privacycenter.instagram.com/policy)
 
 = LinkedIn =
-API links: https://www.linkedin.com/, https://api.linkedin.com/, https://graph.instagram.com
-Terms of using this APIs can be read [here](https://www.linkedin.com/legal/l/api-terms-of-use).
-A link to LinkedIn policy is [here](https://www.linkedin.com/legal/privacy-policy)
->>>>>>> main
+
+API links:
+[LinkedIn web address](https://www.linkedin.com/), The website address of LinkedIn
+[API link](https://api.linkedin.com/), - The root API used to retrieve authorized accounts and posting to them.
+[API link](https://api.linkedin.com/v2), - API version 2 of the above link.
+[API link](https://www.linkedin.com/oauth/v2/authorization), - The root API used to authorize.
+
+[Terms of Service](https://www.linkedin.com/legal/l/api-terms-of-use), Terms of using API.
+[Privacy Policy](https://www.linkedin.com/legal/privacy-policy), A link to LinkedIn policy.
+
+### When Does the Plugin Communicate with These Services?
+The plugin reaches out to the supported social media networks APIs in the following circumstances:
+- When a user authenticates via their social media account to grant access.
+- When posting content on behalf of the user (through schedules).
+- When a user manually decides to instantly share a WordPress post to authorized social media accounts.
+

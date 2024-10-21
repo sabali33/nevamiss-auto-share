@@ -46,7 +46,7 @@ $tabs = $this->tabs();
 
     <div class="tab-content">
         <?php
-            echo $this->render_tab($active_tab)?->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post($this->render_tab($active_tab)?->render());
         ?>
     </div>
 </div>

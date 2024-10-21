@@ -52,12 +52,10 @@ function init(): void {
 }
 
 function sanitize_text_input_field( string $field, string $method = 'get' ): ?string {
-	$method_variable = $method === 'get' ? $_GET : $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
-	$value           = $method_variable[ $field ] ?? null;
 
-	if ( is_null( $value ) ) {
-		return null;
-	}
-
-	return \wp_unslash( sanitize_text_field( $value ) );
+	return match($method){
+		'post' => isset($_POST[$field]) ? \wp_unslash( sanitize_text_field( $_POST[$field] ) ) : null,  // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+		'request' => isset($_REQUEST[$field]) ? \wp_unslash( sanitize_text_field( $_REQUEST[$field] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+		default => isset($_GET[$field]) ? \wp_unslash( sanitize_text_field( $_GET[$field] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+	};
 }

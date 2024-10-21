@@ -140,6 +140,12 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 		 */
 		$schedule_form = $container->get( Schedule_Form::class );
 
+		/**
+		 * @var Suggestions_Page $suggestion_page
+		 */
+
+		$suggestion_page = $container->get(Suggestions_Page::class);
+
 		add_action(
 			'admin_menu',
 			static function () use ( $container, $schedule_form ) {
@@ -177,6 +183,13 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 				$schedules_page = $container->get( Schedules_Page::class );
 				call_user_func( array( $schedules_page, 'bulk_delete' ) );
 			}
+		);
+		add_action(
+			'admin_post_nevamiss_suggestion_post',
+			array(
+				$suggestion_page,
+				'maybe_process_form'
+			)
 		);
 
 		/**

@@ -10,7 +10,7 @@ use WP_Filesystem_Base;
 
 class Logger implements Logger_Interface {
 
-	const FS_PERM_MODE = 0644;
+	const FS_PERM_MODE             = 0644;
 	private static $messages       = array();
 	private static ?self $instance = null;
 	public const SCHEDULE_LOGS     = 'nevamiss_schedule_log';
@@ -60,10 +60,11 @@ class Logger implements Logger_Interface {
 
 			match ( $this->settings->logging_option() ) {
 				'both' => $this->log_and_save( $post_data ),
-				'file' => $this->log_to_file( wp_json_encode($post_data )),
+				'file' => $this->log_to_file( wp_json_encode( $post_data ) ),
 				'database' => $this->save( $post_data ),
-				default => false
+				default => true
 			};
+
 			self::$messages = array();
 		}
 	}
@@ -79,18 +80,18 @@ class Logger implements Logger_Interface {
 	public function log_to_file( string $messages, ?string $file = null ): void {
 
 		$upload_dir = wp_upload_dir();
-		$file = $file ?? $this->log_file;
+		$file       = $file ?? $this->log_file;
 		$log_file   = trailingslashit( $upload_dir['basedir'] ) . $file;
 
-		$time      = current_time( 'mysql' );
+		$time              = current_time( 'mysql' );
 		$formatted_message = sprintf( "[%s] %s\n", $time, $messages );
 
 		if ( $this->wp_filesystem->exists( $log_file ) ) {
-			$already_logged = $this->wp_filesystem->get_contents($log_file);
+			$already_logged  = $this->wp_filesystem->get_contents( $log_file );
 			$new_log_message = $already_logged . "\n" . $formatted_message;
-			$this->wp_filesystem->put_contents( $log_file, $new_log_message, self::FS_PERM_MODE);
+			$this->wp_filesystem->put_contents( $log_file, $new_log_message, self::FS_PERM_MODE );
 		} else {
-			$this->wp_filesystem->put_contents( $log_file, $formatted_message, self::FS_PERM_MODE);
+			$this->wp_filesystem->put_contents( $log_file, $formatted_message, self::FS_PERM_MODE );
 		}
 	}
 }

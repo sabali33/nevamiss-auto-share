@@ -70,7 +70,8 @@ class Settings_Page extends Page {
 			wp_die( 'unathorized' );
 		}
 
-		$data     = $this->extract_data( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$data = $this->sanitize_data();
+
 		$section  = sanitize_text_input_field( 'section', 'post' );
 		$settings = get_option( self::GENERAL_SETTINGS );
 
@@ -176,5 +177,41 @@ class Settings_Page extends Page {
 		$tab = $this->tab_collection->get( $model_name );
 
 		$tab->bulk_delete( $model_name );
+	}
+
+	/**
+	 * @return array
+	 */
+	private function sanitize_data(): array
+	{
+		$schema = apply_filters(
+			'nevamiss-settings-schema',
+			$this->post_keys(sanitize_text_field(wp_unslash($_POST['section']))) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		);
+
+		$data = array();
+		foreach ($schema as $key => $value) {
+			['type' => $type] = $value;
+
+			if (!isset($_POST[$key])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$data[$key] = $this->translate_data_type($type);
+				continue;
+			}
+			if ($_POST[$key] === 'on') { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$data[$key] = 1;
+				continue;
+			}
+			if (is_string($_POST[$key])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$data[$key] = sanitize_text_field(wp_unslash($_POST[$key])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				continue;
+			}
+
+			$data[$key] = map_deep(
+				$_POST[$key], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				'sanitize_text_field',
+			);
+
+		}
+		return $data;
 	}
 }

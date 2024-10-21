@@ -108,7 +108,7 @@ class Schedule_Queue {
 		$post_to_remove = array_shift( $all_posts_ids );
 
 		if ( $post_to_remove !== $post_id ) {
-			throw new \Exception( esc_html("A wrong post was shared. Expected $post_to_remove, but got $post_id") );
+			throw new \Exception( esc_html( "A wrong post was shared. Expected $post_to_remove, but got $post_id" ) );
 		}
 
 		$shared_posts         = array( ...$shared_posts, $post_id );
