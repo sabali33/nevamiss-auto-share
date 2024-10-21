@@ -89,6 +89,8 @@ class SettingsPageTest extends TestCase
 		]);
 		when('wp_unslash')->returnArg();
 		when('sanitize_text_field')->returnArg();
+		when('map_deep')->returnArg();
+
 		expect('get_option')->with(Settings_Page::GENERAL_SETTINGS)->andReturnNull();
 		expect('update_option')->with(
 			Settings_Page::GENERAL_SETTINGS,
