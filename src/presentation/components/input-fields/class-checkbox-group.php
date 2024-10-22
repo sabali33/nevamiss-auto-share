@@ -28,7 +28,7 @@ class Checkbox_Group implements Renderable {
 					'name'    => $attributes['name'],
 					'value'   => $choice,
 					'label'   => ucfirst( $choice ),
-					'checked' => in_array( $choice, $attributes['value'] ),
+					'checked' => in_array( $choice, $attributes['value'], true ),
 				)
 			);
 		}

@@ -75,11 +75,11 @@ class WP_Cron_Service implements Cron_Interface {
 
 		$can_reschedule = match ( true ) {
 			$new_schedule->repeat_frequency() !== $schedule->repeat_frequency(),
-			$new_schedule->daily_times() != $schedule->daily_times(),
-			$new_schedule->monthly_times() != $schedule->monthly_times(),
-			$new_schedule->weekly_times() != $schedule->weekly_times(),
+			! empty( array_diff( $new_schedule->daily_times(), $schedule->daily_times() ) ),
+			! empty( array_diff( $new_schedule->monthly_times(), $schedule->monthly_times() ) ),
+			! empty( array_diff( $new_schedule->weekly_times(), $schedule->weekly_times() ) ),
 			$new_schedule->start_date() !== $schedule->start_date(),
-			$new_schedule->one_time_schedule() != $schedule->one_time_schedule() => true,
+			! empty( array_diff( $new_schedule->one_time_schedule(), $schedule->one_time_schedule() ) ) => true,
 			default => false
 		};
 
@@ -87,9 +87,6 @@ class WP_Cron_Service implements Cron_Interface {
 
 			$this->reschedule_cron( $new_schedule );
 		}
-	}
-
-	public function update_schedule(): bool {
 	}
 
 	public function unschedule( int $schedule_id ): int {

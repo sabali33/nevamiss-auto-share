@@ -101,7 +101,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			Tab_Collection_Interface::class    => function ( ContainerInterface $container ) {
 				$factory = $container->get( Factory::class );
 				return apply_filters(
-					'nevamiss-settings-tabs',
+					'nevamiss_settings_tabs',
 					array(
 						new General_Tab( $factory, $container->get( Shortner_Collection::class ) ),
 						new Network_Accounts_Tab(
@@ -144,7 +144,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 		 * @var Suggestions_Page $suggestion_page
 		 */
 
-		$suggestion_page = $container->get(Suggestions_Page::class);
+		$suggestion_page = $container->get( Suggestions_Page::class );
 
 		add_action(
 			'admin_menu',
@@ -188,7 +188,7 @@ class Presentation_Module implements ServiceModule, ExecutableModule {
 			'admin_post_nevamiss_suggestion_post',
 			array(
 				$suggestion_page,
-				'maybe_process_form'
+				'maybe_process_form',
 			)
 		);
 

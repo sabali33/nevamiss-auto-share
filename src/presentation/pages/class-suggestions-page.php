@@ -39,10 +39,10 @@ class Suggestions_Page extends Page {
 		}
 		$data = array();
 		foreach ( array( 'fullname', 'email_address', 'suggestion' ) as $key ) {
-			$data[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash($_POST[ $key ]) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$data[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 
-		if ( !$data['suggestion'] ) {
+		if ( ! $data['suggestion'] ) {
 			$this->redirect(
 				$this->suggestion_required_message()
 			);
@@ -73,11 +73,10 @@ class Suggestions_Page extends Page {
 	/**
 	 * @return array
 	 */
-	private function suggestion_required_message(): array
-	{
+	private function suggestion_required_message(): array {
 		return array(
-			'message' => __('A suggestion is required', 'nevamiss'),
-			'status' => 'error',
+			'message' => __( 'A suggestion is required', 'nevamiss' ),
+			'status'  => 'error',
 		);
 	}
 }

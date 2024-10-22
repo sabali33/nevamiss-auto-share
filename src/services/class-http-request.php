@@ -43,7 +43,7 @@ class Http_Request {
 
 		$this->validate_response( $body, $response['response'] );
 
-		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ) ) ) {
+		if ( ! $body && in_array( $response['response']['code'], array( 200, 201 ), true ) ) {
 			$headers = $response['headers']->getAll();
 
 			return $headers['x-restli-id'];
@@ -74,10 +74,10 @@ class Http_Request {
 	 * @throws Exception
 	 */
 	private function validate_response( string $body, $response ): void {
-		if ( ! $body && ! in_array( $response['code'], array( 200, 201 ) ) ) {
+		if ( ! $body && ! in_array( $response['code'], array( 200, 201 ), true ) ) {
 			throw new Exception( esc_html( $response['message'] ) );
 		}
-		if ( ! in_array( $response['code'], array( 200, 201, 202, 204 ) ) ) {
+		if ( ! in_array( $response['code'], array( 200, 201, 202, 204 ), true ) ) {
 			throw new Exception( 'Unable to successfully make the request: ' . $body ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 	}

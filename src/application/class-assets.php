@@ -1,11 +1,24 @@
 <?php
+/**
+ * A file that contains code to register assets.
+ *
+ * @package Nevamiss\Application\Assets
+ */
 
 declare(strict_types=1);
 
 namespace Nevamiss\Application;
 
+/**
+ * A class that manages scripts and file registrations
+ */
 class Assets {
 
+	/**Enqueue assets.
+	 *
+	 * @param string $page Currently visited page.
+	 * @return void
+	 */
 	public function enqueue_script( string $page ): void {
 
 		if ( ! $this->is_page( $page ) ) {
@@ -37,6 +50,12 @@ class Assets {
 		);
 	}
 
+	/**
+	 * Check if the page visited is created by this plugin
+	 *
+	 * @param string $page The slug of the current page.
+	 * @return bool
+	 */
 	private function is_page( string $page ): bool {
 		return in_array(
 			$page,
@@ -49,7 +68,8 @@ class Assets {
 				'auto-share_page_nevamiss-suggestions',
 				'post.php',
 				'post-new.php',
-			)
+			),
+			true
 		);
 	}
 }

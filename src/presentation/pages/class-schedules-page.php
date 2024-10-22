@@ -70,7 +70,7 @@ class Schedules_Page extends Page {
 			exit;
 		}
 
-		if ( $_REQUEST['bulk_action'] !== 'delete_all' || ! isset( $_REQUEST['schedules'] ) ) {
+		if ( 'delete_all' !== $_REQUEST['bulk_action'] || ! isset( $_REQUEST['schedules'] ) ) {
 
 			if ( isset( $_REQUEST['s'] ) ) {
 				$this->redirect(
@@ -94,7 +94,7 @@ class Schedules_Page extends Page {
 			exit;
 		}
 
-		if( !isset($_GET['schedules'])){
+		if ( ! isset( $_GET['schedules'] ) ) {
 			$this->redirect(
 				array(
 					'type'    => 'error',
@@ -104,9 +104,9 @@ class Schedules_Page extends Page {
 			exit;
 		}
 		$schedules = map_deep(
-			wp_unslash($_GET['schedules']),
-			function(mixed $schedule_id){
-				return (int) sanitize_text_field($schedule_id);
+			wp_unslash( $_GET['schedules'] ), //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			function ( mixed $schedule_id ) {
+				return (int) sanitize_text_field( $schedule_id );
 			}
 		);
 

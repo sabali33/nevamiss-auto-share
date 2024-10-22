@@ -26,12 +26,12 @@ class Input implements Renderable {
 			'value' => $attributes['value'] ?? '',
 		);
 
-		if ( $attributes['type'] === 'number' ) {
+		if ( 'number' === $attributes['type'] ) {
 			$input_attributes['min']  = $attributes['min'];
 			$input_attributes['max']  = $attributes['max'];
 			$input_attributes['step'] = $attributes['step'] ?? 1;
 		}
-		if ( in_array( $attributes['type'], array( 'checkbox', 'radio' ) ) ) {
+		if ( in_array( $attributes['type'], array( 'checkbox', 'radio' ), true ) ) {
 			$input_attributes['checked'] = $attributes['checked'] ?? false;
 		}
 		if ( isset( $attributes['disabled'] ) ) {
@@ -44,7 +44,7 @@ class Input implements Renderable {
 
 		$label = $attributes['label'] ?? '';
 
-		return $input_attributes['type'] === 'hidden' ? "<input $attributes_str />" :
+		return 'hidden' === $input_attributes['type'] ? "<input $attributes_str />" :
 			"<p>
 	            <label>
 	                <span>$label</span>

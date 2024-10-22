@@ -38,7 +38,7 @@ class Infrastructure_Module implements ServiceModule, ExecutableModule {
 				$collection = new Shortner_Collection();
 
 				$shortners = apply_filters(
-					'nevamiss-url-shortners',
+					'nevamiss_url_shortners',
 					array(
 						$container->get( Rebrandly::class ),
 					)
@@ -109,7 +109,7 @@ class Infrastructure_Module implements ServiceModule, ExecutableModule {
 				 */
 				$settings = $container->get( Settings::class );
 				foreach ( $container->get( Network_Clients::class ) as $network_slug => $client ) {
-					if ( ! in_array( $network_slug, $settings->enabled_networks() ) ) {
+					if ( ! in_array( $network_slug, $settings->enabled_networks(), true ) ) {
 						continue;
 					}
 					$collection->register( $network_slug, $client );

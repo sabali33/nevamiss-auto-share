@@ -17,7 +17,7 @@ trait Bulk_Delete_Trait {
 			return;
 		}
 
-		if ( $_REQUEST['action'] !== 'delete_all' || ! isset( $_REQUEST['model_name'] ) ) {
+		if ( 'delete_all' !== $_REQUEST['action'] || ! isset( $_REQUEST['model_name'] ) ) {
 			return;
 		}
 
@@ -29,18 +29,18 @@ trait Bulk_Delete_Trait {
 
 		$translated_model_name = str_replace( '-', '_', $model_name );
 
-		if(!isset($_GET[$translated_model_name])){
+		if ( ! isset( $_GET[ $translated_model_name ] ) ) {
 			return;
 		}
 
 		$models = map_deep(
-			wp_unslash($_GET[$translated_model_name]),
-			function(mixed $model_id){
-				return (int) sanitize_text_field($model_id);
+			wp_unslash( $_GET[ $translated_model_name ] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			function ( mixed $model_id ) {
+				return (int) sanitize_text_field( $model_id );
 			},
 		);
 
-		$results                            = array(
+		$results = array(
 			'success' => array(),
 			'error'   => array(),
 		);

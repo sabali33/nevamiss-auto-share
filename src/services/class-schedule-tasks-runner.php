@@ -115,7 +115,7 @@ class Schedule_Tasks_Runner implements Task_Runner_Interface {
 	 * @throws Exception
 	 */
 	public function update_task( int $task_id, $payload ): void {
-		if ( $payload['status'] === 'success' ) {
+		if ( 'success' === $payload['status'] ) {
 			$this->task_repository->update( $task_id, array( 'status' => 'succeeded' ) );
 			return;
 		}

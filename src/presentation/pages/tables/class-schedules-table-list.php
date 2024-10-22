@@ -297,7 +297,7 @@ class Schedules_Table_List extends \WP_List_Table {
 				/*
 				translators: %s: A time formatting string such as month, day, hour or minute */
 				// $parts[] = sprintf( _n( "%s $unit", "%s ${unit}s", 0, 'nevamiss' ), 0 );
-				$parts[] = $parts[] = sprintf( $this->translate( $unit, 0 ), 0 );
+				$parts[] = sprintf( $this->translate( $unit, 0 ), 0 );
 			}
 		}
 

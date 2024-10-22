@@ -64,8 +64,8 @@ class X_Api_V1_Strategy implements X_Api_Version_Strategy {
 	 * @throws Exception
 	 */
 	public function auth_link( string $callback_url ): string {
-		$endpoint   = "{$this->root_api}oauth/request_token";
-		$headerAuth = $this->authorization_header(
+		$endpoint    = "{$this->root_api}oauth/request_token";
+		$header_auth = $this->authorization_header(
 			$endpoint,
 			array(
 				'oauth_callback' => $callback_url,
@@ -76,7 +76,7 @@ class X_Api_V1_Strategy implements X_Api_Version_Strategy {
 			$endpoint,
 			array(
 				'headers' => array(
-					'Authorization' => $headerAuth,
+					'Authorization' => $header_auth,
 					'Accept'        => 'application/json',
 				),
 			)
@@ -213,7 +213,7 @@ class X_Api_V1_Strategy implements X_Api_Version_Strategy {
 					return $acc;
 				}
 				$item_arr    = explode( '=', $item );
-				$key         = $sep === 'oauth_' ? "oauth_$item_arr[0]" : $item_arr[0];
+				$key         = 'oauth_' === $sep ? "oauth_$item_arr[0]" : $item_arr[0];
 				$acc[ $key ] = $item_arr[1];
 				return $acc;
 			},

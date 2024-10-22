@@ -16,13 +16,14 @@ class Url_Shortner_Manager {
 	 */
 	public function on_post_publish( string $new_status, string $old_status, \WP_Post $post ) {
 
-		if ( $new_status !== 'publish' ) {
+		if ( 'publish' !== $new_status ) {
 			return;
 		}
 
-		if ( $new_status === 'publish' && $old_status === 'publish' ) {
-			// return;
+		if ( 'publish' === $old_status ) {
+			return;
 		}
+
 		$post_id = $post->ID;
 
 		$shortner_client_name = $this->settings->url_shortner();

@@ -20,8 +20,12 @@ class Accounts_Manager {
 			'linkedin' => $this->prepare_linkedin_accounts( $user ),
 			'x' => $this->prepare_x_accounts( $user ),
 			'instagram' => $this->prepare_instagram_accounts( $user ),
-			default => apply_filters( 'nevamiss-user-auth-data', $user, $network )
+			default => array()
 		};
+
+		if ( empty( $posts_data ) ) {
+			return;
+		}
 
 		$accounts = array();
 		foreach ( $posts_data as $posts_datum ) {
@@ -40,12 +44,12 @@ class Accounts_Manager {
 			$accounts[] = $this->account_repository->create( $posts_datum );
 		}
 
-		if ( in_array( $network, array( 'linkedin', 'x' ) ) ) {
+		if ( in_array( $network, array( 'linkedin', 'x' ), true ) ) {
 			update_option( "nevamiss-$network-refresh-token", $user['refresh_token'] );
 		}
 
 		do_action(
-			'nevamiss-user-network-login-complete',
+			'nevamiss_user_network_login_complete',
 			array(
 				'expires_in'  => $user['token_expires_in'],
 				'account_ids' => $accounts,
@@ -121,7 +125,7 @@ class Accounts_Manager {
 				'network'           => 'x',
 				'remote_account_id' => $user['id'],
 				'token'             => $user['access_token'],
-				'expires_in'        => $user['token_expires_in'] === 'never' ? null : $this->expire_date( ( $user['token_expires_in'] * 24 ) ),
+				'expires_in'        => 'never' === $user['token_expires_in'] ? null : $this->expire_date( ( $user['token_expires_in'] * 24 ) ),
 			),
 		);
 	}

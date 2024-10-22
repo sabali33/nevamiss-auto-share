@@ -29,14 +29,14 @@ class Utils {
 		return count( $checked ) === count( $data );
 	}
 	public static function is_leap_year( int $year ): bool {
-		if ( $year % 4 !== 0 ) {
+		if ( 0 !== $year % 4 ) {
 			return false;
 		}
-		if ( $year % 100 !== 0 ) {
+		if ( 0 !== $year % 100 ) {
 			return true;
 		}
 
-		if ( $year % 400 == 0 ) {
+		if ( 0 === $year % 400 ) {
 			return true;
 		}
 		return false;

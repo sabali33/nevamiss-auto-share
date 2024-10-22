@@ -21,13 +21,13 @@ abstract class Page implements Renderable {
 		string $title,
 		string $slug,
 		int $priority,
-		?string $parent = null,
+		?string $parent_page = null,
 		?bool $is_sub_page = false,
 	) {
 		$this->title       = $title;
 		$this->priority    = $priority;
 		$this->slug        = $slug;
-		$this->parent      = $parent;
+		$this->parent      = $parent_page;
 		$this->is_sub_page = $is_sub_page;
 		$this->data        = $data;
 		$this->page_url    = admin_url( "page=$slug" );
