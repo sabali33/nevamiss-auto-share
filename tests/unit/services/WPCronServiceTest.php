@@ -183,18 +183,35 @@ class WPCronServiceTest extends TestCase
 
 	}
 
+	/**
+	 * This tests performs only changes in repeat frequency
+	 * @param ...$schedule_data
+	 * @return void
+	 * @throws \Brain\Monkey\Expectation\Exception\ExpectationArgsRequired
+	 * @throws \Nevamiss\Application\Not_Found_Exception
+	 * @throws \PHPUnit\Framework\MockObject\Exception
+	 */
 	#[DataProvider('frequency_types')]
-	public function test_it_can_reschedule_cron(string $repeat_frequency)
+	public function test_it_can_reschedule_cron( ...$schedule_data)
 	{
+		[
+			$repeat_frequency,
+			$dates,
+		] = $schedule_data;
 		$scheduleMock = $this->createMock(Schedule::class);
 		$scheduleMock->method('one_time_schedule')->willReturn(['2024-07-12 3:04', '2024-10-12 3:04']);
 		$scheduleMock->method('repeat_frequency')->willReturn('daily');
+		$scheduleMock->method('daily_times')->willReturn([]);
 		$scheduleMock->method('id')->willReturn(3);
 
 		$newScheduleMock = $this->createMock(Schedule::class);
 		$newScheduleMock->method('one_time_schedule')->willReturn(['2024-07-13 3:04', '2024-10-14 3:04']);
+
 		$newScheduleMock->method('id')->willReturn(3);
 		$newScheduleMock->method('repeat_frequency')->willReturn($repeat_frequency);
+		$newScheduleMock->method('monthly_times')->willReturn([]);
+		$newScheduleMock->method('daily_times')->willReturn($dates);
+		$newScheduleMock->method('weekly_times')->willReturn([]);
 
 		$scheduleRepository = $this->createMock(Schedule_Repository::class);
 		$scheduleRepository->expects($this->exactly(2))->method('get')->willReturn($newScheduleMock);

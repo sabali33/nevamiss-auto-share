@@ -97,7 +97,7 @@ class Network_Post_Provider {
 
 		$default_share_format = "%TITLE% \n %LINK% \n %EXCERPT% \n %TAGS%";
 
-		$share_format = $share_format ?? $default_share_format; // $this->settings->setting('post_share_format');
+		$share_format = $share_format ?? $default_share_format;
 
 		$excerpt_length = $this->settings->setting( 'post_excerpt_length' );
 

@@ -67,7 +67,7 @@ class Suggestions_Page extends Page {
 	}
 
 	private function redirect( array $data ): void {
-		wp_redirect( add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-suggestions' ) ) );
+		wp_safe_redirect( add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-suggestions' ) ) );
 	}
 
 	/**

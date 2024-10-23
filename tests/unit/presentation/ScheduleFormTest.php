@@ -227,7 +227,7 @@ class ScheduleFormTest extends TestCase {
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-schedules',
 			'wp_verify_nonce' => true,
-			'wp_redirect' => function(){ throw new \Exception('Exiting'); },
+			'wp_safe_redirect' => function(){ throw new \Exception('Exiting'); },
 		]);
 
 		$form = new Schedule_Form($scheduleRepositoryMock, $networkAccountRepoMock, $formValidatorMock, $factoryMock);
@@ -292,7 +292,7 @@ class ScheduleFormTest extends TestCase {
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-schedules',
 			'wp_verify_nonce' => true,
-			'wp_redirect' => function(){ throw new \Exception('Exiting'); },
+			'wp_safe_redirect' => function(){ throw new \Exception('Exiting'); },
 			'is_null' => false
 		]);
 
@@ -330,7 +330,7 @@ class ScheduleFormTest extends TestCase {
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-schedules',
 			'wp_verify_nonce' => true,
-			'wp_redirect' => function(){ throw new \Exception('Example error'); },
+			'wp_safe_redirect' => function(){ throw new \Exception('Example error'); },
 		]);
 
 		$form = new Schedule_Form($scheduleRepositoryMock, $networkAccountRepoMock, $formValidatorMock, $factoryMock);
@@ -421,7 +421,7 @@ class ScheduleFormTest extends TestCase {
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-schedules',
 			'wp_verify_nonce' => true,
-			'wp_redirect' => function(){
+			'wp_safe_redirect' => function(){
 				throw new \Exception('Exiting');
 			},
 		]);

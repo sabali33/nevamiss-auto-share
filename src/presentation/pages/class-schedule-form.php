@@ -394,7 +394,7 @@ class Schedule_Form extends Page {
 
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php' ) );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 	}
 
 	private function format_dates( array $data ): array {

@@ -81,7 +81,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			$code,
 			$this->client_id,
 			$this->secret,
-			urlencode( $this->redirect_url )
+			rawurlencode( $this->redirect_url )
 		);
 
 		$response = $this->request->post(
@@ -89,7 +89,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			array(
 				'headers' => array(
 					'Content-Type'  => 'application/x-www-form-urlencoded',
-					'Authorization' => 'Basic ' . base64_encode( $this->client_id . ':' . $this->secret ),
+					'Authorization' => 'Basic ' . base64_encode( $this->client_id . ':' . $this->secret ), // Encoding data to safely transmit over a network
 				),
 				'method'  => 'POST',
 				'timeout' => 45,

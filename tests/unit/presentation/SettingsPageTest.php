@@ -95,7 +95,7 @@ class SettingsPageTest extends TestCase
 			'admin_url' => 'https://sagani-site.ddev.site/wp-admin/',
 			'add_query_arg' => 'https://sagani-site.ddev.site/wp-admin/admin.php?page=nevamiss-settings',
 			'wp_verify_nonce' => true,
-			'wp_redirect' => function(){
+			'wp_safe_redirect' => function(){
 				throw new \Exception('Exiting');
 			},
 		]);

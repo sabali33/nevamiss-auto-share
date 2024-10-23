@@ -125,6 +125,6 @@ class Schedules_Page extends Page {
 
 	private function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php?page=schedules' ) );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 	}
 }

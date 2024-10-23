@@ -17,6 +17,6 @@ trait Row_Action_Trail {
 
 	private function redirect( array $args ): void {
 		$url = add_query_arg( $args, $this->page_home );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 	}
 }

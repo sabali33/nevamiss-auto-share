@@ -56,7 +56,7 @@ class Stats_Tab implements Tab_Interface, Bulk_Delete_Interface {
 			admin_url( 'admin.php?page=nevamiss-settings&tab=stats' )
 		);
 
-		wp_redirect( $redirect_url );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
 }

@@ -143,7 +143,7 @@ class Settings_Page extends Page {
 	}
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-settings&tab=general' ) );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 	}
 
 	public function bulk_delete() {
