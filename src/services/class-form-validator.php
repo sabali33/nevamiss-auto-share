@@ -32,11 +32,11 @@ class Form_Validator {
 			$this->errors[ $field ] = "The $field must be a number.";
 			return false;
 		}
-		if ( $min !== null && $value < $min ) {
+		if ( null !== $min && $value < $min ) {
 			$this->errors[ $field ] = "The $field must be at least $min.";
 			return false;
 		}
-		if ( $max !== null && $value > $max ) {
+		if ( null !== $max && $value > $max ) {
 			$this->errors[ $field ] = "The $field must be no more than $max.";
 			return false;
 		}

@@ -12,6 +12,8 @@ use Nevamiss\Services\Settings;
 
 class Linkedin_Client implements Network_Clients_Interface {
 	use Has_Credentials_Trait;
+	use Request_Parameter_Trait;
+
 	private ?string $client_id;
 	private string $redirect_url;
 	private ?string $secret;
@@ -24,8 +26,6 @@ class Linkedin_Client implements Network_Clients_Interface {
 	private array $scope;
 	private string $linkedin_version;
 	private string $root_api_wov;
-
-	use Request_Parameter_Trait;
 
 	public function __construct(
 		private Http_Request $request,
@@ -81,7 +81,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			$code,
 			$this->client_id,
 			$this->secret,
-			urlencode( $this->redirect_url )
+			rawurlencode( $this->redirect_url )
 		);
 
 		$response = $this->request->post(
@@ -89,7 +89,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			array(
 				'headers' => array(
 					'Content-Type'  => 'application/x-www-form-urlencoded',
-					'Authorization' => 'Basic ' . base64_encode( $this->client_id . ':' . $this->secret ),
+					'Authorization' => 'Basic ' . base64_encode( $this->client_id . ':' . $this->secret ), // Encoding data to safely transmit over a network
 				),
 				'method'  => 'POST',
 				'timeout' => 45,
@@ -123,7 +123,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 			array( 'timeout' => 45 )
 		);
 
-		if ( isset( $response['status'] ) && $response['status'] === 401 ) {
+		if ( isset( $response['status'] ) && 401 === $response['status'] ) {
 			throw new Exception( 'Access token revoked' );
 		}
 
@@ -176,7 +176,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 		if ( empty( $entities ) ) {
 			return $entities;
 		}
-		if ( isset( $entities['status'] ) && $entities['status'] === 401 ) {
+		if ( isset( $entities['status'] ) && 401 === $entities['status'] ) {
 			throw new Exception( esc_html( $entities['message'] ) );
 		}
 
@@ -213,7 +213,8 @@ class Linkedin_Client implements Network_Clients_Interface {
 	 * @throws Exception
 	 */
 	private function get_user_organizations_entities( string $token ): array {
-		if ( $orgs = get_transient( 'nevamiss_linkedin_organizations_entities' ) ) {
+		$orgs = get_transient( 'nevamiss_linkedin_organizations_entities' );
+		if ( $orgs ) {
 			return $orgs;
 		}
 		$endpoint = sprintf( '%s/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,roleAssignee~(localizedFirstName, localizedLastName), organization~(localizedName)))', $this->root_api );
@@ -332,7 +333,7 @@ class Linkedin_Client implements Network_Clients_Interface {
 				'title'            => $data['title'],
 				'thumbnail'        => $asset,
 				'source'           => $data['link'],
-				'description'      => $data['excerpt'] ?: 'An examplary living',
+				'description'      => $data['excerpt'],
 				'thumbnailAltText' => $data['title'],
 			),
 		);

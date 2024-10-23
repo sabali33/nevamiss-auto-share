@@ -68,7 +68,7 @@ class Schedule_Queue {
 			$override_sort = true;
 		}
 
-		if ( $updated_schedule->query_args()['orderby'] === 'none' ) {
+		if ( 'none' === $updated_schedule->query_args()['orderby'] ) {
 			$override_sort = false;
 		}
 		if ( ! $override_sort ) {
@@ -98,7 +98,7 @@ class Schedule_Queue {
 		}
 		$shared_posts = $schedule_queue->shared_posts_ids();
 
-		if ( in_array( $post_id, $shared_posts ) ) {
+		if ( in_array( $post_id, $shared_posts, true ) ) {
 			return;
 		}
 
@@ -115,7 +115,7 @@ class Schedule_Queue {
 		$sorted_all_posts_ids = array( ...$all_posts_ids, $post_to_remove );
 		$has_cycle_ended      = false;
 
-		if ( $shared_posts == $sorted_all_posts_ids ) {
+		if ( empty( array_diff( $shared_posts, $sorted_all_posts_ids ) ) ) {
 			$has_cycle_ended = true;
 			$shared_posts    = null;
 			$cycles          = $schedule_queue->cycles() + 1;
@@ -165,7 +165,7 @@ class Schedule_Queue {
 				break;
 			case 'modified_date':
 				$orderby = 'modified_date';
-
+				break;
 			default:
 				$orderby = 'ID';
 		}
@@ -187,7 +187,7 @@ class Schedule_Queue {
 		$unshared_posts = array_filter(
 			$post_ids,
 			function ( $post_id ) use ( $shared_posts ) {
-				return ! in_array( $post_id, $shared_posts );
+				return ! in_array( $post_id, $shared_posts, true );
 			}
 		);
 
@@ -206,7 +206,7 @@ class Schedule_Queue {
 		$new_posts_ids = array_filter(
 			$post_ids,
 			function ( $post_id ) use ( $post_ids_in_queue ) {
-				return ! in_array( $post_id, $post_ids_in_queue );
+				return ! in_array( $post_id, $post_ids_in_queue, true );
 			}
 		);
 
@@ -328,10 +328,9 @@ class Schedule_Queue {
 
 		$time_units['month'] = $months;
 
-		if ( $remaining_posts === 0 ) {
-
-			$format = "{$date->date_format()} @ {$date->time_format()}";
-			$time_units['finish_date'] = $date->format($format);
+		if ( 0 === $remaining_posts ) {
+			$format                    = "{$date->date_format()} @ {$date->time_format()}";
+			$time_units['finish_date'] = $date->format( $format );
 
 			return array_merge( $time_units, $this->no_lower_time_units( $time_units ) );
 		}
@@ -442,7 +441,7 @@ class Schedule_Queue {
 		if ( $days_from_week && ! $time_units['month'] ) {
 			$time_units['day'] = $days_from_week;
 		}
-		if ( $remaining_posts === 0 ) {
+		if ( 0 === $remaining_posts ) {
 			return $this->exact_end_date( $date, $time_units['day'], $posting_times[0] );
 		}
 
@@ -482,7 +481,7 @@ class Schedule_Queue {
 
 		$remaining_posts = $posts_count % $number_of_posting_per_day;
 
-		if ( $remaining_posts === 0 ) {
+		if ( 0 === $remaining_posts ) {
 			return $this->exact_end_date( $date, $time_units['day'], $posting_times[0] );
 		}
 

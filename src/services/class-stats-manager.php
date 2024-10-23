@@ -21,7 +21,7 @@ class Stats_Manager {
 			'status' => $status
 		] = $args;
 
-		if ( $status === 'error' ) {
+		if ( 'error' === $status ) {
 			return;
 		}
 

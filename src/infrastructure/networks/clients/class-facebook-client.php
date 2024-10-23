@@ -11,12 +11,13 @@ use Nevamiss\Services\Http_Request;
 
 class Facebook_Client implements Network_Clients_Interface {
 	use Has_Credentials_Trait;
+	use Request_Parameter_Trait;
+
 	private string $auth_dialog;
 	private string $root_url;
 	private string $auth_url;
 	private string $root_url_versioned;
 
-	use Request_Parameter_Trait;
 
 	/**
 	 * @param array{client_id: string, redirect_url: mixed, client_secret: string} $credentials

@@ -5,9 +5,7 @@ namespace Nevamiss\Application;
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Inpsyde\Modularity\Module\ServiceModule;
-use Nevamiss\Application\Compatibility\Version_Dependency_Provider;
 use Nevamiss\Application\Post_Query\Query;
-use Nevamiss\Domain\Repositories\Schedule_Repository;
 use Nevamiss\Services\Settings;
 use Nevamiss\Services\WP_Cron_Service;
 use Psr\Container\ContainerExceptionInterface;
@@ -21,18 +19,17 @@ class Application_Module implements ServiceModule, ExecutableModule {
 
 	public function services(): array {
 		return array(
-			DB::class                          => static function () {
+			DB::class        => static function () {
 				global $wpdb;
 				return new DB( $wpdb );
 			},
-			Uninstall::class                   => static fn( ContainerInterface $container ) => new Uninstall(
+			Uninstall::class => static fn( ContainerInterface $container ) => new Uninstall(
 				$container->get( DB::class ),
 				$container->get( Settings::class ),
 				$container->get( WP_Cron_Service::class ),
 			),
-			Query::class                       => fn() => new Query( new \WP_Query() ),
-			Assets::class                      => fn() => new Assets(),
-			Version_Dependency_Provider::class => fn() => new Version_Dependency_Provider(),
+			Query::class     => fn() => new Query( new \WP_Query() ),
+			Assets::class    => fn() => new Assets(),
 		);
 	}
 

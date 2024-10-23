@@ -85,7 +85,7 @@ class Schedules_Table_List extends \WP_List_Table {
 
 					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . esc_html( $title ) . "</option>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
-				echo "\t" . "</optgroup>\n";
+				echo '\t' . '</optgroup>\n';
 			} else {
 				$class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
 
@@ -293,7 +293,8 @@ class Schedules_Table_List extends \WP_List_Table {
 			if ( $value > 0 ) {
 				$parts[] = sprintf( $this->translate( $unit, (int) $value ), $value );
 			} elseif ( ! empty( $parts ) ) {
-				$parts[] = $parts[] = sprintf( $this->translate( $unit, 0 ), 0 );
+				/* translators: %s: A time formatting string such as month, day, hour or minute */
+				$parts[] = sprintf( $this->translate( $unit, 0 ), 0 );
 			}
 		}
 

@@ -6,7 +6,6 @@ namespace Nevamiss\Presentation\Tabs;
 use Nevamiss\Application\Not_Found_Exception;
 use Nevamiss\Domain\Factory\Factory;
 use Nevamiss\Infrastructure\Url_Shortner\Shortner_Collection;
-use Nevamiss\Infrastructure\Url_Shortner\URL_Shortner_Interface;
 use Nevamiss\Presentation\Components\Component;
 use Nevamiss\Presentation\Components\Input_Fields\Checkbox_Group;
 use Nevamiss\Presentation\Components\Input_Fields\Input;
@@ -118,7 +117,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'label'      => __( 'Enable Facebook', 'nevamiss' ),
 						'type'       => 'checkbox',
 						'value'      => 'facebook',
-						'checked'    => in_array( 'facebook', $network_api_keys['networks_to_post'] ),
+						'checked'    => in_array( 'facebook', $network_api_keys['networks_to_post'], true ),
 
 						'sub_fields' => array(
 							array(
@@ -128,7 +127,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['facebook']['client_id'] ?? '',
 								'placeholder' => __( 'Enter App ID', 'nevamiss' ),
 								'class'       => 'facebook-app-id',
-								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'], true ),
 
 							),
 							array(
@@ -138,7 +137,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['facebook']['client_secret'] ?? '',
 								'placeholder' => __( 'Enter App Secret', 'nevamiss' ),
 								'class'       => 'facebook-app-secret',
-								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'], true ),
 							),
 							array(
 								'name'        => 'facebook[app_configuration]',
@@ -147,7 +146,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['facebook']['app_configuration'] ?? '',
 								'placeholder' => __( 'Enter the App Configuration', 'nevamiss' ),
 								'class'       => 'facebook-app-configurat',
-								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'facebook', $network_api_keys['networks_to_post'], true ),
 							),
 						),
 					),
@@ -156,7 +155,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'label'      => __( 'Enable X', 'nevamiss' ),
 						'type'       => 'checkbox',
 						'value'      => 'x',
-						'checked'    => in_array( 'x', $network_api_keys['networks_to_post'] ),
+						'checked'    => in_array( 'x', $network_api_keys['networks_to_post'], true ),
 						'sub_fields' => array(
 							array(
 								'name'       => 'x[version]',
@@ -164,7 +163,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'type'       => 'radio',
 								'value'      => 'v1',
 								'checked'    => 'v1' === $network_api_keys['x']['version'],
-								'disabled'   => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
+								'disabled'   => ! in_array( 'x', $network_api_keys['networks_to_post'], true ),
 								'sub_fields' => array(
 									array(
 										'name'        => 'x[api_key]',
@@ -173,7 +172,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'value'       => $network_api_keys['x']['api_key'] ?? '',
 										'placeholder' => esc_html__( 'Enter API Key', 'nevamiss' ),
 										'class'       => 'x-api-key',
-										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'], true ) && 'v1' !== $network_api_keys['x']['version'],
 									),
 									array(
 										'name'        => 'x[api_secret]',
@@ -182,7 +181,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'value'       => $network_api_keys['x']['api_secret'] ?? '',
 										'placeholder' => __( 'Enter API Secret', 'nevamiss' ),
 										'class'       => 'x-api-secret',
-										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'], true ) && 'v1' !== $network_api_keys['x']['version'],
 									),
 									array(
 										'name'        => 'x[oauth_token]',
@@ -191,7 +190,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'value'       => $network_api_keys['x']['oauth_token'] ?? '',
 										'placeholder' => __( 'Enter Request Token', 'nevamiss' ),
 										'class'       => 'x-request-token',
-										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'], true ) && 'v1' !== $network_api_keys['x']['version'],
 									),
 									array(
 										'name'        => 'x[oauth_token_secret]',
@@ -200,7 +199,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'value'       => $network_api_keys['x']['oauth_token_secret'] ?? '',
 										'placeholder' => __( 'Enter Request Token Secret', 'nevamiss' ),
 										'class'       => 'x-request-token-secret',
-										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v1',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'], true ) && 'v1' !== $network_api_keys['x']['version'],
 									),
 								),
 							),
@@ -210,7 +209,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'type'       => 'radio',
 								'value'      => 'v2',
 								'checked'    => 'v2' === $network_api_keys['x']['version'],
-								'disabled'   => ! in_array( 'x', $network_api_keys['networks_to_post'] ),
+								'disabled'   => ! in_array( 'x', $network_api_keys['networks_to_post'], true ),
 								'sub_fields' => array(
 									array(
 										'name'        => 'x[client_id]',
@@ -219,7 +218,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'value'       => $network_api_keys['x']['client_id'] ?? '',
 										'placeholder' => __( 'Enter Client ID', 'nevamiss' ),
 										'class'       => 'x-client-id',
-										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v2',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'], true ) && 'v2' !== $network_api_keys['x']['version'],
 
 									),
 									array(
@@ -229,7 +228,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 										'value'       => $network_api_keys['x']['client_secret'] ?? '',
 										'placeholder' => __( 'Enter Client Secret', 'nevamiss' ),
 										'class'       => 'x-client-secret',
-										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'] ) && $network_api_keys['x']['version'] !== 'v2',
+										'disabled'    => ! in_array( 'x', $network_api_keys['networks_to_post'], true ) && 'v2' !== $network_api_keys['x']['version'],
 									),
 								),
 							),
@@ -241,7 +240,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'label'      => __( 'Enable Linkedin', 'nevamiss' ),
 						'type'       => 'checkbox',
 						'value'      => 'linkedin',
-						'checked'    => in_array( 'linkedin', $network_api_keys['networks_to_post'] ),
+						'checked'    => in_array( 'linkedin', $network_api_keys['networks_to_post'], true ),
 						'sub_fields' => array(
 							array(
 								'name'        => 'linkedin[client_id]',
@@ -250,7 +249,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['linkedin']['client_id'] ?? '',
 								'placeholder' => __( 'Enter Client ID', 'nevamiss' ),
 								'class'       => 'linkedin-client-id',
-								'disabled'    => ! in_array( 'linkedin', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'linkedin', $network_api_keys['networks_to_post'], true ),
 
 							),
 							array(
@@ -260,7 +259,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['linkedin']['client_secret'] ?? '',
 								'placeholder' => __( 'Enter Client Secret', 'nevamiss' ),
 								'class'       => 'linkedin-client-secret',
-								'disabled'    => ! in_array( 'linkedin', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'linkedin', $network_api_keys['networks_to_post'], true ),
 							),
 						),
 					),
@@ -269,7 +268,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 						'label'      => __( 'Enable Instagram', 'nevamiss' ),
 						'type'       => 'checkbox',
 						'value'      => 'instagram',
-						'checked'    => in_array( 'instagram', $network_api_keys['networks_to_post'] ),
+						'checked'    => in_array( 'instagram', $network_api_keys['networks_to_post'], true ),
 						'sub_fields' => array(
 							array(
 								'name'        => 'instagram[client_id]',
@@ -278,7 +277,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['instagram']['client_id'] ?? '',
 								'placeholder' => __( 'Enter Client ID', 'nevamiss' ),
 								'class'       => 'instagram-client-id',
-								'disabled'    => ! in_array( 'instagram', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'instagram', $network_api_keys['networks_to_post'], true ),
 
 							),
 							array(
@@ -288,7 +287,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 								'value'       => $network_api_keys['instagram']['client_secret'] ?? '',
 								'placeholder' => __( 'Enter Client Secret', 'nevamiss' ),
 								'class'       => 'instagram-client-secret',
-								'disabled'    => ! in_array( 'instagram', $network_api_keys['networks_to_post'] ),
+								'disabled'    => ! in_array( 'instagram', $network_api_keys['networks_to_post'], true ),
 							),
 						),
 					),
@@ -318,7 +317,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 				),
 			),
 		);
-		return apply_filters( 'nevamiss-settings-fields', $fields, $settings );
+		return apply_filters( 'nevamiss_settings_fields', $fields, $settings );
 	}
 
 	/**
@@ -454,7 +453,7 @@ class General_Tab implements Tab_Interface, Section_Interface {
 	 */
 	private function default_values(): array {
 		return apply_filters(
-			'nevamiss-default-settings-values',
+			'nevamiss_default_settings_values',
 			array(
 				'networks_to_post'    => array( 'facebook', 'x' ),
 				'facebook'            => array(

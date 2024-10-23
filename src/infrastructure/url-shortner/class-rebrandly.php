@@ -47,7 +47,7 @@ class Rebrandly implements URL_Shortner_Interface {
 			)
 		);
 
-		$status = $response['status'] === 'active';
+		$status = 'active' === $response['status'];
 
 		return new Url_Shortner_Response( $response['shortUrl'], $response['id'], $status, $response['isPublic'] );
 	}

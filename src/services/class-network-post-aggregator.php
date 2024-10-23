@@ -73,36 +73,36 @@ class Network_Post_Aggregator {
 	 * @throws Exception
 	 */
 	private function format_posting_times( array $upcoming_data ): array {
-		return array_map(/**
-		 * @throws Exception
-		 */            function ( array $data ) {
+		return array_map(
+			function ( array $data ) {
 
-						$posting_times = array_map(
-							function ( $post_time ) {
-								$date_string = Date::timestamp_to_date( $post_time );
+				$posting_times = array_map(
+					function ( $post_time ) {
+						$date_string = Date::timestamp_to_date( $post_time );
 
-								$date = Date::create_from_format( $date_string, 'Y-m-d H:i:s' );
+						$date = Date::create_from_format( $date_string, 'Y-m-d H:i:s' );
 
-								$time_diff = Date::now()->diff( $date );
+						$time_diff = Date::now()->diff( $date );
 
-								if ( $time_diff->d < 1 ) {
-										$human_time = human_time_diff( Date::now()->timestamp(), $date->timestamp() );
-										/* translators: %s: Human readable time */
-										return sprintf( esc_html__( 'Posting in %s', 'nevamiss' ), $human_time );
-								}
-								if ( $time_diff->d === 1 ) {
-										/* translators: %s: Human readable time */
-										return sprintf( esc_html__( 'Posting Tomorrow @ %s', 'nevamiss' ), $date->format( $date->time_format() ) );
-								}
+						if ( $time_diff->d < 1 ) {
+								$human_time = human_time_diff( Date::now()->timestamp(), $date->timestamp() );
+								/* translators: %s: Human readable time */
+								return sprintf( esc_html__( 'Posting in %s', 'nevamiss' ), $human_time );
+						}
+						if ( 1 === $time_diff->d ) {
+								/* translators: %s: Human readable time */
+								return sprintf( esc_html__( 'Posting Tomorrow @ %s', 'nevamiss' ), $date->format( $date->time_format() ) );
+						}
 
-								return $date->format( $date->full_wp_date_format() );
-							},
-							$data['posting_times']
-						);
+						return $date->format( $date->full_wp_date_format() );
+					},
+					$data['posting_times']
+				);
 
-						$data['posting_times'] = $posting_times;
-						return $data;
-            },
+				$data['posting_times'] = $posting_times;
+
+				return $data;
+			},
 			$upcoming_data
 		);
 	}

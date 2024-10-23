@@ -18,7 +18,7 @@ trait Repository_Common_Trait {
 
 		foreach ( $data as $key => $value ) {
 
-			if ( ! in_array( $key, self::ALLOW_TABLE_COLUMNS ) ) {
+			if ( ! in_array( $key, self::ALLOW_TABLE_COLUMNS, true ) ) {
 				continue;
 			}
 

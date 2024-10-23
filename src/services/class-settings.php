@@ -44,12 +44,12 @@ class Settings {
 	public function network_credentials( string $network_slug ): array {
 
 		$network_settings = $this->setting( $network_slug );
-		return $network_settings ?: array();
+		return $network_settings ? $network_settings : array();
 	}
 
 	public function enabled_networks(): array {
 		$enabled_settings = $this->setting( 'networks_to_post' );
-		return $enabled_settings ?: array();
+		return $enabled_settings ? $enabled_settings : array();
 	}
 
 	public function section_settings( $section ): array|null {
@@ -58,7 +58,7 @@ class Settings {
 
 	public function linkedin_content_type(): string {
 		$content_type = $this->setting( 'nevamiss_linkedin_content_type' );
-		return $content_type ?: 'article';
+		return $content_type ? $content_type : 'article';
 	}
 
 	public function repeat_cycle() {
@@ -87,7 +87,8 @@ class Settings {
 	}
 
 	public function url_shortner(): string {
-		return $this->setting( 'url_shortner_client' ) ?: 'rebrandly';
+		$shortner = $this->setting( 'url_shortner_client' );
+		return $shortner ? $shortner : 'rebrandly';
 	}
 	public function url_shortner_credentials( string $id = Rebrandly::REBRANDLY ): array {
 		$url_shortner_client = $this->url_shortner();

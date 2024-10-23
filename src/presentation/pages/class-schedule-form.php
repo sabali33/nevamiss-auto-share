@@ -299,7 +299,7 @@ class Schedule_Form extends Page {
 			30 => array( 4, 6, 9, 11 ),
 		);
 		foreach ( $total_days_months as $day => $months ) {
-			if ( in_array( (int) $month, $months ) ) {
+			if ( in_array( (int) $month, $months, true ) ) {
 				return $day;
 			}
 		}
@@ -394,7 +394,7 @@ class Schedule_Form extends Page {
 
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php' ) );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 	}
 
 	private function format_dates( array $data ): array {
@@ -410,7 +410,7 @@ class Schedule_Form extends Page {
 
 			['minutes' => $minutes, 'hours' => $hours ] = $day_time;
 
-			if ( $key === 'daily_times' ) {
+			if ( 'daily_times' === $key ) {
 				$formatted_times = $this->format_daily_times( $hours, $minutes );
 				$data[ $key ]    = $this->ensure_unique_date( $formatted_times );
 
@@ -464,16 +464,16 @@ class Schedule_Form extends Page {
 		return $data;
 	}
 
-	private function sanitize_validate(  ): array {
+	private function sanitize_validate(): array {
 		$validated_data = array();
 
 		foreach ( $this->schedule_repository->allow_columns() as $key ) {
 
-			if ( !isset($_POST[$key]) && ! $this->schedule ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( ! isset( $_POST[ $key ] ) && ! $this->schedule ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				continue;
 			}
 
-			$validated_data[ $key ] = $this->sanitize_validation_func( $key )( wp_unslash($_POST[$key] )); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$validated_data[ $key ] = $this->sanitize_validation_func( $key )( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
 		// Make sure either of the fields is not null
@@ -648,7 +648,7 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->daily_times() as $index => $time ) {
-			$last_field = $index === ( count( $this->schedule->daily_times() ) - 1 );
+			$last_field = ( count( $this->schedule->daily_times() ) - 1 ) === $index;
 			$fields[]   = array(
 				'name'              => 'daily_times[hours][]',
 				'value'             => $time['hour'],
@@ -720,7 +720,7 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->weekly_times() as $index => $week_time ) {
-			$last_field = $index === ( count( $this->schedule->weekly_times() ) - 1 );
+			$last_field = ( count( $this->schedule->weekly_times() ) - 1 ) === $index;
 			$fields[]   = array(
 				'name'              => 'weekly_times[days][]',
 				'value'             => $week_time['day'],
@@ -803,7 +803,7 @@ class Schedule_Form extends Page {
 		$fields = array();
 
 		foreach ( $this->schedule->monthly_times() as $index => $monthly_time ) {
-			$last_field = $index === ( count( $this->schedule->monthly_times() ) - 1 );
+			$last_field = ( count( $this->schedule->monthly_times() ) - 1 ) === $index;
 			$fields[]   = array(
 				'name'              => 'monthly_times[days][]',
 				'value'             => $monthly_time['day'],

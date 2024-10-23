@@ -90,7 +90,7 @@ class Network_Accounts_Tab implements Tab_Interface, Bulk_Delete_Interface {
 			admin_url( 'admin.php?page=nevamiss-settings&tab=network-accounts' )
 		);
 
-		wp_redirect( $redirect_url );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
 }

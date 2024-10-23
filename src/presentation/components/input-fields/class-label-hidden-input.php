@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Nevamiss\Presentation\Components\Input_Fields;
 
-use Nevamiss\Presentation\Components\Renderable;
-
 class Label_Hidden_Input extends Input {
 
 	public function render( $attributes = array() ): string {

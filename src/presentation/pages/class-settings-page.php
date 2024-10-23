@@ -72,7 +72,7 @@ class Settings_Page extends Page {
 
 		$data = $this->sanitize_data();
 
-		if(!$data){
+		if ( ! $data ) {
 			$this->redirect(
 				array(
 					'status'  => 'error',
@@ -88,7 +88,7 @@ class Settings_Page extends Page {
 		if ( ! $settings ) {
 			update_option( self::GENERAL_SETTINGS, array( $section => $data ) );
 			$this->redirect(
-				$this->success_message($section)
+				$this->success_message( $section )
 			);
 			exit;
 		}
@@ -98,7 +98,7 @@ class Settings_Page extends Page {
 		update_option( self::GENERAL_SETTINGS, $settings );
 
 		$this->redirect(
-			$this->success_message($section)
+			$this->success_message( $section )
 		);
 
 		exit;
@@ -143,7 +143,7 @@ class Settings_Page extends Page {
 	}
 	public function redirect( array $data ): void {
 		$url = add_query_arg( $data, admin_url( 'admin.php?page=nevamiss-settings&tab=general' ) );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 	}
 
 	public function bulk_delete() {
@@ -160,35 +160,34 @@ class Settings_Page extends Page {
 	/**
 	 * @return array|false
 	 */
-	private function sanitize_data(): array|false
-	{
-		if(!isset($_POST['section'])){
+	private function sanitize_data(): array|false {
+		if ( ! isset( $_POST['section'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return false;
 		}
 		$schema = apply_filters(
-			'nevamiss-settings-schema',
-			$this->post_keys(sanitize_text_field(wp_unslash($_POST['section']))) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			'nevamiss_settings_schema',
+			$this->post_keys( sanitize_text_field( wp_unslash( $_POST['section'] ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		);
 
 		$data = array();
-		foreach ($schema as $key => $value) {
+		foreach ( $schema as $key => $value ) {
 			['type' => $type] = $value;
 
-			if (!isset($_POST[$key])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-				$data[$key] = $this->translate_data_type($type);
+			if ( ! isset( $_POST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$data[ $key ] = $this->translate_data_type( $type );
 				continue;
 			}
-			if ($_POST[$key] === 'on') { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-				$data[$key] = 1;
+			if ( 'on' === $_POST[ $key ] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$data[ $key ] = 1;
 				continue;
 			}
-			if (is_string($_POST[$key])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-				$data[$key] = sanitize_text_field(wp_unslash($_POST[$key])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( is_string( $_POST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$data[ $key ] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				continue;
 			}
 
-			$data[$key] = map_deep(
-				wp_unslash($_POST[$key]), // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$data[ $key ] = map_deep(
+				wp_unslash( $_POST[ $key ] ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				'sanitize_text_field',
 			);
 
@@ -200,11 +199,10 @@ class Settings_Page extends Page {
 	 * @param string|null $section
 	 * @return array
 	 */
-	private function success_message(?string $section): array
-	{
+	private function success_message( ?string $section ): array {
 		return array(
-			'status' => 'success',
-			'message' => __('Settings saved!', 'nevamiss'),
+			'status'  => 'success',
+			'message' => __( 'Settings saved!', 'nevamiss' ),
 			'section' => $section,
 		);
 	}

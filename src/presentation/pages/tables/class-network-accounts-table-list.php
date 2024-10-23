@@ -199,11 +199,11 @@ class Network_Accounts_Table_List extends WP_List_Table {
 			return $classes;
 		}
 
-		if ( $interval->m === 0 && $interval->d < 10 ) {
+		if ( 0 === $interval->m && $interval->d < 10 ) {
 			$classes .= 'about-to-expire ';
 		}
 
-		if ( $interval->m === 0 && $interval->d === 1 && $interval->h < 12 ) {
+		if ( 0 === $interval->m && 1 === $interval->d && $interval->h < 12 ) {
 			$classes .= 'expiring-danger';
 		}
 

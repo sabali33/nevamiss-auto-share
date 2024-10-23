@@ -18,6 +18,8 @@ use function Nevamiss\factory;
 
 class X_Client implements Network_Clients_Interface {
 	use Has_Credentials_Trait;
+	use Request_Parameter_Trait;
+
 	private ?string $client_id;
 	private ?string $client_secret;
 	private string $redirect_url;
@@ -30,8 +32,6 @@ class X_Client implements Network_Clients_Interface {
 	 */
 	private mixed $version;
 
-	use Request_Parameter_Trait;
-
 	/**
 	 * @throws Not_Found_Exception
 	 * @throws NotFoundExceptionInterface
@@ -42,7 +42,7 @@ class X_Client implements Network_Clients_Interface {
 
 		$this->redirect_url         = admin_url( 'admin-post.php?action=x' );
 		$this->version              = $api_credentials['version'] ?? null;
-		$this->api_version_strategy = isset( $api_credentials['version'] ) && $api_credentials['version'] === 'v1' ?
+		$this->api_version_strategy = isset( $api_credentials['version'] ) && 'v1' === $api_credentials['version'] ?
 			factory()->new( X_Api_V1_Strategy::class, $this->request, $this->settings, $api_credentials ) :
 			factory()->new( X_Api_V2_Strategy::class, $this->request, $api_credentials );
 	}

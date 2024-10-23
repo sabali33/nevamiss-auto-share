@@ -104,7 +104,7 @@ class Network_Authenticator {
 			admin_url( 'admin.php?page=nevamiss-settings&tab=network-accounts' )
 		);
 
-		wp_redirect( $redirect_url );
+		wp_safe_redirect( $redirect_url );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Network_Authenticator {
 	 * @return string
 	 */
 	private function success_message( array $data ): string {
-		return urlencode( "{$data['name']} has successfully logged in to {$data['network_label']}!" );
+		return rawurlencode( "{$data['name']} has successfully logged in to {$data['network_label']}!" );
 	}
 
 	/**
