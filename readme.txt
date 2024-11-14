@@ -76,10 +76,16 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 - We intend to integrate AI to suggest captions for posts.
 - Create a UI interface where site managers can post custom content based on a category of posts.
 
-== Third Party Services ==
+== External services ==
 
-This plugin depends on APIs of third parties and for this reason we seek to make it clear which services
-and provide links to where their terms of usage can be found. They include:
+This plugin connects to APIs of third parties to provide the list of its features. In all cases it does so when
+the site administrator authorizes it. When it's authorized it saves the basic user data required to identify the account in the dashboard area.
+The basic information include the username or for full name, the remote account ID, an access token, and its expiry date. This information is used
+ to identify the account in the dashboard area and used to post the site content to those accounts when the user decides to share posts, and also
+ when a schedule is created to do so.
+For this reason we seek to make it clear which services and provide links to where their policies or terms of usage can be found.
+
+They include:
 
 = Rebrandly =
 API link:

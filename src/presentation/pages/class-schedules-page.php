@@ -103,11 +103,12 @@ class Schedules_Page extends Page {
 			);
 			exit;
 		}
-		$schedules = map_deep(
-			wp_unslash( $_GET['schedules'] ), //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			function ( mixed $schedule_id ) {
-				return (int) sanitize_text_field( $schedule_id );
-			}
+
+		$schedules = array_unique(
+			array_map(
+				'absint',
+				$_GET['schedules'] //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			)
 		);
 
 		foreach ( $schedules as $schedule ) {

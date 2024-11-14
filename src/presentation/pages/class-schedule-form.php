@@ -495,6 +495,7 @@ class Schedule_Form extends Page {
 			'schedule_name'     => function ( ?string $schedule_name ) {
 
 				$this->validator->validate_string( 'schedule_name', $schedule_name, 4 );
+
 				return $this->validator->sanitize_string( $schedule_name );
 			},
 			'repeat_frequency'  => function ( ?string $repeat_frequency ) {

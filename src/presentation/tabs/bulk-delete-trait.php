@@ -33,11 +33,11 @@ trait Bulk_Delete_Trait {
 			return;
 		}
 
-		$models = map_deep(
-			wp_unslash( $_GET[ $translated_model_name ] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			function ( mixed $model_id ) {
-				return (int) sanitize_text_field( $model_id );
-			},
+		$models = array_unique(
+			array_map(
+				'absint',
+				wp_unslash( $_GET[ $translated_model_name ] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			)
 		);
 
 		$results = array(

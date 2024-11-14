@@ -68,8 +68,9 @@ class Form_Validator {
 		return $date ? $date->format( $format ) : '';
 	}
 
-	public function sanitize_number( $value ) {
-		return filter_var( $value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+	public function sanitize_number( $value ): float|int
+	{
+		return absint($value);
 	}
 
 	public function sanitize_assoc_array_of_numbers( array $value ): array {
