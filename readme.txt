@@ -76,61 +76,95 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 - We intend to integrate AI to suggest captions for posts.
 - Create a UI interface where site managers can post custom content based on a category of posts.
 
-== External services ==
+== External Services ==
 
-This plugin connects to APIs of third parties to provide the list of its features. In all cases it does so when
-the site administrator authorizes it. When it's authorized it saves the basic user data required to identify the account in the dashboard area.
-The basic information include the username or for full name, the remote account ID, an access token, and its expiry date. This information is used
- to identify the account in the dashboard area and used to post the site content to those accounts when the user decides to share posts, and also
- when a schedule is created to do so.
-For this reason we seek to make it clear which services and provide links to where their policies or terms of usage can be found.
+This plugin connects to third-party APIs to provide its features. These connections occur only after explicit authorization by the site administrator. The plugin enables features such as posting content to social media accounts, creating short URLs, and retrieving user account details. Below is a comprehensive explanation of how the plugin interacts with these external services and ensures compliance with privacy and security standards.
 
-They include:
+### Data Collection and Handling
+The plugin collects and processes the following data to enable integration with external services:
+- **Usernames or full names**: Used for account identification.
+- **Remote account IDs**: Required for managing external accounts via the plugin.
+- **Access tokens and expiry dates**: Used for authentication and secure API communication.
 
-= Rebrandly =
-API link:
-[API link](https://api.rebrandly.com/v1/links). The API used to create short urls for posting to social media accounts.
+This data is:
+1. Stored securely in the WordPress database, encrypted when applicable.
+2. Used solely to perform authorized actions, such as posting content or scheduling tasks.
+3. Removed when the user revokes authorization or deletes the plugin.
 
-[Terms of Service](https://www.rebrandly.com/terms-conditions)
+The plugin does not collect or share any additional data beyond what is required to facilitate its features.
 
-= X =
-APIs links:
-[API link version 2](https://api.linkedin.com/v2), An alternative version 2 api link used to authorize and posts contents
-[API link version 1](https://upload.twitter.com/1.1) X version 1 API that is used to upload media files,
-[API version 2 link](https://api.twitter.com/2) X version 2 API used to authorize and make text posts.,
-[API version 2 root link](https://api.x.com/) API version 2 link, used to authorize and posts contents.
-[API authorize link](https://twitter.com/i/oauth2/authorize) Used to create authorization link.
-The terms of services for a developer and non-developer are [developer](https://developer.x.com/en/developer-terms/agreement-and-policy),
-[general x user](https://x.com/en/tos). And here is X privacy [policy](https://x.com/en/privacy)
+### User Consent and Privacy
+- The plugin requires **explicit user authorization** before connecting to any external service. Users are presented with a consent screen detailing:
+  - The purpose of the connection.
+  - The data that will be shared.
+  - Links to the external service’s privacy policy.
+- No data is transmitted to third-party services without user consent.
+- Users can revoke access at any time via the plugin’s settings. Upon revocation, all related data is securely deleted.
 
-= Facebook =
-API links:
-[Facebook API link](https://graph.facebook.com/) - Used to authorize, retrieve user account(s) and post to these accounts.
-[Facebook API authorization link](https://www.facebook.com/v20.0/dialog/oauth) - Used to create authorize link.
-[Facebook API authorization link](https://graph.facebook.com/v20.0/oauth/access_token) - Used to retrieve user access token.
-[Terms of Service](https://developers.facebook.com/terms/dfc_platform_terms/),
-[Privacy Policy](https://developers.facebook.com/devpolicy/),
+The plugin complies with global privacy regulations, including GDPR and CCPA. It minimizes data collection and ensures that users can exercise their rights to data access, correction, and deletion.
 
-= Instagram =
-API links: [API authorize link](https://www.instagram.com/oauth/authorize) - Use to create authorization link,
-[API access token link](https://api.instagram.com/oauth/access_token) - Used to retrieve access token after user consents to log in dialog,
-[API link](https://graph.instagram.com) - Used to retrieve accounts and posting to those accounts,
-[Refresh token link](https://graph.instagram.com/refresh_access_token) - Used to refresh expired access tokens,
-[API link](https://graph.instagram.com/v20.0/) - A version of the above API link.
+### Security Practices
+- All API communications occur over secure HTTPS connections.
+- Access tokens are stored encrypted and are not exposed to unauthorized users.
+- Expired tokens are automatically removed, and users are prompted to reauthorize when necessary.
+- The plugin implements error handling for API requests, including retries and logging failures in a secure log file.
 
-[Terms of Service](https://developers.facebook.com/terms/dfc_platform_terms/).
-[Privacy Policy for Devs](https://developers.facebook.com/devpolicy/)
-[Privacy Policy](https://privacycenter.instagram.com/policy)
+### List of External Services
+Below are the external services used by the plugin, their APIs, and links to their respective terms and policies:
 
-= LinkedIn =
-API links:
-[LinkedIn web address](https://www.linkedin.com/), The website address of LinkedIn
-[API link](https://api.linkedin.com/), - The root API used to retrieve authorized accounts and posting to them.
-[API link](https://api.linkedin.com/v2), - API version 2 of the above link.
-[API link](https://www.linkedin.com/oauth/v2/authorization), - The root API used to authorize.
+#### Rebrandly
+- **Purpose**: Short URL generation for social media posts.
+- **API**: [API Link](https://api.rebrandly.com/v1/links)
+- **Terms of Service**: [Rebrandly Terms](https://www.rebrandly.com/terms-conditions)
+- **Privacy Policy**: [Rebrandly Privacy Policy](https://www.rebrandly.com/privacy-policy)
 
-[Terms of Service](https://www.linkedin.com/legal/l/api-terms-of-use), Terms of using API.
-[Privacy Policy](https://www.linkedin.com/legal/privacy-policy), A link to LinkedIn policy.
+#### X (formerly Twitter)
+- **Purpose**: Content posting, media upload, and account management.
+- **APIs**:  
+  - [Authorization](https://twitter.com/i/oauth2/authorize): Used for user login and token generation.  
+  - [Media Upload](https://upload.twitter.com/1.1): Used for uploading media files.  
+  - [Posting](https://api.twitter.com/2): Used for posting text-based content.  
+- **Terms of Service**: [Developer Terms](https://developer.x.com/en/developer-terms/agreement-and-policy)  
+- **Privacy Policy**: [X Privacy Policy](https://x.com/en/privacy)
+
+#### Facebook
+- **Purpose**: Content posting, account retrieval, and page management.
+- **APIs**:  
+  - [Authorization](https://www.facebook.com/v20.0/dialog/oauth): Used to initiate user login and consent.  
+  - [Access Tokens](https://graph.facebook.com/v20.0/oauth/access_token): Used to retrieve access tokens after user consent.  
+  - [Graph API](https://graph.facebook.com/): Used to manage user accounts and post content.  
+- **Terms of Service**: [Facebook Platform Terms](https://developers.facebook.com/terms/dfc_platform_terms/)  
+- **Privacy Policy**: [Facebook Privacy Policy](https://developers.facebook.com/devpolicy/)
+
+#### Instagram
+- **Purpose**: Content posting and account management.
+- **APIs**:  
+  - [Authorization](https://www.instagram.com/oauth/authorize): Used for user login and token generation.  
+  - [Access Tokens](https://api.instagram.com/oauth/access_token): Used to retrieve access tokens.  
+  - [Graph API](https://graph.instagram.com/): Used for posting content and retrieving account details.  
+- **Terms of Service**: [Instagram Platform Terms](https://developers.facebook.com/terms/dfc_platform_terms/)  
+- **Privacy Policies**:  
+  - [Developer Privacy Policy](https://developers.facebook.com/devpolicy/)  
+  - [General Instagram Privacy Policy](https://privacycenter.instagram.com/policy)
+
+#### LinkedIn
+- **Purpose**: Content posting and account management.
+- **APIs**:  
+  - [Authorization](https://www.linkedin.com/oauth/v2/authorization): Used to create login and consent flow.  
+  - [API Root](https://api.linkedin.com/): Used for accessing user data and posting content.  
+  - [Version 2 API](https://api.linkedin.com/v2): An updated version of the API.  
+- **Terms of Service**: [LinkedIn API Terms](https://www.linkedin.com/legal/l/api-terms-of-use)  
+- **Privacy Policy**: [LinkedIn Privacy Policy](https://www.linkedin.com/legal/privacy-policy)
+
+---
+
+### Plugin Privacy Policy
+This plugin provides a privacy policy section in the plugin’s settings page, summarizing:
+1. The data collected and its purpose.
+2. The list of external services used.
+3. User rights regarding data access, correction, and deletion.
+4. A direct link to the plugin documentation.
+
 
 ### When Does the Plugin Communicate with These Services?
 The plugin reaches out to the supported social media networks APIs in the following circumstances:
