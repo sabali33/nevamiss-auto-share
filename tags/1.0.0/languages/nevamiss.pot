@@ -1,0 +1,834 @@
+# Copyright (C) 2024 Eliasu Abraman
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Nevamiss Auto Share 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nevamiss\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-10-16T10:30:58+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: nevamiss\n"
+
+#. Plugin Name of the plugin
+msgid "Nevamiss Auto Share"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/nevamiss"
+msgstr ""
+
+#. Description of the plugin
+msgid "A WordPress plugin to share content to social media Networks"
+msgstr ""
+
+#. Author of the plugin
+msgid "Eliasu Abraman"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://saganithemes.com"
+msgstr ""
+
+#: resources/templates/general-settings.php:53
+msgid "Save"
+msgstr ""
+
+#: resources/templates/home.php:24
+msgid "Posting Overview"
+msgstr ""
+
+#: resources/templates/home.php:30
+msgid "Upcoming posts"
+msgstr ""
+
+#: resources/templates/home.php:40
+msgid "You can drag posts to re-order them. Yes they will post in that order."
+msgstr ""
+
+#: resources/templates/home.php:64
+msgid "Last posted"
+msgstr ""
+
+#: resources/templates/home.php:80
+msgid "Posted by"
+msgstr ""
+
+#: resources/templates/logs.php:27
+msgid "Search Logs"
+msgstr ""
+
+#: resources/templates/network-accounts.php:32
+#: resources/templates/stats.php:28
+msgid "Search Accounts"
+msgstr ""
+
+#. translators: %s: A link to the login page
+#: resources/templates/post-meta.php:24
+msgid "No Accounts created yet. <a href=\"%s\">Login to create one</a>"
+msgstr ""
+
+#. translators: %1$s: Account name %2$s: Network
+#: resources/templates/post-meta.php:50
+msgid "Share to this post %1$s(%2$s)"
+msgstr ""
+
+#: resources/templates/schedule-form.php:18
+msgid "Update"
+msgstr ""
+
+#: resources/templates/schedule-form.php:18
+msgid "Create"
+msgstr ""
+
+#: resources/templates/schedules.php:30
+msgid "Search Schedules"
+msgstr ""
+
+#: resources/templates/settings.php:25
+msgid "Settings"
+msgstr ""
+
+#: resources/templates/suggestions.php:22
+msgid "Suggestions/Feedback"
+msgstr ""
+
+#: resources/templates/suggestions.php:26
+msgid "Your name"
+msgstr ""
+
+#: resources/templates/suggestions.php:26
+msgid "Optional"
+msgstr ""
+
+#: resources/templates/suggestions.php:30
+msgid "Email"
+msgstr ""
+
+#: resources/templates/suggestions.php:34
+msgid "Your Suggestion:"
+msgstr ""
+
+#: resources/templates/suggestions.php:39
+msgid "Submit"
+msgstr ""
+
+#: resources/templates/upgrade.php:17
+msgid "** Premium Features **"
+msgstr ""
+
+#: resources/templates/upgrade.php:29
+msgid "Upgrade"
+msgstr ""
+
+#: resources/templates/upgrade.php:30
+msgid " or "
+msgstr ""
+
+#: resources/templates/upgrade.php:31
+msgid "Donate"
+msgstr ""
+
+#: src/application/class-assets.php:31
+msgid "Sorting..."
+msgstr ""
+
+#: src/application/class-assets.php:32
+msgid "Sorted"
+msgstr ""
+
+#: src/application/class-assets.php:33
+msgid "Failed to sort"
+msgstr ""
+
+#. translators: %s: The class name
+#: src/domain/factory/class-factory.php:18
+msgid "class '%s' does not exist"
+msgstr ""
+
+#: src/infrastructure/networks/class-network-authenticator.php:124
+msgid "Not authorized"
+msgstr ""
+
+#: src/infrastructure/networks/clients/has-credentials-trait.php:16
+msgid "You need to set client ID and client secret."
+msgstr ""
+
+#: src/infrastructure/networks/clients/x-api-version-strategies/class-x-api-v2-strategy.php:142
+msgid "Unable to get user account"
+msgstr ""
+
+#: src/infrastructure/url-shortner/class-rebrandly.php:74
+msgid "Enable Rebrandly"
+msgstr ""
+
+#: src/infrastructure/url-shortner/class-rebrandly.php:82
+msgid "Rebrandly Api key"
+msgstr ""
+
+#: src/infrastructure/url-shortner/class-rebrandly.php:91
+msgid "Short Link"
+msgstr ""
+
+#: src/presentation/pages/class-auto-share-page.php:17
+#: src/presentation/post-meta/class-post-meta.php:28
+msgid "Auto Share"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:42
+msgid "Edit Schedule"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:43
+msgid "New Schedule"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:111
+msgid "X"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:125
+msgid "Add"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:163
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:60
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:72
+#: src/presentation/pages/tables/class-schedules-table-list.php:128
+#: src/presentation/pages/tables/class-schedules-table-list.php:141
+msgid "Name"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:176
+#: src/presentation/pages/tables/class-schedules-table-list.php:130
+msgid "Repeat Frequency"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:178
+msgid "None"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:179
+msgid "Daily"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:180
+msgid "Weekly"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:181
+#: src/services/class-wp-cron-service.php:22
+msgid "Monthly"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:190
+msgid "Start Date"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:206
+msgid "Network Tags"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:214
+#: src/presentation/pages/tables/class-schedules-table-list.php:131
+#: src/presentation/tabs/class-network-accounts-tab.php:33
+msgid "Network Accounts"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:225
+msgid "Number of post to share at a time"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:235
+msgid "Post Types"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:245
+msgid "Taxonomies"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:252
+msgid "Post IDs"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:259
+msgid "Sort posts by"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:327
+#: src/presentation/pages/class-schedules-page.php:91
+#: src/presentation/pages/class-suggestions-page.php:30
+msgid "Unauthorized"
+msgstr ""
+
+#. translators: %s: A link to schedules page
+#: src/presentation/pages/class-schedule-form.php:352
+msgid "Successfully updated the schedule <a href='%s'>back</a>"
+msgstr ""
+
+#. translators: %s: A link to schedules page
+#: src/presentation/pages/class-schedule-form.php:369
+msgid "Successfully created a schedule <a href='%s'>back</a>"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:603
+#: src/presentation/pages/class-schedule-form.php:616
+msgid "Select Date"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:631
+#: src/presentation/pages/class-schedule-form.php:658
+msgid "Hour"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:640
+#: src/presentation/pages/class-schedule-form.php:668
+#: src/presentation/pages/class-schedule-form.php:714
+#: src/presentation/pages/class-schedule-form.php:759
+#: src/presentation/pages/class-schedule-form.php:797
+#: src/presentation/pages/class-schedule-form.php:834
+msgid "Minute"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:687
+#: src/presentation/pages/class-schedule-form.php:731
+msgid "Weekly Times"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:690
+#: src/presentation/pages/class-schedule-form.php:735
+msgid "Monday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:691
+#: src/presentation/pages/class-schedule-form.php:736
+msgid "Tuesday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:692
+#: src/presentation/pages/class-schedule-form.php:737
+msgid "Wednesday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:693
+#: src/presentation/pages/class-schedule-form.php:738
+msgid "Thursday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:694
+#: src/presentation/pages/class-schedule-form.php:739
+msgid "Friday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:695
+#: src/presentation/pages/class-schedule-form.php:740
+msgid "Saturday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:696
+#: src/presentation/pages/class-schedule-form.php:741
+msgid "Sunday"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:705
+#: src/presentation/pages/class-schedule-form.php:750
+#: src/presentation/pages/class-schedule-form.php:788
+#: src/presentation/pages/class-schedule-form.php:825
+msgid "at"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:779
+#: src/presentation/pages/class-schedule-form.php:815
+msgid "On day"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:845
+msgid "Newest"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:846
+msgid "Title"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:847
+msgid "Oldest"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:848
+msgid "Modified Date"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:849
+msgid "Comments Count"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:850
+msgid "Random"
+msgstr ""
+
+#: src/presentation/pages/class-schedule-form.php:853
+msgid "Keep as ordered in queue"
+msgstr ""
+
+#: src/presentation/pages/class-schedules-page.php:35
+msgid "Add Schedule"
+msgstr ""
+
+#: src/presentation/pages/class-schedules-page.php:114
+msgid "Schedule Successfully Deleted"
+msgstr ""
+
+#: src/presentation/pages/class-settings-page.php:89
+msgid "Settings saved!"
+msgstr ""
+
+#: src/presentation/pages/class-suggestions-page.php:15
+msgid "Suggestions"
+msgstr ""
+
+#: src/presentation/pages/class-suggestions-page.php:42
+msgid "A suggestion is required"
+msgstr ""
+
+#: src/presentation/pages/class-suggestions-page.php:51
+msgid "Thanks for your suggestion"
+msgstr ""
+
+#: src/presentation/pages/tables/class-logs-table-list.php:47
+msgid "No Logs yet"
+msgstr ""
+
+#: src/presentation/pages/tables/class-logs-table-list.php:51
+msgid "Message"
+msgstr ""
+
+#: src/presentation/pages/tables/class-logs-table-list.php:52
+#: src/presentation/pages/tables/class-stats-table-list.php:53
+msgid "Schedule ID"
+msgstr ""
+
+#: src/presentation/pages/tables/class-logs-table-list.php:53
+#: src/presentation/pages/tables/class-logs-table-list.php:59
+#: src/presentation/pages/tables/class-stats-table-list.php:55
+#: src/presentation/pages/tables/class-stats-table-list.php:61
+msgid "Shared Date"
+msgstr ""
+
+#: src/presentation/pages/tables/class-logs-table-list.php:59
+#: src/presentation/pages/tables/class-stats-table-list.php:61
+msgid "Table ordered by Posted Date."
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:48
+msgid "No Accounts found, login above"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:61
+msgid "Network"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:62
+msgid "Remote Account ID"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:63
+msgid "Parent Remote ID"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:64
+msgid "Token Expires In"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:65
+msgid "Login At"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:72
+#: src/presentation/pages/tables/class-schedules-table-list.php:141
+msgid "Table ordered by Name."
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:73
+#: src/presentation/pages/tables/class-schedules-table-list.php:142
+msgid "Created Date"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:73
+#: src/presentation/pages/tables/class-schedules-table-list.php:142
+msgid "Table ordered by Created Date."
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:74
+msgid "Expire Date"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:74
+msgid "Table ordered by expire date"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:117
+msgid "No Expiry Date"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:135
+msgid "Expired since"
+msgstr ""
+
+#. translators: %s: Months count
+#. translators: %s: A time formatting string such as month, day, hour or minute
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:141
+#: src/presentation/pages/tables/class-schedules-table-list.php:352
+msgid "%s month"
+msgid_plural "%s months"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: Days count
+#. translators: %s: A time formatting string such as month, day, hour or minute
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:147
+#: src/presentation/pages/tables/class-schedules-table-list.php:350
+msgid "%s day"
+msgid_plural "%s days"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: Hours count
+#. translators: %s: A time formatting string such as month, day, hour or minute
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:153
+#: src/presentation/pages/tables/class-schedules-table-list.php:354
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: Minutes count
+#. translators: %s: A time formatting string such as month, day, hour or minute
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:157
+#: src/presentation/pages/tables/class-schedules-table-list.php:356
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %1$s: Style class %2$s: Output string %3$s: Expire label
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:179
+msgid "<span class=\"%1$s\">%3$s %2$s ago</span>"
+msgstr ""
+
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:222
+#: src/presentation/pages/tables/class-network-accounts-table-list.php:231
+msgid "Logout"
+msgstr ""
+
+#. translators: Hidden accessibility text.
+#: src/presentation/pages/tables/class-schedules-table-list.php:74
+msgid "Select bulk action"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:77
+msgid "Bulk actions"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:98
+msgid "Apply"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:115
+msgid "No Schedules found."
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:129
+msgid "Start Time"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:132
+msgid "Next Post"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:133
+msgid "Last Shared Posts"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:134
+msgid "Estimated Completion date"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:274
+msgid "Will complete a cycle in "
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:284
+msgid "No time estimates, too close"
+msgstr ""
+
+#. translators: %s: A finish date for the schedule
+#: src/presentation/pages/tables/class-schedules-table-list.php:288
+msgid " ( on %s)"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:322
+msgid "Edit"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:328
+msgid "Share Next Posts Now"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:333
+#: src/presentation/pages/tables/class-stats-table-list.php:71
+#: src/presentation/pages/tables/class-stats-table-list.php:78
+#: src/presentation/pages/tables/table-list-trait.php:41
+msgid "Delete"
+msgstr ""
+
+#: src/presentation/pages/tables/class-schedules-table-list.php:339
+msgid "Unschedule"
+msgstr ""
+
+#: src/presentation/pages/tables/class-stats-table-list.php:47
+msgid "No data yet"
+msgstr ""
+
+#: src/presentation/pages/tables/class-stats-table-list.php:52
+msgid "Remote Post ID"
+msgstr ""
+
+#: src/presentation/pages/tables/class-stats-table-list.php:54
+msgid "Post ID"
+msgstr ""
+
+#: src/presentation/pages/tables/table-list-trait.php:33
+msgid "no label"
+msgstr ""
+
+#. translators: %s: An item name
+#: src/presentation/pages/tables/table-list-trait.php:57
+msgid "Select %s"
+msgstr ""
+
+#. translators: Hidden accessibility text. %s: Post title.
+#: src/presentation/pages/tables/table-list-trait.php:69
+msgid "&#8220;%s&#8221; is locked"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:34
+#: src/presentation/tabs/class-general-tab.php:74
+msgid "General"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:78
+msgid "Repeat when a schedule finishes a cycle"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:87
+msgid "Pause posting all schedules"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:94
+msgid "Keep data from this plugin on deactivation"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:101
+msgid "Log to:"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:106
+msgid "File"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:107
+msgid "Database"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:108
+msgid "Both file and database"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:114
+msgid "API Keys and Secrets"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:118
+msgid "Enable Facebook"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:126
+msgid "App ID"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:129
+msgid "Enter App ID"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:136
+msgid "App Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:139
+msgid "Enter App Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:145
+msgid "App Configuration"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:148
+msgid "Enter the App Configuration"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:156
+msgid "Enable X"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:163
+msgid "Enable API V1"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:171
+msgid "API Key"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:174
+msgid "Enter API Key"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:180
+msgid "API Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:183
+msgid "Enter API Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:189
+msgid "Request Token"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:192
+msgid "Enter Request Token"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:198
+msgid "Request Token Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:201
+msgid "Enter Request Token Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:209
+msgid "Enable API V2"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:217
+#: src/presentation/tabs/class-general-tab.php:248
+#: src/presentation/tabs/class-general-tab.php:276
+msgid "Client ID"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:220
+#: src/presentation/tabs/class-general-tab.php:251
+#: src/presentation/tabs/class-general-tab.php:279
+msgid "Enter Client ID"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:227
+#: src/presentation/tabs/class-general-tab.php:258
+#: src/presentation/tabs/class-general-tab.php:286
+msgid "Client Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:230
+#: src/presentation/tabs/class-general-tab.php:261
+#: src/presentation/tabs/class-general-tab.php:289
+msgid "Enter Client Secret"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:241
+msgid "Enable Linkedin"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:269
+msgid "Enable Instagram"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:307
+msgid "Post Settings"
+msgstr ""
+
+#: src/presentation/tabs/class-general-tab.php:311
+msgid "Share on publish:"
+msgstr ""
+
+#: src/presentation/tabs/class-logs-tab.php:24
+msgid "Logs"
+msgstr ""
+
+#. translators: %s: Social media network name
+#: src/presentation/tabs/class-network-accounts-tab.php:66
+msgid "Login to %s"
+msgstr ""
+
+#. translators: %s: Social media network name
+#: src/presentation/tabs/class-network-accounts-tab.php:72
+msgid "You need to setup %s account here"
+msgstr ""
+
+#: src/presentation/tabs/class-stats-tab.php:29
+msgid "Stats"
+msgstr ""
+
+#: src/presentation/tabs/class-upgrade-tab.php:24
+msgid "Become a pro member"
+msgstr ""
+
+#: src/services/class-ajax.php:41
+msgid "Unauthorised"
+msgstr ""
+
+#: src/services/class-ajax.php:57
+msgid "Invalid post IDs provided"
+msgstr ""
+
+#. translators: %s: Human readable time
+#: src/services/class-network-post-aggregator.php:91
+msgid "Posting in %s"
+msgstr ""
+
+#. translators: %s: Human readable time
+#: src/services/class-network-post-aggregator.php:95
+msgid "Posting Tomorrow @ %s"
+msgstr ""
+
+#. translators: %s: Schedule name
+#: src/services/class-schedule-queue.php:236
+msgid "No queues found for this schedule(%s)"
+msgstr ""
+
+#: src/services/class-url-shortner-manager.php:33
+msgid "The Shortner client is not registered!"
+msgstr ""
+
+#: src/services/row-action-handlers/class-accounts-row-action-handler.php:40
+msgid "Accounts Logged out"
+msgstr ""
+
+#: src/services/row-action-handlers/class-schedule-row-action-handler.php:45
+msgid "Schedule post shared"
+msgstr ""
+
+#: src/services/row-action-handlers/class-schedule-row-action-handler.php:81
+msgid "Schedule deleted"
+msgstr ""
+
+#: src/services/row-action-handlers/class-schedule-row-action-handler.php:111
+msgid "Unschedule cron"
+msgstr ""
+
+#: src/services/row-action-handlers/class-stat-row-action-handler.php:39
+msgid "Stats data row deleted"
+msgstr ""

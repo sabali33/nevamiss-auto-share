@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'type' => 'wordpress-plugin',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => 'eb61b91b0dee83bfa5b6dce84a00a737c0dea197',
+        'name' => 'zimbel/nevamiss',
+        'dev' => false,
+    ),
+    'versions' => array(
+        'inpsyde/modularity' => array(
+            'pretty_version' => '1.11.0',
+            'version' => '1.11.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../inpsyde/modularity',
+            'aliases' => array(),
+            'reference' => 'c79bb3682f55e1a2ece67f36e70d04fa2ab8c65d',
+            'dev_requirement' => false,
+        ),
+        'psr/container' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/container',
+            'aliases' => array(),
+            'reference' => 'c71ecc56dfe541dbd90c5360474fbc405f8d5963',
+            'dev_requirement' => false,
+        ),
+        'zimbel/nevamiss' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => 'eb61b91b0dee83bfa5b6dce84a00a737c0dea197',
+            'dev_requirement' => false,
+        ),
+    ),
+);

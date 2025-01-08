@@ -1,0 +1,47 @@
+{
+    "name": "zimbel/nevamiss",
+
+    "description": "A WordPress plugin to share content to social media Networks",
+
+    "authors": [
+        {
+            "name": "Eliasu Abraman",
+            "email": "abraman.e@gmail.com"
+        }
+    ],
+
+    "type": "wordpress-plugin",
+
+    "require": {
+        "inpsyde/modularity": "^1.8"
+    },
+
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.1",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "squizlabs/php_codesniffer": "^3.10",
+        "phpunit/phpunit": "^11.2",
+        "vimeo/psalm": "*",
+        "brain/monkey": "2.*",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
+    },
+
+    "autoload": {
+        "classmap": ["./src"]
+    },
+    "autoload-dev": {
+      "Nevamiss\\Tests\\": "./tests"
+    },
+
+    "license": "MIT",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "cs": "./vendor/bin/phpcs ./src --standard=WordPress",
+        "cbf": "./vendor/bin/phpcbf ./src --standard=WordPress",
+        "qa": "./vendor/bin/psalm"
+    }
+}
