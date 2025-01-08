@@ -7,7 +7,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: automation, autopost, auto-post, auto posts, posts, api, automatic, seo, social networks, socialnetwork, social networks, social network, 
 Social Share,Facebook Share, Post, X (Twitter) Share, Schedules, repost re-post, ai social share, ai content, ai posts, Linkedin, Instagram
 Tested up to: 6.6
-Stable tag: 1.0.0
+Stable tag: 1.0.4
 Requires PHP: 8.0
 Requires at least: 5.6
 

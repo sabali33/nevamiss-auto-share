@@ -14,6 +14,8 @@ class Instagram_Client implements Network_Clients_Interface {
 	use Request_Parameter_Trait;
 
 	private string $access_token_endpoint;
+	private string $root_auth;
+	private string $root_api;
 
 	public function __construct( private Http_Request $request, private array $credentials ) {
 		$this->root_auth             = 'https://www.instagram.com/oauth/authorize';
@@ -125,7 +127,7 @@ class Instagram_Client implements Network_Clients_Interface {
 	/**
 	 * @param Network_Account $account
 	 * @param string          $image
-	 * @return void
+	 * @return string
 	 * @throws \Exception
 	 */
 	private function media_container( Network_Account $account, string $image ): string {

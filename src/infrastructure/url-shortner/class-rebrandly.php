@@ -11,6 +11,7 @@ use Nevamiss\Services\Settings;
 class Rebrandly implements URL_Shortner_Interface {
 
 	const REBRANDLY = 'rebrandly';
+	private string $endpoint;
 
 	public function __construct( private Http_Request $http_request, private Settings $settings ) {
 		$this->endpoint = 'https://api.rebrandly.com/v1/links';

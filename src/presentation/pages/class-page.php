@@ -53,7 +53,7 @@ abstract class Page implements Renderable {
 		}
 
 		add_submenu_page(
-			$this->parent,
+			$this->parent ?? '',
 			$this->title,
 			$this->title,
 			'manage_options',

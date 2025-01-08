@@ -24,8 +24,8 @@ class X_Api_V2_Strategy implements X_Api_Version_Strategy {
 	use Request_Parameter_Trait;
 
 	public function __construct( private Http_Request $request, array $api_credentials ) {
-		$this->client_id     = $api_credentials['client_id'];
-		$this->client_secret = $api_credentials['client_secret'];
+		$this->client_id     = $api_credentials['client_id'] ?? '';
+		$this->client_secret = $api_credentials['client_secret'] ?? '';
 		$this->root_auth     = 'https://twitter.com/i/oauth2/authorize';
 		$this->root_api      = 'https://api.twitter.com/2';
 	}

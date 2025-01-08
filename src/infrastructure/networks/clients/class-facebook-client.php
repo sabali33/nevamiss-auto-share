@@ -17,6 +17,7 @@ class Facebook_Client implements Network_Clients_Interface {
 	private string $root_url;
 	private string $auth_url;
 	private string $root_url_versioned;
+	private array $scopes;
 
 
 	/**
