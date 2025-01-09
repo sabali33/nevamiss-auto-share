@@ -5,11 +5,11 @@ Donate link: https://wise.com/pay/me/eliasua
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: automation, autopost, auto-post, auto posts, posts, api, automatic, seo, social networks, socialnetwork, social networks, social network, 
-Social Share,Facebook Share, Post, X (Twitter) Share, Schedules, repost re-post, ai social share, ai content, ai posts, Linkedin, Instagram
-Tested up to: 6.6
-Stable tag: 1.0.4
-Requires PHP: 8.0
+Social Share,Facebook Share, Post, X Share, Schedules, repost re-post, ai social share, ai content, ai posts, Linkedin, Instagram 
 Requires at least: 5.6
+Tested up to: 6.7.1
+Stable tag: 1.0.5
+Requires PHP: 8.0
 
 This plugin allows site users to auto-share their site content to authorized social media accounts.
 
@@ -46,12 +46,6 @@ It requires configuration and authorization of the supported social media networ
 
 - Rebrandly
 
-== Screenshots ==
-
-1. This screenshot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Screenshots are stored in the /assets directory.
-2. This is the second screenshot
-
-
 == Frequently Asked Questions ==
 
 = Do I need API keys for each network? =
@@ -75,6 +69,7 @@ Absolutely. We intend to add support for Flickr, SnapChat, TikTok, VK, Weibo, Xi
 = What are the next features coming up? =
 
 - We intend to integrate AI to suggest captions for posts.
+
 - Create a UI interface where site managers can post custom content based on a category of posts.
 
 == External Services ==
@@ -172,3 +167,29 @@ The plugin reaches out to the supported social media networks APIs in the follow
 - When a user authenticates via their social media account to grant access.
 - When posting content on behalf of the user (through schedules).
 - When a user manually decides to instantly share a WordPress post to authorized social media accounts.
+- Create a UI interface where site managers can post custom content based on a category of posts.
+
+== Changelog ==
+= 1.0.5 =
+- Fix potential errors.
+
+= 1.0.4 =
+- Fix fatal errors.
+
+= 1.0.3 =
+- Correct tag version
+
+= 1.0.0 =
+
+== Upgrade Notice ==
+
+= 1.0.3 =
+
+Initial release
+
+== Screenshots ==
+1. What has been shared and coming to share are displayed at screenshot-1.(png|jpg|jpeg|gif).
+2. A list of created schedules are displayed in screenshot-2.(png|jpg|jpeg|gif)
+3. A list of authorized accounts are displayed in screenshot-3.(png|jpg|jpeg|gif)
+4. A list of database logs are displayed in screenshot-4.(png|jpg|jpeg|gif)
+
