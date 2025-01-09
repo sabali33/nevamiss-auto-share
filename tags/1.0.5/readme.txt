@@ -5,11 +5,11 @@ Donate link: https://wise.com/pay/me/eliasua
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: automation, autopost, auto-post, auto posts, posts, api, automatic, seo, social networks, socialnetwork, social networks, social network, 
-Social Share,Facebook Share, Post, X Share, Schedules, repost re-post, ai social share, ai content, ai posts, Linkedin, Instagram 
-Requires at least: 5.6
-Tested up to: 6.7.1
+Social Share,Facebook Share, Post, X Share, Schedules, repost re-post, ai social share, ai content, ai posts, Linkedin, Instagram
+Tested up to: 6.7
 Stable tag: 1.0.5
 Requires PHP: 8.0
+Requires at least: 5.6
 
 This plugin allows site users to auto-share their site content to authorized social media accounts.
 
