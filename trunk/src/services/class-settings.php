@@ -44,7 +44,13 @@ class Settings {
 	public function network_credentials( string $network_slug ): array {
 
 		$network_settings = $this->setting( $network_slug );
-		return $network_settings ? $network_settings : array();
+		return $network_settings ? $network_settings : array(
+			'client_id' => '', 
+			'client_secret' => '',
+			'api_key' => '',
+			'api_secret' => '',
+			'oauth_token_secret'
+		);
 	}
 
 	public function enabled_networks(): array {

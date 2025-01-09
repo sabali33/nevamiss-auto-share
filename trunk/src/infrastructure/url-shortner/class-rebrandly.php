@@ -31,7 +31,7 @@ class Rebrandly implements URL_Shortner_Interface {
 			array(
 				'headers' => array(
 					'accept'       => 'application/json',
-					'apikey'       => $api['api_key'],
+					'apikey'       => $api['api_key'] ?? '',
 					'content-type' => 'application/json',
 				),
 				'body'    => wp_json_encode(
