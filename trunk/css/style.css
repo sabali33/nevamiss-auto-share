@@ -1,32 +1,77 @@
 .sub-field-wrapper {
-    display: none;
+  display: none;
 }
 
-.sub-field-wrapper.active{
-    display: block;
+.sub-field-wrapper.active {
+  display: flex;
 }
-.wrap .schedules .started{
-    background: #1f9681;
-    color: #ffffff;
-    padding: 5px;
-    border-radius: 3px;
+.sub-field-wrapper {
+  max-width: 400px;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 2rem;
+  margin-block: 1rem;
 }
-.wrap .schedules .not-started{
-    background: #d5a476;
-    color: #ffffff;
-    padding: 5px;
-    border-radius: 3px;
+.sub-field-wrapper.active:last-child {
+  margin-bottom: 1.5rem;
 }
-.wrap .tab-content label{
-    display: flex;
-    width: 400px;
-    justify-content: space-between;
+.sub-field-wrapper.weekly {
+  max-width: 500px;
 }
-.subsubsub li{
-    margin: 0 10px;
+
+.sub-field-wrapper .remove {
+  color: #d71c1c;
 }
-.wrap .tab-content .field-wrap{
-    margin: 2rem 0;
+.double-select-fields {
+  display: flex;
+  justify-content: space-between;
+  width: 250px;
+  column-gap: 0.5rem;
+}
+.weekly .double-select-fields {
+  width: 450px;
+}
+.monthly .double-select-fields {
+  width: 300px;
+}
+.double-select-fields > p label {
+  margin-right: 0.5rem;
+}
+.double-select-fields > p {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.schedule-form .textarea-field {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+.schedule-form form > *:not(.sub-field-wrapper) {
+  margin-bottom: 2rem;
+}
+.wrap .schedules .started {
+  background: #1f9681;
+  color: #ffffff;
+  padding: 5px;
+  border-radius: 3px;
+}
+.wrap .schedules .not-started {
+  background: #d5a476;
+  color: #ffffff;
+  padding: 5px;
+  border-radius: 3px;
+}
+.wrap .tab-content label {
+  display: flex;
+  width: 400px;
+  justify-content: space-between;
+}
+.subsubsub li {
+  margin: 0 10px;
+}
+.wrap .tab-content .field-wrap {
+  margin: 2rem 0;
 }
 
 /**
@@ -34,127 +79,131 @@ Post meta settings
  */
 
 .nevamiss-instant-share-list .success-message,
-.nevamiss-instant-share-list .success-error{
-    margin-left: 2rem;
+.nevamiss-instant-share-list .success-error {
+  margin-left: 2rem;
 }
-.wrap.schedule-form form, .wrap .suggestion-form{
-    background: #ffffff;
-    padding: 30px;
-    margin: 0 auto;
-    border: solid 1px #c3c4c7;
-    max-width: 1000px;
+.wrap.schedule-form form,
+.wrap .suggestion-form {
+  background: #ffffff;
+  padding: 30px;
+  margin: 0 auto;
+  border: solid 1px #c3c4c7;
+  max-width: 1000px;
 }
 .wrap .suggestion-form {
-    margin-top: 3rem !important;
+  margin-top: 3rem !important;
 }
 .suggestion-form p {
-    display: flex;
-    justify-content: space-between;
-    width: 400px;
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
 }
-.suggestion-form form{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+.suggestion-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
+/* .sub-field-wrapper {
+  display: flex;
+} */
 
 /**
 Upgrade Tab styles
  */
-.premium-feature-list li{
-    padding: 10px 0;
+.premium-feature-list li {
+  padding: 10px 0;
 }
-.premium-feature-list li::before{
-    content: " ";
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: solid 1px #1f9681;
-    display: inline-block;
-    margin-right: 1.5rem;
+.premium-feature-list li::before {
+  content: " ";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: solid 1px #1f9681;
+  display: inline-block;
+  margin-right: 1.5rem;
 }
-.premium-features-wrap{
-    margin: 3rem auto;
+.premium-features-wrap {
+  margin: 3rem auto;
 }
 .premium-features-wrap .convert-action {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 /**
 Style Network accounts
  */
 
-.network-accounts .about-to-expire{
-    background: #e3a36f;
-    color: #ffffff;
-    padding: 3px;
-    border-radius: 3px;
+.network-accounts .about-to-expire {
+  background: #e3a36f;
+  color: #ffffff;
+  padding: 3px;
+  border-radius: 3px;
 }
-.network-accounts .expired-danger{
-    background: #d71c1c;
-    color: #ffffff;
-    padding: 3px;
-    border-radius: 3px;
+.network-accounts .expired-danger {
+  background: #d71c1c;
+  color: #ffffff;
+  padding: 3px;
+  border-radius: 3px;
 }
 
 /** Overview post **/
 
-.schedule-overview{
-    display: flex;
-    column-gap: 5px;
-    padding: 15px;
+.schedule-overview {
+  display: flex;
+  column-gap: 5px;
+  padding: 15px;
 }
-.upcoming-overview .schedule-overview-wrap{
-    margin-top: 2rem;
+.upcoming-overview .schedule-overview-wrap {
+  margin-top: 2rem;
 }
 .schedule-overview-wrap ul {
-    margin: 0;
+  margin: 0;
 }
-.post-overview{
-    background: #FFFFFF;
-    padding: 4rem;
+.post-overview {
+  background: #ffffff;
+  padding: 4rem;
 }
 .post-overview h3 {
-    font-size: 40px;
+  font-size: 40px;
 }
 .post-overview .summary {
-    display: flex;
-    column-gap: 4rem;
+  display: flex;
+  column-gap: 4rem;
 }
 .post-overview .summary > div {
-    /*max-height: 500px;*/
-    overflow-y: scroll;
+  /*max-height: 500px;*/
+  overflow-y: scroll;
 }
 .schedule-overview-wrap ul.wp-posts-list li {
-    border: dashed 1px #0a4b78;
+  border: dashed 1px #0a4b78;
 }
 .schedule-overview-wrap li {
-    padding: 10px;
-    background: #ece8e8;
-    margin-bottom: 1rem;
+  padding: 10px;
+  background: #ece8e8;
+  margin-bottom: 1rem;
 }
-.schedule-overview-wrap ul.schedule-times{
-    width: 300px;
+.schedule-overview-wrap ul.schedule-times {
+  width: 300px;
 }
 .schedule-overview-wrap h4 i {
-    font-weight: normal;
-    font-size: 12px;
+  font-weight: normal;
+  font-size: 12px;
 }
-.schedule-overview-wrap{
-    position: relative;
+.schedule-overview-wrap {
+  position: relative;
 }
-.schedule-overview-wrap > span{
-    position: absolute;
-    right: 0;
+.schedule-overview-wrap > span {
+  position: absolute;
+  right: 0;
 }
-.schedule-overview-wrap .message{
-    padding: 5px;
-    border-radius: 5px;
-    color: #fff;
+.schedule-overview-wrap .message {
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
 }
-.schedule-overview-wrap .message-error{
-    background: #d71c1c;
+.schedule-overview-wrap .message-error {
+  background: #d71c1c;
 }
 .schedule-overview-wrap .notice-success {
-    background: forestgreen;
+  background: forestgreen;
 }
